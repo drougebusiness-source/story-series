@@ -1,0 +1,21 @@
+title: ROLL FOR FATE
+handle: ""
+live: false
+secret: ROLLFORFATE
+slot_utc: "02"        # 8 PM Central
+colors: {bg: "#1C1A2E", fg: "#F1E3C3", accent: "#C9A227", accent2: "#7A1F3D"}
+font_head: CinzelDecorative-Bold.ttf
+font_body: CormorantGaramond.ttf
+style: >-
+  Painterly storybook fantasy illustration, warm parchment light, rich forest green and gold, classic book
+  illustration style.
+characters:
+  Wren Ashby: a short, freckled 23-year-old woman, cropped copper hair, oversized battered plate armour
+  Crows: a sleek black raven with one white feather on its head
+  Fennick Vale: a lanky 30-year-old bard, wine-red coat, lute, a faint glowing curse mark on his throat
+  Brunhild Ashfall: a stout old dwarf woman, grey braided beard, smith's apron, huge hammer
+  Osric Dimm: a pale, nervous 19-year-old necromancer, oversized black robe, a skeletal mouse on his shoulder
+  Sister Maelle: a tall 40-year-old cleric, white and gold Order tabard, lantern staff
+vote_line: "WHAT DOES WREN DO?"
+dice: true            # risky choices get a d20 roll (the dice step in the pipeline)
+hashtags: "#dnd #fantasy #ttrpg #interactivestory #youdecide #storytime"

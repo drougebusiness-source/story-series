@@ -1,0 +1,27 @@
+name: Check connections
+
+# Run after adding secrets: shows each Instagram account it can reach and whether the Gemini key works. Posts nothing.
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          IG_USER_ID_COMPLIANT: ${{ secrets.IG_USER_ID_COMPLIANT }}
+          META_PAGE_TOKEN_COMPLIANT: ${{ secrets.META_PAGE_TOKEN_COMPLIANT }}
+          IG_USER_ID_LASTDRAFT: ${{ secrets.IG_USER_ID_LASTDRAFT }}
+          META_PAGE_TOKEN_LASTDRAFT: ${{ secrets.META_PAGE_TOKEN_LASTDRAFT }}
+          IG_USER_ID_ROLLFORFATE: ${{ secrets.IG_USER_ID_ROLLFORFATE }}
+          META_PAGE_TOKEN_ROLLFORFATE: ${{ secrets.META_PAGE_TOKEN_ROLLFORFATE }}
+          IG_USER_ID_DRIFTBORN: ${{ secrets.IG_USER_ID_DRIFTBORN }}
+          META_PAGE_TOKEN_DRIFTBORN: ${{ secrets.META_PAGE_TOKEN_DRIFTBORN }}
+        run: python -m stories check | tee -a "$GITHUB_STEP_SUMMARY"

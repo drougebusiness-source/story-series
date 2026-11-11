@@ -1,0 +1,62 @@
+name: Episode
+
+# Mon/Wed/Fri evenings (Central): 6 PM COMPLIANT, 7 PM THE LAST DRAFT, 8 PM ROLL FOR FATE, 9 PM DRIFTBORN.
+# GitHub's cron is UTC, so that's Tue/Thu/Sat 00-03 UTC. Each run counts the last episode's vote, writes and
+# draws the next one, posts it, and commits the story state back. A series only posts once `live: true`.
+on:
+  schedule:
+    - cron: "5 0,1,2,3 * * 2,4,6"
+  workflow_dispatch:
+    inputs:
+      series:
+        description: "Series to run now (compliant, last-draft, roll-for-fate, driftborn)"
+        required: true
+
+concurrency: story-state   # one run at a time, so commits never collide
+
+jobs:
+  episode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: sudo apt-get update -q && sudo apt-get install -yq ffmpeg && pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/stories
+          key: art-${{ github.run_id }}
+          restore-keys: art-
+      - name: Run
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          IG_USER_ID_COMPLIANT: ${{ secrets.IG_USER_ID_COMPLIANT }}
+          META_PAGE_TOKEN_COMPLIANT: ${{ secrets.META_PAGE_TOKEN_COMPLIANT }}
+          IG_USER_ID_LASTDRAFT: ${{ secrets.IG_USER_ID_LASTDRAFT }}
+          META_PAGE_TOKEN_LASTDRAFT: ${{ secrets.META_PAGE_TOKEN_LASTDRAFT }}
+          IG_USER_ID_ROLLFORFATE: ${{ secrets.IG_USER_ID_ROLLFORFATE }}
+          META_PAGE_TOKEN_ROLLFORFATE: ${{ secrets.META_PAGE_TOKEN_ROLLFORFATE }}
+          IG_USER_ID_DRIFTBORN: ${{ secrets.IG_USER_ID_DRIFTBORN }}
+          META_PAGE_TOKEN_DRIFTBORN: ${{ secrets.META_PAGE_TOKEN_DRIFTBORN }}
+        run: |
+          if [ -n "${{ inputs.series }}" ]; then python -m stories episode "${{ inputs.series }}"
+          else python -m stories slot "$(date -u +%H)"; fi
+      - name: Save the story state
+        if: always()
+        run: |
+          git config user.name "story-bot"
+          git config user.email "story-bot@users.noreply.github.com"
+          git add */state.json */CANON.md */episodes 2>/dev/null || true
+          git diff --cached --quiet || (git commit -m "episode: update story state" && git pull --rebase -q && git push)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: episode-${{ github.run_id }}
+          path: out/*.mp4
+          if-no-files-found: ignore
+          retention-days: 14

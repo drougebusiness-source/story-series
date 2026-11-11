@@ -1,0 +1,19 @@
+title: DRIFTBORN
+handle: ""
+live: false
+secret: DRIFTBORN
+slot_utc: "03"        # 9 PM Central
+colors: {bg: "#0E1A2B", fg: "#E9C896", accent: "#2EC4B6", accent2: "#B5532A"}
+font_head: Orbitron.ttf
+font_body: SpaceGrotesk.ttf
+style: >-
+  1970s retro sci-fi paperback cover art, airbrushed, film grain, rust desert mining moon with a giant ringed planet on
+  the horizon, cold teal space, chunky worn spaceships. Original designs only, nothing from existing franchises.
+characters:
+  Kael Torvin: a wiry, sun-scarred 19-year-old man, messy dark hair, goggles on his forehead, half-on breath mask, patched rust-orange diving suit
+  Sola Venn: a 21-year-old woman engineer, shaved head, tool belt, teal coveralls
+  Captain Iva Rhoss: a 35-year-old woman pilot, short grey-streaked hair, battered flight jacket with a broken-chain patch
+  Prefect Daren Holt: a calm 45-year-old man in spotless white uniform with one gold stripe
+  Wick: a hulking, rust-covered 300-year-old mining robot with one round glowing teal eye
+vote_line: "KAEL'S CHOICE:"
+hashtags: "#scifi #spaceopera #interactivestory #youdecide #storytime"

@@ -1,0 +1,19 @@
+title: COMPLIANT
+handle: ""            # the Instagram handle, once the owner makes the account
+live: false           # the pipeline posts only when this is true (Claude flips it at launch)
+secret: COMPLIANT     # GitHub secrets IG_USER_ID_COMPLIANT and META_PAGE_TOKEN_COMPLIANT
+slot_utc: "00"        # Mon/Wed/Fri 6 PM Central = Tue/Thu/Sat 00:00 UTC
+colors: {bg: "#111111", fg: "#EFE6D2", accent: "#C8102E", accent2: "#39FF88"}
+font_head: BebasNeue-Regular.ttf
+font_body: IBMPlexMono-Bold.ttf
+style: >-
+  Soviet constructivist propaganda poster style, flat graphic shapes, hard shadows, red black and cream palette,
+  risograph grain, dystopian concrete megacity, surveillance screens.
+characters:
+  Ezra Vale: a narrow, tidy 26-year-old man, regulation-cut black hair, mended grey suit, small red pin on the lapel
+  Mira Vale: a 22-year-old woman, shaved sides, dark hair, green scarf, radio headset
+  Director Halden Crane: a silver-haired man in his 60s, soft smile, long black Ministry coat with red trim
+  Juno Park: a cheerful 28-year-old woman, bob haircut, grey clerk uniform, round glasses
+  Officer Brann Kols: a broad 40-year-old man, black police armour with a red visor
+vote_line: "SELECT ONE."
+hashtags: "#dystopia #interactivestory #youdecide #choicesmatter #scifi #storytime"

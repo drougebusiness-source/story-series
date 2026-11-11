@@ -1,0 +1,21 @@
+title: THE LAST DRAFT
+handle: ""
+live: false
+secret: LASTDRAFT
+slot_utc: "01"        # 7 PM Central
+colors: {bg: "#2B2B2B", fg: "#E8E1D3", accent: "#D9692B", accent2: "#3E6E6E"}
+font_head: SpecialElite-Regular.ttf
+font_body: Inter.ttf
+style: >-
+  Gritty graphic novel ink illustration, heavy black linework, desaturated teal and ash palette with warm orange
+  firelight, post-apocalyptic overgrown suburb, no gore.
+characters:
+  Cole Mercer: a lanky 34-year-old man, tape-mended glasses, brown cardigan over a stab vest, chemistry kit satchel
+  Dani Ortiz: a 17-year-old girl, dark curly hair in a bun, long-sleeved hoodie
+  Marcus "Tank" Bell: a big gentle 18-year-old young man, old football jacket, buzz cut
+  Lily Tran: a small 15-year-old girl, short black bob, sketchbook under her arm
+  Owen Pike: a skinny 17-year-old boy, smirk, beanie, too many pockets
+  Priya Shah: a 16-year-old girl, long braid, med kit on her hip
+  Rook: a weathered man in his 40s, grey stubble, faded military jacket, rifle
+vote_line: "WHAT DOES COLE DO?"
+hashtags: "#zombie #survival #interactivestory #youdecide #postapocalyptic #storytime"
