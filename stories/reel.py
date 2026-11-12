@@ -91,7 +91,7 @@ def caption_overlay(series: Series, text: str, n: int) -> Image.Image:
     for line in lines:
         d.text((80, y), line, font=f, fill=_rgb(series.color("fg")), stroke_width=2, stroke_fill=bg)
         y += 74
-    d.text((80, 90), f"{series.title} · EP {n}", font=_font(series.font("head"), 40), fill=_rgb(series.color("fg")),
+    d.text((80, 90), f"{series.title} / EP {n}", font=_font(series.font("head"), 40), fill=_rgb(series.color("fg")),
            stroke_width=2, stroke_fill=bg)
     return im
 
