@@ -54,6 +54,17 @@ def _rolls(series: Series, prev: dict) -> dict:
     return {k: (int(dc), roll_d20()) for k, dc in risky.items()}
 
 
+def story_path(eps: list[dict]) -> list[str]:
+    """The letters chosen so far, in order (FLOW.md's path codes). A rewind replaces the choice that killed."""
+    path: list[str] = []
+    for e in eps:
+        if e.get("decided_by") == "rewind" and path:
+            path[-1] = e.get("chosen", "")
+        elif e.get("chosen"):
+            path.append(e["chosen"])
+    return path
+
+
 def build_prompt(series: Series, n: int, prev: dict | None, d: dict, recent: list[dict]) -> str:
     recent_txt = "\n".join(f"- Ep {e['n']} \"{e['title']}\": followed {e.get('chosen') or '(start)'}; "
                            f"asked: {(e.get('choice') or {}).get('question', '(death)')} "
@@ -85,6 +96,12 @@ def build_prompt(series: Series, n: int, prev: dict | None, d: dict, recent: lis
 
 === SEASON PLAN (an outline; votes may take the story elsewhere, then continue in the same spirit) ===
 {series.text('SEASON1.md')}
+
+=== BRANCH MAP for the first episodes (path codes: one letter per vote) ===
+{series.text('FLOW.md') or '(none)'}
+Votes so far, as a path code: {'-'.join(story_path(recent)) or '(none yet: this is the start)'}{(' then ' + d['chosen'] + ' (this episode)') if d.get('chosen') else ''}
+While the story is still on the branch map, this episode IS the matching node: follow its beats and use its vote
+options word for word (the dice and ☠ marks too). Once past the map, continue from SEASON1.md and the canon.
 
 === CANON SO FAR (never contradict) ===
 {series.text('CANON.md')}

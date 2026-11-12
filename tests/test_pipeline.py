@@ -146,3 +146,24 @@ def test_profile_art_prompts_and_square_output(tmp_path, monkeypatch):
     monkeypatch.setattr(art, "OUT", tmp_path)
     paths = art.make_profile(s, 2, painter=FakePainter())
     assert [Image.open(p).size for p in paths] == [(1080, 1080)] * 2
+
+
+def test_story_path_and_branch_map_in_prompt():
+    s = Series.load("compliant")
+    eps = [{"n": 1, "title": "t1", "chosen": "", "decided_by": "first"},
+           {"n": 2, "title": "t2", "chosen": "B", "decided_by": "vote"},
+           {"n": 3, "chosen": "B", "decided_by": "vote", "death": True},
+           {"n": 4, "chosen": "A", "decided_by": "rewind"}]
+    assert writer.story_path(eps) == ["B", "A"]
+    d = writer.decision(s, None, None)
+    p = writer.build_prompt(s, 1, None, d, [])
+    assert "BRANCH MAP" in p and "The Delete Pile" in p and "(none yet" in p
+    d2 = {"kind": "vote", "chosen": "A", "opening": "", "rolls": {}}
+    p2 = writer.build_prompt(s, 3, eps[1] | {"choice": {"options": {"A": "x", "B": "y"}}}, d2, eps[:2])
+    assert "path code: B then A (this episode)" in p2
+
+
+@pytest.mark.parametrize("slug", SLUGS)
+def test_every_series_has_a_branch_map(slug):
+    flow = Series.load(slug).text("FLOW.md")
+    assert "```mermaid" in flow and "VOTE 1" in flow and "☠" in flow
