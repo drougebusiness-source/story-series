@@ -7,6 +7,7 @@
     python -m stories episode <series>          the scheduled job: count the last vote, write, draw, render, post
     python -m stories slot <HH>                 run `episode` for the series whose slot_utc is HH (GitHub's cron)
     python -m stories status                    one line per series
+    python -m stories art <series> [--n 3]      Gemini profile picture options -> out/art/
 
 A series only posts when `live: true` in its series.yaml.
 """
@@ -20,7 +21,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import gemini, reel, votes, writer
+from . import art, gemini, reel, votes, writer
 from .instagram import Account, PostError
 from .series import ROOT, SLUGS, Series
 
@@ -169,6 +170,9 @@ def main(argv=None) -> int:
     p.add_argument("--fake-art", action="store_true")
     e = sub.add_parser("episode")
     e.add_argument("series", choices=SLUGS)
+    ar = sub.add_parser("art")
+    ar.add_argument("series", choices=SLUGS)
+    ar.add_argument("--n", type=int, default=3)
     sl = sub.add_parser("slot")
     sl.add_argument("hour")
     a = ap.parse_args(argv)
@@ -181,6 +185,9 @@ def main(argv=None) -> int:
         return 0
     if a.cmd == "episode":
         return cmd_episode(a.series)
+    if a.cmd == "art":
+        art.make_profile(Series.load(a.series), min(a.n, 6))
+        return 0
     s = Series.for_slot(a.hour.zfill(2))
     if s is None:
         print(f"no series in slot {a.hour}")

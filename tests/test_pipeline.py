@@ -121,3 +121,28 @@ def test_reel_builds_a_vertical_video(tmp_path):
     assert (v["width"], v["height"]) == (1080, 1920)
     assert any(x["codec_type"] == "audio" for x in probe["streams"])
     assert 40 < float(probe["format"]["duration"]) < 60
+
+
+def test_profile_art_prompts_and_square_output(tmp_path, monkeypatch):
+    import io
+
+    from PIL import Image
+
+    from stories import art
+    s = Series.load("driftborn")
+    prompts = art.profile_prompts(s, 3)
+    assert len(set(prompts)) == 3 and all("Kael Torvin" in p and "No text" not in p for p in prompts)
+    assert all("Absolutely no text" in p and "Square 1:1" in p for p in prompts)
+
+    class FakePainter:
+        spent = 0.0
+
+        def picture(self, prompt, aspect="9:16"):
+            assert aspect == "1:1"
+            buf = io.BytesIO()
+            Image.new("RGB", (1200, 1000), "teal").save(buf, "JPEG")
+            return buf.getvalue()
+
+    monkeypatch.setattr(art, "OUT", tmp_path)
+    paths = art.make_profile(s, 2, painter=FakePainter())
+    assert [Image.open(p).size for p in paths] == [(1080, 1080)] * 2

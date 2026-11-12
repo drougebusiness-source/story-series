@@ -130,15 +130,15 @@ class Painter:
     def spent(self) -> float:
         return round(self.new * COST_PER_IMAGE.get(IMAGE_SIZE, 0.05), 3)
 
-    def picture(self, prompt: str) -> bytes:
+    def picture(self, prompt: str, aspect: str = "9:16") -> bytes:
         CACHE.mkdir(parents=True, exist_ok=True)
-        path = CACHE / (hashlib.sha256(f"{IMAGE_MODEL}|{IMAGE_SIZE}|{prompt}".encode()).hexdigest()[:24] + ".jpg")
+        path = CACHE / (hashlib.sha256(f"{IMAGE_MODEL}|{IMAGE_SIZE}|{aspect}|{prompt}".encode()).hexdigest()[:24] + ".jpg")
         if path.exists():
             return path.read_bytes()
         if self.new >= MAX_NEW_IMAGES:
             raise RuntimeError(f"picture limit reached ({MAX_NEW_IMAGES} new pictures in one run)")
         body = {"model": IMAGE_MODEL, "input": [{"type": "text", "text": prompt}],
-                "response_format": {"type": "image", "mime_type": "image/jpeg", "aspect_ratio": "9:16",
+                "response_format": {"type": "image", "mime_type": "image/jpeg", "aspect_ratio": aspect,
                                     "image_size": IMAGE_SIZE}}
         try:
             out = _post(f"{API}/interactions", body)
@@ -146,7 +146,7 @@ class Painter:
             out = _post(f"{API}/models/{IMAGE_MODEL}:generateContent", {
                 "contents": [{"parts": [{"text": prompt}]}],
                 "generationConfig": {"responseModalities": ["IMAGE"],
-                                     "imageConfig": {"aspectRatio": "9:16", "imageSize": IMAGE_SIZE}}})
+                                     "imageConfig": {"aspectRatio": aspect, "imageSize": IMAGE_SIZE}}})
         raw = _find_image(out)
         if not raw:
             raise RuntimeError(f"Gemini returned no picture: {json.dumps(out)[:300]}")
