@@ -22,14 +22,14 @@ CUSTOM_PROFILE = {"driftborn": "gemini/driftborn-abstract-debris.jpg"}
 
 S = {
     "compliant": dict(
-        title="COMPLIANT", tag="YOU DECIDE", hero="Ezra Vale", role="Records Clerk · Ministry of Harmony",
+        title="COMPLIANT", tag="YOU DECIDE", hero="Ezra Vale", role="Citizen 213 · Ministry Records Clerk",
         hook="He deletes people for a living.<br>Then he found his sister's file.",
         a="comply", b="copy the file", bg="#EFE6D2", fg="#111111", acc="#C8102E", acc2="#39FF88",
         hf="'Bebas Neue'", bf="'IBM Plex Mono'", mark="eye",
         rule="Rebel or builder. Every choice is yours."),
     "last-draft": dict(
         title="THE LAST DRAFT", tag="YOU DECIDE WHO LIVES", hero="Cole Mercer", role="Chemistry teacher · Day 731",
-        hook="A teacher. 5 students. 1 stranger with a gun.<br>300 miles to the safe zone.",
+        hook="A teacher. 5 students.<br>1 stranger with a gun.<br>300 miles to the safe zone.",
         a="tell the group", b="keep her secret", bg="#2B2B2B", fg="#E8E1D3", acc="#D9692B", acc2="#3E6E6E",
         hf="'Special Elite'", bf="'Inter'", mark="roster",
         rule="Anyone can die. Even him."),
@@ -75,7 +75,11 @@ h1{{font-family:{hf};margin:0;line-height:1;color:{fg}}}
 .frame{{position:absolute;inset:36px;border:4px solid {acc}}}
 .opt{{display:flex;gap:24px;align-items:center;font-size:44px;margin:14px 0;font-weight:700}}
 .opt b{{display:inline-flex;width:84px;height:84px;align-items:center;justify-content:center;background:{acc};color:{bg};font-family:{hf};font-size:56px}}
-</style></head><body>{body}<div class="grain"></div></body></html>"""
+</style></head><body>{body}<div class="grain"></div>
+<script>/* shrink any heading that's wider than the frame until it fits */
+document.fonts.ready.then(() => document.querySelectorAll("h1").forEach(h => {{
+  h.style.whiteSpace = "nowrap"; let px = parseFloat(getComputedStyle(h).fontSize);
+  while (h.scrollWidth > {w} - 200 && px > 20) {{ px -= 2; h.style.fontSize = px + "px"; }} }}));</script></body></html>"""
 
 
 def render(name, w, h, body, c):
@@ -109,9 +113,14 @@ def main():
             print(f"{slug}-profile.png kept (from {CUSTOM_PROFILE[slug]})")
         else:
             render_profile(slug, c, size)
+        if slug in CUSTOM_PROFILE:  # the chosen art, as a round badge, instead of the drawn mark
+            emblem = (f'<img src="{CUSTOM_PROFILE[slug]}" style="width:400px;height:400px;border-radius:50%;'
+                      f'margin:40px 0 20px;box-shadow:0 0 0 6px {c["acc2"]},0 0 60px {c["acc"]}55">')
+        else:
+            emblem = f"""<div style="width:300px;height:300px;margin:50px 0 30px">{mark(c['mark'], c)}</div>"""
         render(f"{slug}-pin1", 1080, 1350, f"""<div class="frame"></div><div class="c" style="padding:0 90px">
 <div class="tag" style="font-size:34px">{c['tag']}</div>
-<div style="width:300px;height:300px;margin:50px 0 30px">{mark(c['mark'], c)}</div>
+{emblem}
 <h1 style="font-size:{int(size * 1.15)}px">{c['title']}</h1>
 <div style="font-size:64px;font-family:{c['hf']};margin-top:60px;color:{c['acc']}">{c['hero']}</div>
 <div style="font-size:34px;opacity:.8;margin-top:10px">{c['role']}</div>
