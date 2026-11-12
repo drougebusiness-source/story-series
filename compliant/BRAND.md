@@ -7,7 +7,7 @@ rises to rule it.
 - **Handle:** `@citizen.213` (made 2026-11-12)
 - **Name field:** COMPLIANT | You Decide
 - **Bio (under 150 characters):**
-  > Ezra Vale deletes people for the Ministry.
+  > Citizen 213 deletes people for the Ministry.
   > Then he found his sister's file.
   > 🗳️ You vote. He lives with it.
   > New episode Mon/Wed/Fri

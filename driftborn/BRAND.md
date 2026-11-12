@@ -11,7 +11,7 @@ him. You decide what he becomes.
 - **Bio:**
   > Kael dives for scrap on a dying moon.
   > He hears the Current. The Concord hunts those who do.
-  > 🗳️ Train it? Hide it? Join them? You decide.
+  > 🗳️ You decide what he becomes.
   > New episode Mon/Wed/Fri
 - **Highlights:** CREW · VOTES · THE CURRENT · THE CONCORD · STAR MAP
 
