@@ -2,12 +2,12 @@
 
 About 15 minutes per account, once. Do them in this order. Nothing posts until Claude switches a series to `live: true`.
 
-| Series | Name on Instagram | Handle (try in order) | Profile picture | GitHub secret suffix |
+| Series | Name on Instagram | Handle | Profile picture | GitHub secret suffix |
 |---|---|---|---|---|
-| COMPLIANT | COMPLIANT \| You Decide | `compliant.series` → `ministryofharmony` → `stay.compliant` | `images/compliant-profile.png` | `COMPLIANT` |
-| THE LAST DRAFT | THE LAST DRAFT \| You Decide Who Lives | `thelastdraft.series` → `lastdraft.survival` → `the.last.draft` | `images/last-draft-profile.png` | `LASTDRAFT` |
-| ROLL FOR FATE | ROLL FOR FATE \| You Choose, Dice Decide | `rollforfate.series` → `roll.for.fate` → `rollforfate.tales` | `images/roll-for-fate-profile.png` | `ROLLFORFATE` |
-| DRIFTBORN | DRIFTBORN \| You Decide His Fate | `driftborn.series` → `driftborn.saga` → `the.driftborn` | `images/driftborn-profile.png` | `DRIFTBORN` |
+| COMPLIANT | COMPLIANT \| You Decide | **`citizen.213`** ✅ made | `images/compliant-profile.png` | `COMPLIANT` |
+| THE LAST DRAFT | THE LAST DRAFT \| You Decide Who Lives | **`lastdraft.survival`** ✅ made | `images/last-draft-profile.png` | `LASTDRAFT` |
+| ROLL FOR FATE | ROLL FOR FATE \| You Choose, Dice Decide | **`roll.for.fate`** ✅ made | `images/roll-for-fate-profile.png` | `ROLLFORFATE` |
+| DRIFTBORN | DRIFTBORN \| You Decide His Fate | **`driftborn.saga`** ✅ made | `images/driftborn-profile.png` | `DRIFTBORN` |
 
 Bios are in each series' `BRAND.md` (copy them as written).
 

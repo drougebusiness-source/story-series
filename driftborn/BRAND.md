@@ -6,7 +6,7 @@ him. You decide what he becomes.
 *Original universe (no Star Wars names, words or designs), so the account can grow and sell merch safely.*
 
 ## Account
-- **Handle options:** `@driftborn.series` · `@driftborn.saga` · `@the.driftborn`
+- **Handle:** `@driftborn.saga` (made 2026-11-12)
 - **Name field:** DRIFTBORN | You Decide His Fate
 - **Bio:**
   > Kael dives for scrap on a dying moon.

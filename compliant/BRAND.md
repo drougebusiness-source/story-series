@@ -4,7 +4,7 @@
 rises to rule it.
 
 ## Account
-- **Handle options (check in this order):** `@compliant.series` · `@ministryofharmony` · `@stay.compliant`
+- **Handle:** `@citizen.213` (made 2026-11-12)
 - **Name field:** COMPLIANT | You Decide
 - **Bio (under 150 characters):**
   > Ezra Vale deletes people for the Ministry.
@@ -25,7 +25,7 @@ rises to rule it.
   and cream palette, risograph grain, dystopian concrete megacity, surveillance screens, [SCENE], vertical 9:16"*
 
 ## Voice
-- On-screen text is short and cold, like official notices: "CITIZEN 4471-V. REPORT TO FLOOR 9."
+- On-screen text is short and cold, like official notices: "CITIZEN 213. REPORT TO FLOOR 9." (Ezra is Citizen 213, which is also the account name, @citizen.213)
 - Ezra's thoughts are lowercase, in Plex Mono: "they said she moved east. she never moved east."
 - The vote card is always written as a Ministry form: **"SELECT ONE. A ☐ comply. B ☐ copy the file."**
 - Hashtags: #dystopia #interactivestory #youdecide #choicesmatter #scifi #1984vibes #storytime

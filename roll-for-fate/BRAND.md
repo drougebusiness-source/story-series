@@ -4,7 +4,7 @@
 works.
 
 ## Account
-- **Handle options:** `@rollforfate.series` · `@roll.for.fate` · `@rollforfate.tales`
+- **Handle:** `@roll.for.fate` (made 2026-11-12)
 - **Name field:** ROLL FOR FATE | You Choose, Dice Decide
 - **Bio:**
   > Wren was thrown out of the knighthood for a crime she didn't commit.

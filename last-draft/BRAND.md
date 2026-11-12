@@ -3,7 +3,7 @@
 **One line:** a chemistry teacher and 5 of his students, two years into the end of the world. You decide who lives.
 
 ## Account
-- **Handle options:** `@thelastdraft.series` · `@lastdraft.survival` · `@the.last.draft`
+- **Handle:** `@lastdraft.survival` (made 2026-11-12)
 - **Name field:** THE LAST DRAFT | You Decide Who Lives
 - **Bio:**
   > A teacher. 5 students. 1 stranger with a gun.

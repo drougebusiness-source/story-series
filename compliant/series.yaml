@@ -1,5 +1,5 @@
 title: COMPLIANT
-handle: ""            # the Instagram handle, once the owner makes the account
+handle: "citizen.213"   # the Instagram handle (owner made it 2026-11-12)
 live: false           # the pipeline posts only when this is true (Claude flips it at launch)
 secret: COMPLIANT     # GitHub secrets IG_USER_ID_COMPLIANT and META_PAGE_TOKEN_COMPLIANT
 slot_utc: "00"        # Mon/Wed/Fri 6 PM Central = Tue/Thu/Sat 00:00 UTC
