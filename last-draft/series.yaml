@@ -1,7 +1,7 @@
 title: THE LAST DRAFT
 handle: "lastdraft.survival"   # the Instagram handle (owner made it 2026-11-12)
 live: false
-secret: LASTDRAFT
+secret: LASTDRAFTSURVIVAL
 slot_utc: "01"        # 7 PM Central
 colors: {bg: "#2B2B2B", fg: "#E8E1D3", accent: "#D9692B", accent2: "#3E6E6E"}
 font_head: SpecialElite-Regular.ttf

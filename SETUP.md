@@ -4,8 +4,8 @@ About 15 minutes per account, once. Do them in this order. Nothing posts until C
 
 | Series | Name on Instagram | Handle | Profile picture | GitHub secret suffix |
 |---|---|---|---|---|
-| COMPLIANT | COMPLIANT \| You Decide | **`citizen.213`** ✅ made | `images/compliant-profile.png` | `COMPLIANT` |
-| THE LAST DRAFT | THE LAST DRAFT \| You Decide Who Lives | **`lastdraft.survival`** ✅ made | `images/last-draft-profile.png` | `LASTDRAFT` |
+| COMPLIANT | COMPLIANT \| You Decide | **`citizen.213`** ✅ made | `images/compliant-profile.png` | `CITIZEN213` |
+| THE LAST DRAFT | THE LAST DRAFT \| You Decide Who Lives | **`lastdraft.survival`** ✅ made | `images/last-draft-profile.png` | `LASTDRAFTSURVIVAL` |
 | ROLL FOR FATE | ROLL FOR FATE \| You Choose, Dice Decide | **`roll.for.fate`** ✅ made | `images/roll-for-fate-profile.png` | `ROLLFORFATE` |
 | DRIFTBORN | DRIFTBORN \| You Decide His Fate | **`driftborn.saga`** ✅ made | `images/driftborn-profile.png` | `DRIFTBORN` |
 
