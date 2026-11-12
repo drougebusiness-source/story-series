@@ -17,6 +17,9 @@ FONTS = ("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mo
          "&family=Inter:wght@500;800&family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:wght@600;700"
          "&family=Orbitron:wght@600;900&family=Space+Grotesk:wght@500;700&display=block")
 
+# Profile pictures the owner chose from Gemini art (images/gemini/), kept as they are
+CUSTOM_PROFILE = {"driftborn": "gemini/driftborn-abstract-debris.jpg"}
+
 S = {
     "compliant": dict(
         title="COMPLIANT", tag="YOU DECIDE", hero="Ezra Vale", role="Records Clerk · Ministry of Harmony",
@@ -92,13 +95,20 @@ def render(name, w, h, body, c):
     print(out.name, out.stat().st_size if out.exists() else "FAILED")
 
 
+def render_profile(slug, c, size):
+    # Instagram crops the profile picture to a circle: keep everything inside the middle ~720 px
+    render(f"{slug}-profile", 1080, 1080, f"""<div class="c"><div style="width:440px;height:440px">{mark(c['mark'], c)}</div>
+<h1 style="font-size:{int(size * 0.5)}px;margin-top:20px;max-width:640px">{c['title']}</h1></div>""", c)
+
+
 def main():
     OUT.mkdir(exist_ok=True)
     for slug, c in S.items():
         size = 110 if len(c["title"]) > 10 else 150
-        # Instagram crops the profile picture to a circle: keep everything inside the middle ~720 px
-        render(f"{slug}-profile", 1080, 1080, f"""<div class="c"><div style="width:440px;height:440px">{mark(c['mark'], c)}</div>
-<h1 style="font-size:{int(size * 0.5)}px;margin-top:20px;max-width:640px">{c['title']}</h1></div>""", c)
+        if slug in CUSTOM_PROFILE:  # the owner picked Gemini art for this one: don't overwrite it
+            print(f"{slug}-profile.png kept (from {CUSTOM_PROFILE[slug]})")
+        else:
+            render_profile(slug, c, size)
         render(f"{slug}-pin1", 1080, 1350, f"""<div class="frame"></div><div class="c" style="padding:0 90px">
 <div class="tag" style="font-size:34px">{c['tag']}</div>
 <div style="width:300px;height:300px;margin:50px 0 30px">{mark(c['mark'], c)}</div>
