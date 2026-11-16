@@ -18,7 +18,7 @@ import json
 import secrets
 
 from . import gemini
-from .series import Series
+from .series import ROOT, Series
 
 MIN_SECONDS, MAX_SECONDS = 35, 75
 MAX_TEXT = 140
@@ -65,6 +65,12 @@ def story_path(eps: list[dict]) -> list[str]:
     return path
 
 
+def house_style() -> str:
+    """The Head Writer's craft guide (WRITING.md, copied from agent-office/hq/WRITING.md)."""
+    p = ROOT / "WRITING.md"
+    return p.read_text(encoding="utf-8") if p.exists() else ""
+
+
 def build_prompt(series: Series, n: int, prev: dict | None, d: dict, recent: list[dict]) -> str:
     recent_txt = "\n".join(f"- Ep {e['n']} \"{e['title']}\": followed {e.get('chosen') or '(start)'}; "
                            f"asked: {(e.get('choice') or {}).get('question', '(death)')} "
@@ -91,6 +97,9 @@ def build_prompt(series: Series, n: int, prev: dict | None, d: dict, recent: lis
     return f"""You write one episode of "{series.title}", an interactive story told as a 45-75 second Instagram Reel
 (captions on still pictures, no narration). The audience votes on what happens next.
 
+=== HOUSE WRITING GUIDE (how every episode must read: hooks, open loops, rhythm, planted twists, the ban list) ===
+{house_style()}
+
 === SERIES BIBLE ===
 {series.text('BRAND.md')}
 
@@ -115,8 +124,9 @@ options word for word (the dice and ☠ marks too). Once past the map, continue 
 
 Rules:
 - 5 to 8 scenes, 4 to 8 seconds each, {MIN_SECONDS}-{MAX_SECONDS} seconds in total.
-- Each scene "text" is the on-screen caption: at most {MAX_TEXT} characters, punchy, in the series' voice. Scene 1
-  hooks in the first 2 seconds.
+- Each scene "text" is the on-screen caption: at most {MAX_TEXT} characters, in the series' voice and written to
+  the house guide: scene 1 hooks in the first 2 seconds, every caption makes sense alone AND pulls the viewer into
+  the next one, behavior over labels, varied rhythm (never a run of two-word fragments), nothing from the ban list.
 - Each scene "image" describes ONE picture for an illustrator: who is there (use the character names from the
   bible), what they're doing, the setting, the light and the camera framing. Vertical 9:16. No text in pictures.
   No gore: deaths and violence are implied (a shadow, a cut away, an empty chair), never shown.
