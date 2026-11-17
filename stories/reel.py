@@ -274,8 +274,7 @@ def build(series: Series, ep: dict, pictures: list[bytes], out: Path) -> Path:
             _clip_from_image(img, secs, p, **kw)
             clips.append(p)
 
-        if ep.get("opening"):
-            add(card(series, "opening", ep), CARD_SECONDS["opening"])
+        # no opening/recap card (owner 11-17: "it adds too much"): the first line picks up the vote inside the story
         if ep.get("roll"):
             add(card(series, "dice", ep), CARD_SECONDS["dice"])
         voice_id = None

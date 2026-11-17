@@ -76,6 +76,11 @@ def from_qa(qa_dir: str):
         heard = " ".join(x.text.strip() for x in m.transcribe(np.frombuffer(pcm, np.float32))[0])
         score = difflib.SequenceMatcher(None, norm(ln["text"]), norm(heard)).ratio()
         ok = score >= 0.9                                # a dropped word must fail (owner 11-16)
+        heard_w = norm(heard).split()
+        missing = [w for w in norm(ln["text"]).split() if len(w) > 3 and
+                   not any(difflib.SequenceMatcher(None, w, h).ratio() >= 0.75 for h in heard_w)]
+        if missing:
+            print(f"MISS shot {ln['shot']}: {', '.join(missing)}")
         bad += not ok
         print(f"{'OK ' if ok else 'BAD'} shot {ln['shot']} {ln['who']} {score:.2f}: wanted \"{ln['text']}\", heard \"{heard}\"")
     sys.exit(1 if bad else 0)

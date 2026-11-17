@@ -31,7 +31,7 @@ RATE = 24000
 # ElevenLabs narration model. eleven_v3 is more expressive but swallowed short phrases and once switched voices
 # mid-line (11-16), so the steadier multilingual v2 is the default.
 ELEVEN_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
-ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.75, "speed": 1.08}   # brisk: short-form (owner 11-16)
+ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.75, "speed": 1.0}   # 1.08 made voices drop words (11-17)
 KOKORO = Path.home() / ".cache" / "doodle"
 _kokoro = None
 
@@ -410,6 +410,7 @@ def timeline(slug: str, ep_name: str = "ep1") -> list[tuple[float, np.ndarray | 
         if who and clip.exists():                        # lip-synced: the shot's own speech, revoiced, never stretched
             a = revoice(clip, entry["eleven"])
             a = _fade(level(a), int(MIX * 0.02))
+            a = np.pad(a, (0, int(MIX * 0.3)))            # a breath after the talking shot before the next line
             out.append((len(a) / MIX, a, 0.0))
             continue
         who, text = speaker_and_text(shot.get("caption", ""))
@@ -420,7 +421,7 @@ def timeline(slug: str, ep_name: str = "ep1") -> list[tuple[float, np.ndarray | 
         voice = voices.get(who) or voices.get("narrator")
         a = say(text, voice)
         room = secs - LEAD - TAIL
-        if len(a) / RATE > room:                         # only a gentle speed-up; past that the shot gets longer
+        if False and len(a) / RATE > room:               # no time-stretching (it sounded robotic): the shot gets longer
             a = stretch(a, min(1.08, (len(a) / RATE) / room))
         a = _decode(None, pcm=a, extra="highpass=f=80")          # 24k -> 48k, no low thumps
         a = np.pad(level(a), int(MIX * 0.08))           # breathing room so the soft edge never clips a word

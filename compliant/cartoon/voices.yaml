@@ -5,7 +5,7 @@ narrator:
   brief: a calm, official state-broadcast announcer; crisp received-pronunciation English, measured and emotionless
   kokoro: bm_george@0.92
   gemini: Charon
-  eleven: dqbqOZM4uhsyx1WtTAgT     # "Max - 1940s RP British voice" (11-16: Gemini narration dropped words)
+  eleven: Pu6wRXGiX8rRTqojO6N0     # "Stuart - Steady, Clear and Polished" newsreader (11-17: Max over-stressed words and clipped line starts)
   engine: eleven
 ezra:
   name: Ezra Vale

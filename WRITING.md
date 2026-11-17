@@ -117,17 +117,10 @@ spoken line):
 - Middle: two escalations and one turn, linked by but/therefore.
 - Last 10 s: a reveal, then a choice with a clock. Each caption must make sense read on its own *and* pull the
   viewer into the next shot.
-- **Teaser (flash-forward), when it helps.** Open on 1.5-2.5 s of the episode's most gripping moment, then a quick
-  rewind into the start. In the episode yaml: `teaser: {shot: N, secs: 2}` (`start:` picks the second within the
-  shot). Use it when a moment works with no context: a reveal on a face, a scream, a hand at the window, a red
-  key about to be pressed. Show the moment *before* it resolves. Tease, never spoil: the twist line and the
-  answer stay where they are. Skip it when the opening line is already the strongest hook, or in a quiet,
-  emotional episode where showing the payoff early would kill it.
-- **Vote recap (every episode after the first).** The episode opens on last episode's vote as bars with "YOU
-  CHOSE B" (`recap:` in the yaml for cartoons; the automatic Reels make it from the vote count). The teaser
-  plays first, then the recap. The first story line then picks up the choice *inside the story*: not "Option
-  B won", but "You chose to copy the file. Now the chip is in his shoe, and Kols is searching everyone at the
-  gate."
+- **No teaser and no vote recap (owner, 2026-11-17: "it adds too much").** Episodes are 15-29 s, never over 30.
+  Open straight on the hook. An episode after a vote picks up the choice *inside the story* in its first line: not
+  "Option B won", but "You chose to copy the file. Now the chip is in his shoe, and Kols is searching everyone at
+  the gate."
 - Character entrances are shown, mouths move when people talk, and a world looks the same every time
   (story-series memory rules).
 

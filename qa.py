@@ -92,7 +92,12 @@ def words(qa_dir: Path) -> tuple[list[str], list[str]]:
     r = subprocess.run([str(WHISPER_PY), str(ROOT / "check_lines.py"), "--qa", str(qa_dir)], capture_output=True,
                        text=True, encoding="utf-8", errors="replace")
     bad = [l.strip() for l in r.stdout.splitlines() if l.startswith("BAD")]
+    global MISSING                                       # shots where the transcriber really lost a word
+    MISSING = {re.search(r"shot (\d+)", l).group(1) for l in r.stdout.splitlines() if l.startswith("MISS")}
     return bad, ([] if r.returncode in (0, 1) else [f"word check crashed: {r.stderr[-300:]}"])
+
+
+MISSING: set = set()
 
 
 def _gemini(parts: list[dict]) -> dict:
@@ -145,6 +150,9 @@ Report only real problems a viewer would notice: (1) shouting or yelling when th
 Answer JSON: {{"problems": [{{"severity": "severe"|"minor", "what": "<one plain sentence>"}}]}}. Empty list if clean."""
 
 
+TONE = ""
+
+
 def ai_shots(shots: list[dict], src: Path, qa_dir: Path, notes: dict | None = None,
              lengths: list[float] | None = None) -> tuple[list[str], list[str]]:
     """notes: cast.yaml design notes, so designed features (a white feather) aren't reported as glitches.
@@ -154,6 +162,9 @@ def ai_shots(shots: list[dict], src: Path, qa_dir: Path, notes: dict | None = No
     for i, shot in enumerate(shots, 1):
         sheet = qa_dir / f"shot{i}.jpg"
         used = (lengths or [None] * len(shots))[i - 1] or float(shot.get("secs", 6))
+        have = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                     str(src / f"shot{i}.mp4")], capture_output=True, text=True).stdout or used)
+        used = min(used, have)                           # a held last frame adds nothing to look at: no black tiles
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-t", f"{used:.2f}", "-i", str(src / f"shot{i}.mp4"), "-vf",
                         f"fps={24 / used:.4f},scale=180:-1,tile=8x3", "-frames:v", "1", "-q:v", "4", str(sheet)],
                        check=True)
@@ -162,11 +173,17 @@ def ai_shots(shots: list[dict], src: Path, qa_dir: Path, notes: dict | None = No
                        shot.get("cast", []) if c in notes)
         if shot.get("_still"):                           # a still: judge the picture, not motion
             sheet = src / f"key{i}.jpg"
+        parts = [{"text": (STILL_REVIEW if shot.get("_still") else SHOT_REVIEW).format(   # a still is judged
+                      motion=shot.get("frame" if shot.get("_still") else "motion", ""), who=who + TONE)},  # on its picture text
+                 {"inline_data": {"mime_type": "image/jpeg", "data": base64.b64encode(sheet.read_bytes()).decode()}}]
         try:
-            res = _gemini([{"text": (STILL_REVIEW if shot.get("_still") else SHOT_REVIEW).format(
-                               motion=shot.get("motion", ""), who=who)},
-                           {"inline_data": {"mime_type": "image/jpeg",
-                                            "data": base64.b64encode(sheet.read_bytes()).decode()}}])
+            res = _gemini(parts)
+            if any(p.get("severity") == "severe" for p in res.get("problems", [])):
+                again = _gemini(parts)                   # a severe finding must hold up on a second look
+                if not any(p.get("severity") == "severe" for p in again.get("problems", [])):
+                    for p in res.get("problems", []):
+                        p["severity"] = "minor"
+                        p["what"] = f"{p.get('what')} (not confirmed on a second look)"
         except Exception as e:                          # a review that can't run is a failure, never a silent pass
             severe.append(f"shot {i}: picture review could not run ({e})")
             continue
@@ -232,7 +249,18 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
     # sound
     speech, rate = sf.read(qa_dir / "speech.wav", dtype="float32")
     lines = json.loads((qa_dir / "lines.json").read_text(encoding="utf-8"))
-    fail += [f"voice: {p}" for p in voice.audio_check(speech, rate, label="voices") if "dead-silent" not in p]
+    for p in voice.audio_check(speech, rate, label="voices"):
+        if "dead-silent" in p:
+            continue
+        m = re.search(r"burst at ([\d.]+)s", p)
+        if m:                                            # a quiet hissy burst inside a spoken line is an "s"/"sh" sound
+            t = float(m.group(1))
+            seg = speech[int(t * rate):int((t + 0.05) * rate)]       # just the burst itself
+            inside = any(ln["start"] <= t <= ln["end"] for ln in lines)
+            if inside and len(seg) and float(np.abs(seg).max()) < 0.1:
+                warn.append(f"voice: {p} (quiet hiss inside a word: a sibilant, not static)")
+                continue
+        fail.append(f"voice: {p}")
     fail += [f"sound: {p}" for p in voice.audio_check(final, label=final.name) if "dead-silent" in p]
     fail += [f"talking over: {p}" for p in overlaps(lines)]
     fail += [f"loudness: {p}" for p in loudness(speech, lines, rate)]
@@ -243,6 +271,13 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
     fail += [f"words: {p}" for p in notes if "crashed" in p]     # a check that can't run is a failure
     warn += [f"words: {p}" for p in notes if "crashed" not in p]
     if ai:
+        global TONE
+        tf = ROOT / slug / "cartoon" / "tone.md"
+        if tf.exists() and "COMEDY" in tf.read_text(encoding="utf-8"):
+            TONE = (" This is a COMEDY: big, fast, exaggerated expression changes and comic takes are intended. Flag a"
+                    " face only if it morphs into a different face or loses its design, not for comic acting.")
+        else:
+            TONE = ""
         castf = ROOT / slug / "cartoon" / "cast.yaml"
         notes = (yaml.safe_load(castf.read_text(encoding="utf-8")) or {}) if castf.exists() else {}
         lengths = [p[0] for p in voice.timeline(slug, ep)]
@@ -252,6 +287,17 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
         fail += [f"picture: {p}" for p in s]
         warn += [f"picture: {p}" for p in m]
         s, m = ai_lines(speech, rate, lines, qa_dir)
+        # the listener sometimes claims a word is missing when it isn't: trust that claim only if the transcriber agrees
+        wordy = re.compile(r"missing|cut off|omit|dropped|skipp", re.I)
+        moved = [x for x in s if wordy.search(x) and re.search(r"shot (\d+)", x).group(1) not in MISSING]
+        s = [x for x in s if x not in moved]
+        m = m + [x + " (transcriber heard every word)" for x in moved]
+        # a transcriber "missing word" alone is usually its own mishearing ("Mira Vale" -> "mirror veil"): it counts
+        # only when the listener also heard a word missing in that line (that pair caught the real drops on 11-17)
+        heard_missing = {re.search(r"shot (\d+)", x).group(1) for x in moved}
+        s += [f"shot {k}: both the transcriber and the listener found a dropped word" for k in sorted(MISSING & heard_missing)]
+        m += [f"shot {k}: transcriber flagged a word the listener heard fine (likely a mishearing)"
+              for k in sorted(MISSING - heard_missing)]
         fail += [f"voice: {p}" for p in s]
         warn += [f"voice: {p}" for p in m]
         for p in borderline:                             # the small transcriber mishears soft voices: the listener decides
