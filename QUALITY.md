@@ -19,6 +19,7 @@ PASS. Posting automation must check PASS.json.
 | No clicks or static | click/static/dead-air scan of the finished file; Gemini listens to every line |
 | Nobody talks over anyone | no two lines overlap (voice.timeline lengthens shots to fit their lines) |
 | Nobody randomly louder or softer | every line is set to the same loudness; the gate fails a line more than 3 dB off, a loudness spike, or an episode far from -15 LUFS |
+| Short form: 15-29 s, never over 30 | the gate measures the finished episode and fails anything over 30 s |
 | Nobody yells without a reason | lines speak at a calm volume unless the shot says `shout: true`; Gemini flags yelling |
 
 ## What else is automatic

@@ -222,6 +222,13 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
             if d > 8.0:
                 fail.append(f"shot {i} doesn't start where shot {i - 1} ended (difference {d:.1f})")
         prev_last = f[-1]
+    # length (owner 11-16: short form, 15-29 s, never over 30)
+    total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
+                                  str(final)], capture_output=True, text=True).stdout or 0)
+    if total > 30.0:
+        fail.append(f"length: {total:.1f} s, over the 30 s limit (aim for 15-29 s)")
+    elif total < 15.0:
+        warn.append(f"length: {total:.1f} s, under the 15-29 s sweet spot")
     # sound
     speech, rate = sf.read(qa_dir / "speech.wav", dtype="float32")
     lines = json.loads((qa_dir / "lines.json").read_text(encoding="utf-8"))
