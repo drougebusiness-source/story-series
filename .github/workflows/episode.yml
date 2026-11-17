@@ -35,6 +35,7 @@ jobs:
       - name: Run
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}   # narration (narrated: true episodes); empty = captions only
           IG_USER_ID_CITIZEN213: ${{ secrets.IG_USER_ID_CITIZEN213 }}
           META_PAGE_TOKEN_CITIZEN213: ${{ secrets.META_PAGE_TOKEN_CITIZEN213 }}
           IG_USER_ID_LASTDRAFTSURVIVAL: ${{ secrets.IG_USER_ID_LASTDRAFTSURVIVAL }}

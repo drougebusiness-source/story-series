@@ -77,7 +77,8 @@ def placeholder(series: Series, scene: dict, i: int) -> bytes:
     return buf.getvalue()
 
 
-def caption_overlay(series: Series, text: str, n: int) -> Image.Image:
+def caption_overlay(series: Series, text: str, n: int, hi: int | None = None) -> Image.Image:
+    """The scene caption. hi: index of the word being spoken (narrated episodes), drawn in the accent colour."""
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     bg = _rgb(series.color("bg"))
@@ -88,8 +89,17 @@ def caption_overlay(series: Series, text: str, n: int) -> Image.Image:
     lines = _wrap(d, text, f, W - 160)
     y = H - 330 - (len(lines) - 1) * 74
     d.rectangle([80, y - 34, 200, y - 26], fill=_rgb(series.color("accent")))
+    k = 0
     for line in lines:
-        d.text((80, y), line, font=f, fill=_rgb(series.color("fg")), stroke_width=2, stroke_fill=bg)
+        if hi is None:
+            d.text((80, y), line, font=f, fill=_rgb(series.color("fg")), stroke_width=2, stroke_fill=bg)
+        else:                                            # word by word, the spoken word lit up
+            x = 80
+            for w in line.split():
+                d.text((x, y), w, font=f, fill=_rgb(series.color("accent" if k == hi else "fg")), stroke_width=2,
+                       stroke_fill=bg)
+                x += d.textlength(w + " ", font=f)
+                k += 1
         y += 74
     d.text((80, 90), f"{series.title} / EP {n}", font=_font(series.font("head"), 40), fill=_rgb(series.color("fg")),
            stroke_width=2, stroke_fill=bg)
@@ -204,6 +214,30 @@ def _clip_from_image(img: Image.Image, seconds: float, out: Path, zoom: bool = F
               "-r", str(FPS), str(out)])
 
 
+def _clip_karaoke(img: Image.Image, seconds: float, out: Path, overlays: list[tuple[Image.Image, float]]):
+    """Slow zoom on the picture with caption overlays that change over time: (overlay, start second) in order."""
+    src = out.with_suffix(".png")
+    img.save(src)
+    frames = int(seconds * FPS)
+    lst = out.with_name(out.stem + "_ov.txt")
+    rows = []
+    for k, (ov, t0) in enumerate(overlays):
+        p = out.with_name(f"{out.stem}_ov{k:03d}.png")
+        ov.save(p)
+        t1 = overlays[k + 1][1] if k + 1 < len(overlays) else seconds
+        rows.append(f"file '{p.as_posix()}'\nduration {max(0.04, t1 - t0):.3f}\n")
+    rows.append(f"file '{p.as_posix()}'\n")                    # concat needs the last file twice
+    lst.write_text("".join(rows), encoding="utf-8")
+    f = (f"[0]zoompan=z='1+0.09*on/{frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}:"
+         f"s={W}x{H}:fps={FPS}[v];[1]fps={FPS},format=rgba[o];[v][o]overlay=0:0:eof_action=repeat,format=yuv420p")
+    _run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-f", "concat", "-safe", "0", "-i", str(lst),
+          "-filter_complex", f, "-frames:v", str(frames), "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+          "-r", str(FPS), str(out)])
+
+
+LEAD, TAIL = 0.35, 0.6       # quiet before and after each narrated scene's line
+
+
 def pad(seconds: float, path: Path, seed: int = 0) -> Path:
     """A quiet, slightly tense minor pad, one chord every 6 s, faded in and out."""
     sr = 48000
@@ -244,8 +278,30 @@ def build(series: Series, ep: dict, pictures: list[bytes], out: Path) -> Path:
             add(card(series, "opening", ep), CARD_SECONDS["opening"])
         if ep.get("roll"):
             add(card(series, "dice", ep), CARD_SECONDS["dice"])
+        voice_id = None
+        if ep.get("narrated"):
+            from . import narrate
+            voice_id = narrate.narrator(series.dir)
+            if not voice_id:
+                print("narrated episode but no ElevenLabs narrator or key: captions only")
+        spoken = []                                      # (start second in the Reel, audio)
         for scene, raw in zip(ep["scenes"], pictures):
-            add(cover(raw), float(scene["seconds"]), zoom=True, overlay=caption_overlay(series, scene["text"], ep["n"]))
+            if voice_id:                                 # the scene lasts as long as its narration
+                audio, words = narrate.speak(scene["text"], voice_id)
+                secs = LEAD + len(audio) / narrate.RATE + TAIL
+                at = sum(float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
+                                               "csv=p=0", str(c)], capture_output=True, text=True).stdout)
+                         for c in clips)
+                spoken.append((at + LEAD, audio))
+                ovs = [(caption_overlay(series, scene["text"], ep["n"], hi=None), 0.0)]
+                ovs += [(caption_overlay(series, scene["text"], ep["n"], hi=k), LEAD + w0)
+                        for k, (_, w0, _) in enumerate(words)]
+                p = tmp / f"c{len(clips):02d}.mp4"
+                _clip_karaoke(cover(raw), secs, p, ovs)
+                clips.append(p)
+            else:
+                add(cover(raw), float(scene["seconds"]), zoom=True,
+                    overlay=caption_overlay(series, scene["text"], ep["n"]))
         add(card(series, "death" if ep.get("death") else "choice", ep),
             CARD_SECONDS["death" if ep.get("death") else "choice"])
         lst = tmp / "list.txt"
@@ -255,7 +311,25 @@ def build(series: Series, ep: dict, pictures: list[bytes], out: Path) -> Path:
         secs = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
                                      str(silent)], check=True, capture_output=True, text=True).stdout)
         music = pad(secs, tmp / "pad.wav", seed=ep["n"])
+        if spoken:                                       # narration over the pad, which dips under the voice
+            n = int(secs * 48000)
+            with wave.open(str(music)) as w:
+                bed = np.frombuffer(w.readframes(w.getnframes()), np.int16).astype(np.float32)[:n] / 32767
+            bed = np.pad(bed, (0, max(0, n - len(bed))))
+            voice = np.zeros(n, np.float32)
+            talk = np.zeros(n, np.float32)
+            for t0, a in spoken:
+                i = int(t0 * 48000)
+                a = a[: max(0, n - i)]
+                voice[i:i + len(a)] += a
+                talk[i:i + len(a)] = 1
+            duck = np.convolve(talk, np.ones(14400) / 14400, "same")
+            mix = np.clip(voice + bed * (1 - 0.5 * np.clip(duck, 0, 1)), -1, 1)
+            with wave.open(str(music), "wb") as w:
+                w.setnchannels(1), w.setsampwidth(2), w.setframerate(48000)
+                w.writeframes((mix * 32767).astype(np.int16).tobytes())
         out.parent.mkdir(parents=True, exist_ok=True)
-        _run(["ffmpeg", "-v", "error", "-y", "-i", str(silent), "-i", str(music), "-c:v", "copy", "-c:a", "aac",
+        level = ["-af", "loudnorm=I=-15:TP=-1.5:LRA=9"] if spoken else []   # narrated: Instagram loudness
+        _run(["ffmpeg", "-v", "error", "-y", "-i", str(silent), "-i", str(music), *level, "-c:v", "copy", "-c:a", "aac",
               "-ar", "48000", "-ac", "2", "-b:a", "128k", "-shortest", "-movflags", "+faststart", str(out)])
     return out

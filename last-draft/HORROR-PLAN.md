@@ -34,7 +34,7 @@ Mon/Wed/Fri (~13 parts/month): about $6-8 art + ~14K credits. Daily like 3amchoi
 + ~33K credits. The current Creator plan (131K/month) is already used up by JIC's two full videos a week, hence the
 upgrade.
 
-## Done (2026-11-16, not committed: the repo also has another chat's uncommitted cartoon work)
+## Done (2026-11-16, committed with the cartoon work in 4b85c3b)
 - `last-draft/series.yaml`: `format: horror`.
 - `stories/writer.py`: horror mode. Second-person narrated prompt with HORROR-FORMAT.md fed in, 8-14 scenes,
   60-90 s, ≤3 spoken words per second checked per scene, arc/part tracking made by code (`arc`, `part`), the model
@@ -46,11 +46,12 @@ upgrade.
 ## Still to do (in order)
 1. **Owner: upgrade ElevenLabs** (from Creator to the next tier) and add the key as a GitHub secret if the workflow
    doesn't have it yet.
-2. **Narration in the Reel builder.** `stories/reel.py` doesn't speak yet: for an episode with `narrated: true`,
-   voice each scene's `text` with one narrator voice (pick a dark, calm, close-mic voice; record it in
-   `last-draft/cartoon/voices.yaml`), set each shot's length to its audio (not the model's guessed `seconds`), and
-   show the caption word by word (the current word highlighted). `voice.py` at the repo root has ElevenLabs code from
-   the cartoon work. Careful: another chat has uncommitted edits in reel.py.
+2. ~~Narration in the Reel builder~~ **DONE 2026-11-16.** `stories/narrate.py` voices each scene with the series
+   narrator (`narrator.eleven` in last-draft/cartoon/voices.yaml: "Victor - Halloween Horror Calm Narrator",
+   GoV1V2hQd1doxcYR2SuA) through ElevenLabs with-timestamps; `reel.py` sets each scene to its audio length and lights
+   the caption word by word; narration is levelled and mixed over the ducked pad at -15 LUFS. The episode and preview
+   workflows pass `ELEVENLABS_API_KEY` (the owner adds the repo secret; without it episodes stay captions-only).
+   tests/test_narration.py.
 3. **Art look: owner's call.** The approved LOOK-2D (gritty ink) can stay, just darker with one light per shot, or
    switch to the 3amchoicess flat vector look (cheaper, simpler). Ask the owner with one sample of each.
 4. **Preview part 1** (`.venv/Scripts/python -m stories preview last-draft`, about $0.50 of art) and send it to the
