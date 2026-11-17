@@ -1,4 +1,5 @@
 # Cut 2026-11-17 to 15-29 s (owner: short form; no teaser, no recap). Long version in backups/2026-11-17-long/.
+# Fixed 2026-11-17 from the owner's review: pauses, the right voice for each line, no narrated screen text.
 title: The Delete Pile
 stills: true
 shots:
@@ -13,16 +14,7 @@ shots:
     her mug.
   secs: 3
   caption: Citizen 213 has deleted eleven thousand people. He has never once looked up.
-  line: Citizen two-thirteen has deleted eleven thousand people. He has never once looked up.
-- set: clerk_desk
-  cast:
-  - Ezra Vale
-  frame: Medium shot. Ezra at the desk, the monitor showing rows of glowing green lines with no readable text; a small content
-    smile.
-  motion: Ezra taps the keys in a neat rhythm, scrolling, nodding slightly to himself.
-  secs: 3
-  caption: Batch 4471. Forty names. Home by six.
-  line: Batch forty-four seventy-one. Forty names. Home by six.
+  line: Citizen two-thirteen has deleted eleven thousand people. <break time="0.4s" /> He has never once looked up.
 - set: clerk_desk
   cast:
   - Ezra Vale
@@ -31,8 +23,19 @@ shots:
     Smooth clean skin, no scars, no stitches, no marks.
   motion: Ezra's smile drops, his eyes widen slowly and he leans toward the screen. Hold.
   secs: 3
-  caption: 'Then he reads one. 39: MIRA VALE. UNPERSON.'
-  line: Then he reads one. Number thirty-nine. Mira Vale. Unperson.
+  caption: 'Then he reads one. ... 39: MIRA VALE. UNPERSON.'
+  line: Then he reads one. <break time="0.9s" /> Thirty-nine. <break time="0.3s" /> Mira Vale. <break time="0.3s" /> Unperson.
+- set: clerk_desk
+  cast:
+  - Ezra Vale
+  framing: the same set, close on the desk and Ezra's hand
+  frame: Ezra's hand hovers over the keyboard, one finger above a single red key, the green monitor glow on his knuckles.
+    No scars, stitches or marks on his face, hands or suit.
+  motion: His finger trembles above the red key; the monitor glow pulses slowly like a blinking cursor; his hand pulls back
+    an inch, then hovers again.
+  secs: 2
+  caption: 'EZRA: My sister?'
+  line: My sister?
 - set: clerk_desk
   cast:
   - Ezra Vale
@@ -42,8 +45,8 @@ shots:
   motion: His finger trembles above the red key; the monitor glow pulses slowly like a blinking cursor; his hand pulls back
     an inch, then hovers again.
   secs: 3
-  caption: Mira Vale is his sister. She still sends postcards from the farms.
-  line: Mira Vale is his sister. She still sends postcards from the farms.
+  caption: Every month, his sister still sends him a postcard from the farms.
+  line: Every month, his sister still sends him a postcard from the farms.
 - set: records_floor
   cast:
   - Juno Park
@@ -54,7 +57,11 @@ shots:
   motion: Juno slowly lowers her mug, eyes fixed on Ezra, then gives a small, too-sweet smile. Ezra doesn't move.
   secs: 3
   caption: Every keystroke here is logged. And Juno has stopped typing.
-  line: Every keystroke here is logged. And Juno has stopped typing.
+  line: Every keystroke here is logged. <break time="0.7s" /> And Juno has stopped typing.
+  sfx:
+  - sound: ominous_drone
+    at: 0.3
+    gain: 0.5
 choice:
   question: Delete his sister, or steal her file?
   options:

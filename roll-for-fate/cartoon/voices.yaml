@@ -17,8 +17,8 @@ crows:
   name: Crows
   brief: a sly black raven from far away; dry, smug, silky voice with a clear French accent, owner 11-16, never in a hurry
   kokoro: im_nicola     # free test picks in out/voices/crows-accent-test.wav
-  eleven: 1a6onbE6zC5AwIN3pEp0
   gemini: Puck
+  eleven: kiw9hkUW1gcPQwsQSs4e     # LOCKED 11-17: "Cyril - French-Accented" (listen-checked; owner: one voice per character, keep it)
 fennick:
   name: Fennick Vale
   brief: a lanky 30-year-old cursed bard; charming, quick, roguish Cockney showman, voice a little hoarse from the curse

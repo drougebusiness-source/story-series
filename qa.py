@@ -93,11 +93,15 @@ def words(qa_dir: Path) -> tuple[list[str], list[str]]:
                        text=True, encoding="utf-8", errors="replace")
     bad = [l.strip() for l in r.stdout.splitlines() if l.startswith("BAD")]
     global MISSING                                       # shots where the transcriber really lost a word
-    MISSING = {re.search(r"shot (\d+)", l).group(1) for l in r.stdout.splitlines() if l.startswith("MISS")}
+    MISSING = {}                                         # shot -> the words the transcriber really didn't hear
+    for l in r.stdout.splitlines():
+        if l.startswith("MISS"):
+            m_ = re.match(r"MISS shot (\d+): (.*)", l)
+            MISSING[m_.group(1)] = {w.strip().lower() for w in m_.group(2).split(",")}
     return bad, ([] if r.returncode in (0, 1) else [f"word check crashed: {r.stderr[-300:]}"])
 
 
-MISSING: set = set()
+MISSING: dict = {}
 
 
 def _gemini(parts: list[dict]) -> dict:
@@ -198,7 +202,7 @@ def ai_lines(speech: np.ndarray, rate: int, lines: list[dict], qa_dir: Path) -> 
         f = qa_dir / f"line{ln['shot']}.wav"
         sf.write(f, speech[int(ln["start"] * rate):int(ln["end"] * rate)], rate)
         try:
-            res = _gemini([{"text": LINE_REVIEW.format(who=ln["who"], text=ln["text"],
+            res = _gemini([{"text": LINE_REVIEW.format(who=ln["who"], text=re.sub(r"<[^>]+>", " ... ", ln["text"]),
                                                        shout="The script says they shout." if ln.get("shout") else
                                                        "They should speak at a normal volume.")},
                            {"inline_data": {"mime_type": "audio/wav", "data": base64.b64encode(f.read_bytes()).decode()}}])
@@ -289,15 +293,18 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
         s, m = ai_lines(speech, rate, lines, qa_dir)
         # the listener sometimes claims a word is missing when it isn't: trust that claim only if the transcriber agrees
         wordy = re.compile(r"missing|cut off|omit|dropped|skipp", re.I)
-        moved = [x for x in s if wordy.search(x) and re.search(r"shot (\d+)", x).group(1) not in MISSING]
+        def agreed(x):                                   # the same word, heard missing by both
+            k = re.search(r"shot (\d+)", x).group(1)
+            named = {w.lower().strip(".,!?") for w in re.findall(r"['\"‘“]([^'\"’”]+)['\"’”]", x)}
+            named = {t for w in named for t in w.split()}
+            return bool(named & MISSING.get(k, set())) or (k in MISSING and not named)
+        moved = [x for x in s if wordy.search(x) and not agreed(x)]
         s = [x for x in s if x not in moved]
         m = m + [x + " (transcriber heard every word)" for x in moved]
         # a transcriber "missing word" alone is usually its own mishearing ("Mira Vale" -> "mirror veil"): it counts
         # only when the listener also heard a word missing in that line (that pair caught the real drops on 11-17)
-        heard_missing = {re.search(r"shot (\d+)", x).group(1) for x in moved}
-        s += [f"shot {k}: both the transcriber and the listener found a dropped word" for k in sorted(MISSING & heard_missing)]
-        m += [f"shot {k}: transcriber flagged a word the listener heard fine (likely a mishearing)"
-              for k in sorted(MISSING - heard_missing)]
+        m += [f"shot {k}: transcriber flagged {', '.join(sorted(w))} (the listener didn't: likely a mishearing)"
+              for k, w in sorted(MISSING.items())]
         fail += [f"voice: {p}" for p in s]
         warn += [f"voice: {p}" for p in m]
         for p in borderline:                             # the small transcriber mishears soft voices: the listener decides

@@ -1,4 +1,5 @@
 # Cut 2026-11-17 to 15-29 s (owner: short form; no teaser, no recap). Long version in backups/2026-11-17-long/.
+# Fixed 2026-11-17 from the owner's review: pauses, the right voice for each line, no narrated screen text.
 title: Day 731
 stills: true
 shots:
@@ -10,12 +11,12 @@ shots:
   motion: The lantern flame gutters low. From the black at the far end of the hall comes a slow scratching. The hand on the
     sleeping bag goes completely still. Long hold.
   secs: 3
-  caption: Two in the morning. Somebody down the hall is scratching, slowly, like they're trying not to.
-  line: Two in the morning. Somebody down the hall is scratching, slowly, like they're trying not to.
+  caption: Two in the morning. Somebody down the hall is scratching.
+  line: Two in the morning. <break time="0.6s" /> Somebody down the hall is scratching.
   sfx:
   - sound: slow_scratch
-    at: 1.0
-    gain: 0.35
+    at: 1.4
+    gain: 0.5
 - set: school_yard
   cast:
   - Dani Ortiz
@@ -27,8 +28,8 @@ shots:
   motion: Tank claps Dani's forearm in a friendly slap. Dani jerks away hard and clutches the arm to her chest. Tank's grin
     falls. Dani forces a smile that doesn't reach her eyes.
   secs: 3
-  caption: Today Dani flinched when Tank touched her arm. Her sleeves stay down.
-  line: Today Dani flinched when Tank touched her arm. Her sleeves stay down.
+  caption: Today, Dani flinched when Tank touched her arm. Her sleeves never come up.
+  line: Today, Dani flinched when Tank touched her arm. <break time="0.5s" /> Her sleeves never come up.
 - set: school_hallway
   cast: []
   framing: the same set, close-up on the corkboard
@@ -36,8 +37,8 @@ shots:
     paper with seven tally marks in black marker. Everything else is shadow.
   motion: A draft lifts the corner of the paper and lets it fall. The lantern light trembles across the seven marks.
   secs: 3
-  caption: Your group has one rule. A bite means a bullet.
-  line: Your group has one rule. A bite means a bullet.
+  caption: The group has one rule. A bite means a bullet.
+  line: The group has one rule. <break time="0.6s" /> A bite means a bullet.
 - set: school_hallway
   cast:
   - Dani Ortiz
@@ -49,8 +50,21 @@ shots:
     calmly at the barricade of desks with her back to us. She doesn't turn around. Slowly she tugs her hoodie sleeve down
     over her hand.
   secs: 3
-  caption: 'Now she''s at the barricade, whispering: "Mister Mercer... at roll call, skip my name."'
-  line: Now she's at the barricade, whispering, Mister Mercer, at roll call, skip my name.
+  caption: Now Dani is at the barricade, her back to you.
+  line: Now Dani is at the barricade, her back to you.
+- set: school_hallway
+  cast:
+  - Dani Ortiz
+  framing: the same set, long view down the hall from behind the raised lantern
+  frame: Long view down the dark hallway from behind the raised lantern. At the far end, small in the edge of the warm light,
+    Dani stands at the barricade of desks with her back to us, one hoodie sleeve pushed up, her arm held in front of her out
+    of sight. She is not facing the camera.
+  motion: The warm lantern light creeps slowly down the quiet hall and finds Dani, a teenage girl in a grey hoodie, standing
+    calmly at the barricade of desks with her back to us. She doesn't turn around. Slowly she tugs her hoodie sleeve down
+    over her hand.
+  secs: 3
+  caption: 'DANI: Mister Mercer... at roll call... skip my name.'
+  line: Mister Mercer... <break time="0.4s" /> at roll call... <break time="0.3s" /> skip my name.
 - set: school_hallway
   cast:
   - Dani Ortiz
@@ -59,8 +73,8 @@ shots:
     sleeves pulled down, arms held in front of her out of sight.
   motion: Dani stays perfectly still, her back to us. Very slowly, the lantern light dims at the edges. Hold.
   secs: 3
-  caption: Wake the group, or keep her secret? Comment A or B.
-  line: Wake the group, or keep her secret? Comment A or B.
+  caption: Do you wake the group, or keep her secret? Comment A or B.
+  line: Do you wake the group... <break time="0.3s" /> or keep her secret? <break time="0.5s" /> Comment A or B.
 choice:
   question: Dani is hiding her arm. Roll call is at 7. What do you do?
   options:

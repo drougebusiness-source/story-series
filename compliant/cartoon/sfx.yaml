@@ -1,0 +1,2 @@
+# Sound effects made once with ElevenLabs sound generation, placed per shot with `sfx:`.
+ominous_drone: {prompt: "A slow, low, ominous cinematic drone swelling up, deep sub-bass, cold and menacing, horror tension, no melody, no music.", secs: 6}

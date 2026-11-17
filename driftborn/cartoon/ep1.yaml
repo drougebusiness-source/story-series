@@ -1,6 +1,19 @@
 # Cut 2026-11-17 to 15-29 s (owner: short form; no teaser, no recap). Long version in backups/2026-11-17-long/.
+# Fixed 2026-11-17 from the owner's review: pauses, the right voice for each line, no narrated screen text.
 title: Scrap
 shots:
+- set: wreck_outside
+  cast: []
+  still: true
+  frame: 'The empty desert wreck site under the ringed planet: the huge torn warship hull half-buried in red sand.'
+  motion: Slow push in on the wreck.
+  secs: 3
+  caption: Kael hears machines. Nobody else does. And this old wreck is humming.
+  line: Kael hears machines. <break time="0.3s" /> Nobody else does. <break time="0.4s" /> And this old wreck is humming.
+  sfx:
+  - sound: core_hum
+    hold: true
+    gain: 0.06
 - set: wreck_outside
   cast:
   - Kael Torvin
@@ -35,32 +48,13 @@ shots:
 - set: wreck_inside
   cast:
   - Kael Torvin
-  frame: The dark tilted corridor inside the wreck, a dim square of daylight from the hatch above. Kael has just landed in
-    a proud hero crouch in the middle of the floor, and the metal floor panel under him has sagged into a dent; his wrist
-    lamp throws a white beam.
-  motion: Kael drops in from above and lands in a perfect hero crouch. The floor panel under him sags with a loud metal clank.
-    He freezes. His wrist lamp flickers, sparks and dies; he smacks it twice and it blinks on, its white beam pointing ahead
-    into the dark, dust drifting through it.
-  secs: 3
-  caption: Kael hears machines. Nobody else on Hollow ever has.
-  line: Kael hears machines. Nobody else on Hollow ever has.
-  sfx:
-  - sound: floor_clank
-    at: 0.9
-    gain: 0.6
-  - sound: core_hum
-    hold: true
-    gain: 0.22
-  still: true
-- set: wreck_inside
-  cast:
-  - Kael Torvin
   framing: the same set, medium shot looking at the debris pile
   frame: The lamp beam on a sealed metal cylinder glowing soft teal, half-buried in the debris pile; Kael kneels beside it.
   motion: Kael lifts the cylinder out of the debris with both hands. It pulses brighter teal, slowly, like a heartbeat.
   secs: 3
-  caption: A sealed data core. Worth a fortune. Keeping one gets you hanged.
-  line: A sealed data core. Worth a fortune. Keeping one gets you hanged.
+  caption: 'Inside: a sealed data core. Worth a fortune. And a hanging.'
+  line: Inside... <break time="0.3s" /> a sealed data core. <break time="0.4s" /> Worth a fortune. <break time="0.6s" /> And
+    a hanging.
   sfx:
   - sound: core_hum
     hold: true
@@ -80,6 +74,7 @@ shots:
   - sound: core_hum
     hold: true
     gain: 0.42
+  voice_tts: true
 choice:
   question: The core hums with Kael, and now Sola hears it too. Sell it or hide it?
   options:

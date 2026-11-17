@@ -80,7 +80,8 @@ def _img(b: bytes) -> Image.Image:
     return Image.open(io.BytesIO(b)).convert("RGB")
 
 
-def main(slug: str, n: str, creature: str, near: str = "", secs: float = 3.2):
+def main(slug: str, n: str, creature: str, near: str = "", secs="2.4"):
+    secs = float(secs)
     render._env("GEMINI_API_KEY")
     n = int(n)
     e = cartoon.Episode(slug, "ep1")
@@ -146,21 +147,31 @@ def main(slug: str, n: str, creature: str, near: str = "", secs: float = 3.2):
     land = (box[0] + pcx, box[1] + pcy)                  # the perched body's centre on screen
     start = (W + glide.width, land[1] - H * 0.35)        # off the top right
     fps, total = cartoon.reel.FPS, int(secs * cartoon.reel.FPS)
-    fly = int(total * 0.7)
+    pre = int(0.5 * fps)                                 # a beat of the scene before the swoop
+    fly = int(0.8 * fps)                                 # a quick cartoon swoop (owner 11-17: the slow slide was terrible)
+
+    def pos(t):
+        e_ = 1 - (1 - t) ** 2.2
+        return (start[0] + (land[0] - start[0]) * e_, start[1] + (land[1] - start[1]) * (e_ ** 0.7))
+
+    def ghost(im, a_):
+        g_ = im.copy(); g_.putalpha(g_.getchannel("A").point(lambda v: int(v * a_))); return g_
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         for k in range(total):
             fr = plate.copy().convert("RGBA")
-            if k < fly:                                  # ease-out curve down to the perch, a gentle bob
-                t = k / fly
-                e_ = 1 - (1 - t) ** 3
-                x = start[0] + (land[0] - start[0]) * e_
-                y = start[1] + (land[1] - start[1]) * (e_ ** 0.8) + np.sin(t * 9) * H * 0.006 * (1 - t)
-                sc = 1.0 - 0.25 * max(0.0, (t - 0.7) / 0.3)    # wings tuck in over the last stretch
-                gl = glide if sc == 1.0 else glide.resize((max(1, int(glide.width * sc)), max(1, int(glide.height * sc))))
-                fr.alpha_composite(gl, (int(x - gcx * sc), int(y - gcy * sc)))
-            elif k < fly + 3:                            # wings fold: a quick swap into the perched pose
-                w = (k - fly + 1) / 4
+            if k < pre:
+                pass
+            elif k < pre + fly:                          # swoop in along a curve, with a short motion trail
+                t = (k - pre + 1) / fly
+                for lag, a_ in ((3, 0.12), (2, 0.22), (1, 0.38)):   # the trail: where it just was, fading
+                    tt = max(0.0, t - lag * 0.09)
+                    x, y = pos(tt)
+                    fr.alpha_composite(ghost(glide, a_), (int(x - gcx), int(y - gcy)))
+                x, y = pos(t)
+                fr.alpha_composite(glide, (int(x - gcx), int(y - gcy)))
+            elif False:                                  # (no crossfade: two half-see-through birds looked broken)
+                w = (k - pre - fly + 1) / 4
                 g2 = glide.resize((max(1, int(glide.width * 0.75)), max(1, int(glide.height * 0.75))))
                 g2.putalpha(g2.getchannel("A").point(lambda v: int(v * (1 - w))))
                 p2 = perched.copy(); p2.putalpha(p2.getchannel("A").point(lambda v: int(v * w)))

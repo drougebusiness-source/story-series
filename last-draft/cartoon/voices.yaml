@@ -4,8 +4,7 @@ narrator:
   brief: horror narrator, a low, calm, measured American man telling you a scary story at 2 AM, never theatrical
   kokoro: am_michael@0.95
   gemini: Schedar
-  eleven: GoV1V2hQd1doxcYR2SuA     # "Victor - Halloween Horror Calm Narrator" (owner 11-16: horror needs a strong narrator)
-  engine: eleven                   # this narrator uses ElevenLabs even though narrators default to Gemini
+  eleven: Uh6UEmMIUnnL0GOOUghh     # LOCKED 11-17: "Ray - Thrilling Narrator" (listen-checked; owner: one voice per character, keep it)
 cole:
   name: Cole Mercer
   brief: a lanky 34-year-old ex-chemistry teacher from Ohio; kind, dry, tired dad-humour, gentle Midwest voice that keeps everyone calm
@@ -17,6 +16,7 @@ dani:
   brief: a 17-year-old Midwest girl; guarded, quiet, quick short answers, tough on the outside
   kokoro: af_river
   gemini: Kore
+  eleven: wSRCyzJYBsTZLFcumuu8     # LOCKED 11-17: "Celeste - Soft whisper" (listen-checked; owner: one voice per character, keep it)
 tank:
   name: Marcus "Tank" Bell
   brief: a big gentle 18-year-old ex-linebacker; deep, slow, warm, friendly small-town Midwest kid

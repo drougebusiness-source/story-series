@@ -286,6 +286,9 @@ class Episode:
 
     def _animate(self, key: bytes, prompt: str, secs: int) -> bytes:
         """The video model, retried once with calmer wording if its safety filter blocks the shot."""
+        import os
+        if os.environ.get("NO_NEW_VIDEO"):               # owner 11-17: word/sound fixes must not buy new video
+            raise SystemExit("NO_NEW_VIDEO is set: refusing to generate a new video shot")
         try:
             return animate(key, prompt, secs)
         except RuntimeError as e:

@@ -31,7 +31,7 @@ def words_for(n: int) -> str:
 
 
 def norm(t: str) -> str:
-    t = t.lower()
+    t = re.sub(r"<[^>]+>", " ", t).lower()   # pause tags aren't words
     for k, v in NUM.items():                             # how the script says them ("Day 731" = seven thirty-one)
         t = t.replace(k, v)
     t = re.sub(r"\d[\d,]*", lambda m: words_for(int(m.group().replace(",", ""))) if len(m.group()) < 9 else m.group(), t)

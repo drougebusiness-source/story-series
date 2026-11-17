@@ -5,13 +5,13 @@ narrator:
   brief: a calm, official state-broadcast announcer; crisp received-pronunciation English, measured and emotionless
   kokoro: bm_george@0.92
   gemini: Charon
-  eleven: Pu6wRXGiX8rRTqojO6N0     # "Stuart - Steady, Clear and Polished" newsreader (11-17: Max over-stressed words and clipped line starts)
-  engine: eleven
+  eleven: TTmUgRoiAUdn043OgRax     # LOCKED 11-17: "Eddie" (deep, measured British; listen-checked 9/10). Rob dropped words.
 ezra:
   name: Ezra Vale
   brief: a narrow, tidy 26-year-old records clerk; precise, quiet, clipped proper English, polite to a fault, nervous underneath
   kokoro: bm_lewis@0.95
   gemini: Iapetus
+  eleven: 0SqKG8YoEv9xwrHlKCfF     # LOCKED 11-17: "Lee - British soft" (listen-checked; owner: one voice per character, keep it)
 mira:
   name: Mira Vale
   brief: a 22-year-old rebel radio operator; low, quick and sharp, the only one who doesn't sound rehearsed, a little rough at the edges
