@@ -1,5 +1,10 @@
 # DRIFTBORN: brand kit
 
+> **Tone since 2026-11-16: COMEDY** (owner). A sci-fi comedy-adventure: the mystery of the humming machines and the
+> Empire chase stay real, but the scenes play for laughs. Kael is a cocky, motor-mouthed kid hero who talks to
+> machines (and the machines might answer); Sola is the deadpan engineer who has to clean up after him. Jokes come
+> from character, banter and plans backfiring. Every episode still ends on a cliffhanger vote.
+
 **One line:** a scrap diver on a mining moon hears something in dead machines. The Empire wants him. The rebels need
 him. You decide what he becomes.
 

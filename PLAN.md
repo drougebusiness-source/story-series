@@ -62,6 +62,7 @@ budget into the winners.
 | Instagram accounts and Facebook Pages | $0 | |
 | Art for episodes | about $10-20/month | Gemini images (the same tool JIC uses), about 4¢ each. About 8 per episode × 12 a week ≈ 100 a week; reusing scenes cuts that |
 | Voice (optional, winners only) | ElevenLabs credits | not needed for the test: captions only |
+| Voice for THE LAST DRAFT | ~1,100 ElevenLabs credits per part | horror format is narrated (owner will upgrade the ElevenLabs plan); see last-draft/HORROR-PLAN.md |
 | Metricool tracking | check plan | the current plan may not cover 4 more brands; Ana can read Instagram directly instead |
 
 ## Automation: how it runs with no daily work

@@ -1,0 +1,2 @@
+# Sound effects made once with ElevenLabs sound generation (voice.py sfx), placed per shot with `sfx:` in ep files.
+armour_clang: {prompt: "A heavy steel breastplate dropped onto a stone floor: one loud metallic clang, a bounce and a short rattle as it settles. Castle hall echo.", secs: 2.5}

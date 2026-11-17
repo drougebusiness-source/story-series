@@ -94,7 +94,8 @@ def test_dice_roll_recorded_for_risky_choice(monkeypatch):
 
 def test_caption_has_vote_line_and_hashtags():
     s = Series.load("last-draft")
-    ep = writer.write_episode(s, None, None, [], ask=lambda p: fake_episode())
+    from test_horror import fake_part   # THE LAST DRAFT uses the horror format
+    ep = writer.write_episode(s, None, None, [], ask=lambda p: fake_part())
     t = caption(s, ep)
     assert "Comment A or B" in t and "#zombie" in t and len(t) < 2200
 
@@ -167,3 +168,15 @@ def test_story_path_and_branch_map_in_prompt():
 def test_every_series_has_a_branch_map(slug):
     flow = Series.load(slug).text("FLOW.md")
     assert "```mermaid" in flow and "VOTE 1" in flow and "☠" in flow
+
+
+def test_opening_shows_vote_bars_when_there_were_votes():
+    from stories import reel
+    from stories.series import Series
+    s = Series.load("compliant")
+    ep = {"opening": "YOU CHOSE B (75%)", "chosen": "B", "vote": {"counts": {"A": 1, "B": 3}, "total": 4},
+          "asked": {"question": "Q?", "options": {"A": "one", "B": "two"}}}
+    im = reel.card(s, "opening", ep)
+    assert im.size == (reel.W, reel.H)
+    plain = reel.card(s, "opening", {"opening": "NO VOTES. THE STORY CHOSE B."})
+    assert plain.tobytes() != im.tobytes()

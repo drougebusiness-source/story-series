@@ -1,0 +1,40 @@
+# Every recurring character gets a voice. World: ROLL FOR FATE is olden-times Britain told by commoners: rough,
+# earthy regional British accents (West Country, Yorkshire, Cockney), not posh. Crows is a foreigner with another accent.
+# key = the speaker as written before ":" in a caption (or narrator). brief = casting spec. kokoro = free stand-in.
+narrator:
+  brief: an old tavern storyteller; warm, gravelly working-class English, a bit theatrical, like he's had one ale
+  kokoro: bm_fable
+  gemini: Algenib
+wren:
+  name: Wren Ashby
+  brief: a short, freckled 23-year-old squire, a woman; scrappy commoner English (West Country), stubborn and earnest, brave but cracks when cornered
+  kokoro: bf_emma
+  eleven: jUPSOpRcPt8GMPsWx5fy
+  gemini: Leda
+crows:
+  name: Crows
+  brief: a sly black raven from far away; dry, smug, silky voice with a clear French accent, owner 11-16, never in a hurry
+  kokoro: im_nicola     # free test picks in out/voices/crows-accent-test.wav
+  eleven: 1a6onbE6zC5AwIN3pEp0
+  gemini: Puck
+fennick:
+  name: Fennick Vale
+  brief: a lanky 30-year-old cursed bard; charming, quick, roguish Cockney showman, voice a little hoarse from the curse
+  kokoro: bm_lewis
+  gemini: Fenrir
+brunhild:
+  name: Brunhild Ashfall
+  brief: a stout old dwarf smith, a woman; deep, gruff, loud Yorkshire, blunt and funny
+  kokoro: bf_alice@0.85
+  gemini: Gacrux
+osric:
+  name: Osric Dimm
+  brief: a pale, nervous 19-year-old necromancer; thin, fast, stammering commoner English, apologises a lot
+  kokoro: bm_daniel@1.12
+  gemini: Enceladus
+maelle:
+  name: Sister Maelle
+  brief: a tall 40-year-old cleric of the Order; cold, stern, slow and formal, the only proper-sounding voice in town
+  kokoro: bf_isabella@0.92
+  eleven: USEQXnsXRJlw2k9LUzG4
+  gemini: Kore

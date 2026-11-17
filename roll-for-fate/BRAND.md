@@ -1,5 +1,11 @@
 # ROLL FOR FATE: brand kit
 
+> **Tone since 2026-11-16: COMEDY** (owner). A comedy-adventure: still a real mystery and a trial with stakes, but
+> played for laughs. Wren is a lovable, stubborn screw-up who never admits she's out of her depth; Crows, the smug
+> French raven, is the comic foil who knows more than he says; the dice can go hilariously wrong. Jokes come from
+> character and from situations backfiring, never from winking at the camera. Every episode still ends on a
+> cliffhanger vote, and a failed roll should be funny AND cost something.
+
 **One line:** a disgraced squire, a lying raven and a party of misfits. You choose the move, and the dice decide if it
 works.
 

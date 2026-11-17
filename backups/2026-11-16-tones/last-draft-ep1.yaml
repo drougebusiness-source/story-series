@@ -1,0 +1,48 @@
+title: Day 731
+# Rewritten 2026-11-13 after owner review: open on the world and the group, let characters talk.
+shots:
+  - set: supply_street
+    cast: []
+    frame: Wide shot of the empty overgrown street, no people; far down the road a single shambling dead figure walks slowly across.
+    motion: Wind moves the tall grass; far in the distance the dead figure shambles slowly across the road and out of sight.
+    secs: 4
+    caption: Two years since the dead got up. Most people stopped counting the days.
+  - set: school_yard
+    cast: [Cole Mercer, Marcus "Tank" Bell, Dani Ortiz]
+    frame: Wide shot. Cole walks across the fortified yard with a clipboard; Tank carries a heavy sandbag toward the fence; Dani stacks tins by the bus.
+    motion: Tank sets the sandbag down on the pile by the fence; Cole walks past checking his clipboard; Dani places a food can on the stack.
+    secs: 5
+    caption: Seven survivors. One old high school. Their leader used to teach chemistry, and he still takes roll every morning.
+  - set: school_yard
+    cast: [Cole Mercer]
+    framing: the same set, medium shot
+    frame: Cole in the harsh low sun, sweat on his forehead, holding up his clipboard, looking at the group with a tired, kind half-smile.
+    motion: Cole talks to the group, tapping the clipboard with his pen.
+    secs: 6
+    caption: "COLE: Roll call. Day 731. Everybody still breathing?"
+    line: Roll call. Day seven thirty-one. Everybody still breathing?
+  - set: school_yard
+    cast: [Dani Ortiz, Marcus "Tank" Bell]
+    framing: the same set, medium shot
+    frame: Tank grinning beside Dani, his big hand raised to clap her left forearm; Dani in her long-sleeved hoodie with the sleeves pulled down over her hands.
+    motion: Tank talks cheerfully and claps Dani's forearm in a friendly slap. Dani jerks away with a big obvious flinch and clutches her forearm to her chest. Tank stops and stares at her, confused. Dani forces a fake smile.
+    secs: 4
+    caption: "TANK: Still breathing, Mister Mercer!"
+  - set: school_yard
+    cast: [Cole Mercer]
+    framing: the same set, close-up on Cole's face
+    frame: Close-up of Cole behind his tape-mended glasses, looking off to the side, orange rim light on his face.
+    motion: Cole slowly lowers the clipboard and his eyes narrow. Hold.
+    secs: 4
+    caption: Ninety degrees. Everyone's in tank tops. Dani hasn't rolled up her sleeves in three days.
+  - set: school_hallway
+    cast: [Dani Ortiz, Cole Mercer]
+    frame: Dani alone by the lantern, her back half to us, looking down at her forearm with the sleeve pushed up, the arm turned away from the camera so it can't be seen; far down the hall, Cole stands in the shadow.
+    motion: Dani slowly pushes her sleeve higher, staring at her arm, which stays hidden from the camera; she freezes and yanks the sleeve down. Cole stays still in the shadow.
+    secs: 5
+    caption: "The group made one rule, and they all voted for it: a bite means a bullet. Dani voted yes."
+choice:
+  question: Dani might be bitten. Who do you tell?
+  options: {A: Tell the group, B: Keep her secret and watch her}
+
+teaser: {shot: 6, secs: 2}     # Sloane: Dani alone with her sleeve pushed up

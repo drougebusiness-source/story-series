@@ -1,0 +1,14 @@
+# One painted plate per location, reused by every shot and every episode, so backgrounds never change.
+records_floor: >-
+  The Ministry of Harmony records floor: a vast grey concrete hall with long identical rows of small clerk desks, each
+  with a boxy monitor glowing green; tall square pillars; a huge red banner with an abstract geometric emblem hanging
+  from the ceiling; a giant wall screen at the far end showing one stylised watching eye; cold light from high slit
+  windows cutting hard diagonal shadows across the floor.
+clerk_desk: >-
+  One small, perfectly tidy clerk desk in a grey concrete cubicle, seen close: a boxy old monitor glowing green, a
+  rubber stamp and a neat stack of cream file folders, a wire tray marked only with a red stripe, a pneumatic tube
+  hatch in the wall, a small red emblem pinned above the desk; the room behind falls into black shadow.
+meridian_street: >-
+  A wide morning street in the concrete megacity of Meridian: brutalist slab towers on both sides, a giant red
+  vertical banner with an abstract emblem, lamp posts each holding a small round surveillance camera, a big public
+  screen on a tower showing a stylised eye, hard low sunlight and long black diagonal shadows on the pavement.

@@ -42,6 +42,11 @@ class Series:
         p = self.dir / name
         return p.read_text(encoding="utf-8") if p.exists() else ""
 
+    def root_text(self, name: str) -> str:
+        """A shared file at the repo root (e.g. HORROR-FORMAT.md)."""
+        p = ROOT / name
+        return p.read_text(encoding="utf-8") if p.exists() else ""
+
     @property
     def state(self) -> dict:
         return json.loads(self.text("state.json") or '{"episodes": []}')

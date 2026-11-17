@@ -1,0 +1,77 @@
+title: Scrap
+# Sloane 2026-11-16 (approved tone change): SCI-FI COMEDY-ADVENTURE. Kael is the cocky motor-mouth, Sola the deadpan
+# engineer. The joke (only Kael hears machines) turns into the stakes (now Sola's radio hums too).
+# Kept word for word (already voiced, saves credits): Kael shots 2 and 5. New spoken lines: Sola shots 1 and 8,
+# Kael shot 7. Narration (shots 3, 4, 6) uses the narrator voice.
+shots:
+  - set: wreck_outside
+    cast: [Kael Torvin, Sola Venn]
+    frame: Wide shot. Kael and Sola stand on the sand a few steps apart with the dark torn hull opening BETWEEN them in the background, so that neither head is in front of the dark hole; Kael stands against the light riveted hull plating with his hands on his hips; Sola holds binoculars up to her eyes.
+    motion: Sola lowers the binoculars and talks in a flat deadpan, not looking at him. Kael slowly tilts his head, as if listening to something.
+    secs: 6
+    caption: "SOLA: Ninety years dead. If you go in there and die, I'm keeping your boots."
+    sfx: [{sound: core_hum, hold: true, gain: 0.1}]   # the hum only Kael hears
+  - set: wreck_outside
+    cast: [Kael Torvin, Sola Venn]
+    framing: the same set seen closer, a medium shot near the hull opening
+    frame: Kael leans toward the dark hull opening with one hand cupped to his ear; Sola stands behind him, squinting at him, confused.
+    motion: Kael leans in further, listening hard. Sola looks at him, looks at the wreck, looks at him again, then throws her hands up.
+    secs: 4
+    caption: "KAEL: Then why is it humming?"
+    sfx: [{sound: core_hum, hold: true, gain: 0.16}]   # the hum only Kael hears
+  - set: wreck_outside
+    cast: [Kael Torvin, Sola Venn]
+    framing: the same set, medium shot near the hull opening
+    continues: true     # starts where shot 2 ended
+    frame: (the last frame of the shot before)
+    motion: Sola gives a long deadpan stare straight at Kael. Kael grins, salutes her with two fingers, and jumps feet-first into the dark hull opening and out of sight. Sola pinches the bridge of her nose.
+    secs: 8
+    caption: Sola can't hear it. Nobody on Hollow ever has. Kael hears it in drills, in toasters, and once, very loudly, in a girl's hover-bike.
+    line: Sola can't hear it. Nobody on Hollow ever has. Kael hears it in drills, in toasters, and once, very loudly, in a girl's hover-bike.
+    sfx: [{sound: core_hum, hold: true, gain: 0.16}]
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    frame: The dark tilted corridor, empty at first; a dim square of daylight from above.
+    motion: Kael drops in from above and lands in a perfect hero crouch. The floor panel under him sags with a loud metal clank. He freezes. His wrist lamp flickers, sparks and dies; he smacks it twice and it blinks on, its white beam pointing ahead into the dark, dust drifting through it.
+    secs: 6
+    caption: He lands perfectly. The floor is less sure about it.
+    line: He lands perfectly. The floor is less sure about it.
+    sfx: [{sound: floor_clank, at: 0.9, gain: 0.6}, {sound: core_hum, hold: true, gain: 0.22}]
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, close-up on Kael's face
+    frame: Close-up of Kael's face lit teal from below, a sly grin, the glow reflected in his goggles.
+    motion: Kael's grin spreads, he wiggles his eyebrows and rubs his gloved hands together.
+    secs: 4
+    caption: "KAEL: One of these buys a ticket off this rock."
+    sfx: [{sound: core_hum, hold: true, gain: 0.28}]   # the hum only Kael hears
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, medium shot looking at the debris pile
+    frame: The lamp beam on a sealed metal cylinder glowing soft teal, half-buried in the debris pile; Kael kneels beside it.
+    motion: Kael lifts the cylinder out of the debris with both hands. It pulses brighter teal, slowly, like a heartbeat.
+    secs: 7
+    caption: A sealed Unbound data core. The Concord pays a fortune for one. It also hangs anyone caught keeping one.
+    line: A sealed Unbound data core. The Concord pays a fortune for one. It also hangs anyone caught keeping one.
+    sfx: [{sound: core_hum, hold: true, gain: 0.32}]
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, medium shot
+    frame: Kael kneels holding the glowing teal cylinder in both hands; faint teal light is glowing along his own fingers too.
+    motion: The cylinder and Kael's fingers pulse teal together in the same rhythm. Kael freezes, stares down at his hands, blinks slowly, and talks to the core, quietly.
+    secs: 4
+    caption: "KAEL: Okay. Why are you humming WITH me?"
+    sfx: [{sound: core_hum, hold: true, gain: 0.38}]
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, close-up on Kael's wrist
+    frame: Close-up of Kael's gloved wrist, with a small wrist-comm with a tiny glowing screen showing Sola's face, her eyebrows raised.
+    motion: The tiny screen crackles and Sola's small face on it talks, suspicious. The wrist lamp, the broken ceiling light behind and the comm screen all flicker teal at once, in time with the hum.
+    secs: 5
+    caption: "SOLA: Kael? Why is my radio humming?"
+    sfx: [{sound: core_hum, hold: true, gain: 0.42}]   # now everyone can hear it
+choice:
+  question: The core hums with Kael, and now Sola hears it too. Sell it or hide it?
+  options: {A: Sell it to the Concord, B: Hide it}
+
+teaser: {shot: 7, secs: 2}     # Sloane: his fingers glow with the core

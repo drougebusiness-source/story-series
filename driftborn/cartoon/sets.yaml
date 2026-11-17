@@ -1,0 +1,8 @@
+# One painted plate per location, reused by every shot and every episode, so backgrounds never change.
+wreck_outside: >-
+  Outside a huge crashed freighter half-buried in rust-red sand dunes on a mining moon at dusk: a tall torn opening
+  in the dented hull on the left with darkness inside, twisted metal edges, scattered scrap on the sand; behind,
+  rolling dunes and a teal sky with a giant ringed planet low on the horizon.
+wreck_inside: >-
+  Inside a dark, tilted ninety-year-old freighter corridor: slanted wall panels, hanging cables, a broken ceiling
+  light, cold blue-grey shadows, a pile of debris and crates in the middle distance, faint dust in the air.

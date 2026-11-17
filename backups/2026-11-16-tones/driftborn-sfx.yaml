@@ -1,0 +1,2 @@
+# Sound effects made once with ElevenLabs sound generation (voice.py sfx), placed per shot with `sfx:` in ep files.
+core_hum: {prompt: "A low eerie electronic hum from an ancient alien machine, steady soft resonant drone with a slow gentle pulse, sci-fi, no music.", secs: 10}

@@ -1,0 +1,62 @@
+title: Stripped
+# Rewritten 2026-11-13 after owner review: say what she's accused of, let characters talk, raven flies in.
+shots:
+  - set: lantern_hall
+    cast: [Wren Ashby, Sister Maelle]
+    frame: Wide shot. Wren kneels in her oversized battered plate armour before Sister Maelle, who stands tall holding her lantern staff. The whole hall is watching in silence.
+    motion: The lanterns sway gently. Wren bows her head lower. Maelle stands still and stern.
+    secs: 5
+    caption: "Last night someone stole the Ember Lantern, the holy flame the Order has sworn to guard with their lives."
+  - set: lantern_hall
+    cast: [Sister Maelle]
+    framing: the same set, medium shot
+    frame: Sister Maelle holding up a small dagger with a copper-wire handle in one hand, her lantern staff in the other, looking down coldly.
+    motion: Maelle holds the dagger up higher and speaks coldly.
+    secs: 7
+    caption: "MAELLE: Your dagger, Squire Ashby. Found beside the empty case."
+  - set: lantern_hall
+    cast: [Wren Ashby]
+    framing: the same set, close-up on Wren's face
+    frame: Close-up of Wren in her armour looking up, eyes wide, shocked and hurt.
+    motion: Wren shakes her head desperately and protests.
+    secs: 5
+    caption: "WREN: I swear on the Light, I can't even reach that shelf!"
+  - set: lantern_hall
+    cast: [Wren Ashby, Sister Maelle]
+    framing: the same set, medium shot
+    frame: Wren standing, fumbling with the buckles of her oversized breastplate, glum; Sister Maelle beside her holding out an open hand.
+    motion: Maelle speaks; Wren unbuckles the breastplate and it drops to the floor with a clang, and she winces.
+    secs: 7
+    caption: "MAELLE: Then the Light will judge you. Your armour, please."
+  - set: lantern_hall
+    cast: []
+    framing: the same set, close-up on the stone floor
+    frame: Close-up of the polished stone floor of the hall, Wren's steel boots at the top edge of the frame; a dented steel breastplate is falling, just above the floor.
+    motion: The dented steel breastplate drops onto the stone floor, bounces once with a heavy clang and rattles to a stop. Wren's boots step back.
+    secs: 3
+    caption: ""
+    sfx: [{sound: armour_clang, at: 0.2, gain: 0.7}]
+  - set: stable_night
+    cast: [Wren Ashby]
+    frame: Wren sits slumped on the straw, no armour, chin on her knees, wearing only the padded clothes from under her armour, a maroon quilted jacket with green sleeves and green trousers, brown boots.
+    motion: Wren sighs, kicks a tuft of straw, and sniffs defiantly. A horse shifts in a stall.
+    secs: 5
+    caption: No rank. No armour. A bed of straw beside the horses. In three days, her trial. The Order has never found a squire innocent.
+  - set: stable_night
+    cast: [Wren Ashby]
+    frame: Wren sulking on the straw in her maroon quilted jacket with green sleeves and green trousers, the empty stall door behind her, the moonlit hayloft window above.
+    motion: A small, ordinary-sized black raven with one white feather on its head, no bigger than a real raven and much smaller than Wren, swoops in through the moonlit hayloft window, glides down across the stable in one smooth continuous flight and lands on the top of the stall door right behind Wren, folding its wings. It stays small the whole time. Wren doesn't notice.
+    secs: 4
+    caption: Nobody visits the stables at midnight. So the raven was a surprise.
+  - set: stable_night
+    cast: [Crows, Wren Ashby]
+    continues: true     # starts on the last frame of the landing: same raven, same spot, same size
+    frame: (the last frame of the shot before)
+    motion: The small raven stays perched exactly where it landed on the stall door, the same small size, leans toward Wren and talks to her, smug. Wren turns her head, sees it, yelps and scrambles backward through the straw.
+    secs: 6
+    caption: "CROWS: Relax, squire. I know you didn't take it. I watched who did."
+choice:
+  question: A talking raven saw the thief. Do you trust it?
+  options: {A: Follow the raven, B: "Break into the vault (roll 13+)"}
+
+teaser: {shot: 8, secs: 2}     # Sloane: the raven talks

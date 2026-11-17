@@ -1,0 +1,1 @@
+Mood: THRILLER. Cold, tense and paranoid: harsh flat fluorescent light, stark shadows, slow controlled movement, small telling reactions in the eyes and hands, uneasy stillness, nobody smiles for real.

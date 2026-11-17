@@ -1,0 +1,32 @@
+# Every recurring character gets a voice. World: COMPLIANT is proper, prim and buttoned-up; everyone sounds careful.
+# key = the speaker as written before ":" in a caption (or narrator). brief = who the voice is (the casting spec for
+# ElevenLabs or Gemini). kokoro = free local stand-in. eleven = ElevenLabs voice id once cast.
+narrator:
+  brief: a calm, official state-broadcast announcer; crisp received-pronunciation English, measured and emotionless
+  kokoro: bm_george@0.92
+  gemini: Charon
+ezra:
+  name: Ezra Vale
+  brief: a narrow, tidy 26-year-old records clerk; precise, quiet, clipped proper English, polite to a fault, nervous underneath
+  kokoro: bm_lewis@0.95
+  gemini: Iapetus
+mira:
+  name: Mira Vale
+  brief: a 22-year-old rebel radio operator; low, quick and sharp, the only one who doesn't sound rehearsed, a little rough at the edges
+  kokoro: bf_lily
+  gemini: Pulcherrima
+crane:
+  name: Director Halden Crane
+  brief: a silver-haired Ministry director in his 60s; warm, velvety, unhurried upper-class English with a soft smile you can hear, quietly menacing
+  kokoro: bm_fable@0.88
+  gemini: Algieba
+juno:
+  name: Juno Park
+  brief: a cheerful 28-year-old clerk; bright, chirpy, overly polite and prim, every sentence sounds like a customer-service smile
+  kokoro: bf_alice
+  gemini: Laomedeia
+brann:
+  name: Officer Brann Kols
+  brief: a broad 40-year-old riot officer; flat, heavy, clipped commands, deep chest voice, no warmth
+  kokoro: bm_daniel@0.9
+  gemini: Alnilam

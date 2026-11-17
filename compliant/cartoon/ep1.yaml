@@ -1,0 +1,44 @@
+title: The Delete Pile
+shots:
+  - set: records_floor
+    cast: [Ezra Vale, Juno Park]
+    frame: Wide shot. Ezra sits perfectly upright typing at his desk in the endless rows; Juno sits at the next desk holding a mug. Ezra has a clean face with no scars.
+    motion: The clerks type in unison. Ezra stamps a file with quiet satisfaction and squares it neatly on the desk. Juno sips her mug.
+    secs: 4
+    caption: Citizen 213 has deleted eleven thousand people. He has never once looked up.
+    line: Eleven thousand deletions. He's never once looked up.
+  - set: clerk_desk
+    cast: [Ezra Vale]
+    frame: Medium shot. Ezra at the desk, the monitor showing rows of glowing green lines with no readable text; a small content smile.
+    motion: Ezra taps the keys in a neat rhythm, scrolling, nodding slightly to himself.
+    secs: 3
+    caption: Batch 4471. Forty names. He'll be home by six.
+    line: Forty names. Home by six.
+  - set: clerk_desk
+    cast: [Ezra Vale]
+    framing: the same set, close-up on Ezra's face
+    frame: Close-up of Ezra's face lit acid green by the monitor, half in hard black shadow, his smile just starting to drop. Smooth clean skin, no scars, no stitches, no marks.
+    motion: Ezra's smile drops, his eyes widen slowly and he leans toward the screen. Hold.
+    secs: 3
+    caption: "Then, for the first time, he reads one. 39: MIRA VALE. UNPERSON."
+    line: Thirty-nine. Mira Vale. Unperson.
+  - set: clerk_desk
+    cast: [Ezra Vale]
+    framing: the same set, close on the desk and Ezra's hand
+    frame: Ezra's hand hovers over the keyboard, one finger above a single red key, the green monitor glow on his knuckles. No scars, stitches or marks on his face, hands or suit.
+    motion: His finger trembles above the red key; the monitor glow pulses slowly like a blinking cursor; his hand pulls back an inch, then hovers again.
+    secs: 4
+    caption: His sister. Two years ago the Ministry said she moved to the eastern farms. She still sends postcards.
+    line: His sister. She still sends postcards from the farms.
+  - set: records_floor
+    cast: [Juno Park, Ezra Vale]
+    framing: the same set, medium shot of the two neighbouring desks
+    frame: Juno at the next desk peers over her round glasses straight at Ezra, mug in hand; Ezra in the foreground, frozen at his screen.
+    motion: Juno slowly lowers her mug, eyes fixed on Ezra, then gives a small, too-sweet smile. Ezra doesn't move.
+    secs: 4
+    caption: Every keystroke on this floor is logged. Juno has stopped typing.
+choice:
+  question: Delete his sister, or steal her file?
+  options: {A: Delete it as ordered, B: Secretly copy the file first}
+
+teaser: {shot: 3, secs: 2}     # Sloane: the name on the screen, before we know who she is

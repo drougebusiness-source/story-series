@@ -1,0 +1,53 @@
+title: Scrap
+shots:
+  - set: wreck_outside
+    cast: [Kael Torvin, Sola Venn]
+    frame: Wide shot. Kael and Sola stand on the sand a few steps apart with the dark torn hull opening BETWEEN them in the background, so that neither head is in front of the dark hole; Kael stands against the light riveted hull plating with his hands on his hips; Sola holds binoculars up to her eyes.
+    motion: Sola lowers the binoculars and shrugs, unimpressed. Kael slowly tilts his head, as if listening to something.
+    secs: 5
+    caption: "SOLA: Ninety years dead. Nothing in there but scrap."
+    sfx: [{sound: core_hum, hold: true, gain: 0.1}]   # the hum only Kael hears
+  - set: wreck_outside
+    cast: [Kael Torvin, Sola Venn]
+    framing: the same set seen closer, a medium shot near the hull opening
+    frame: Kael leans toward the dark hull opening with one hand cupped to his ear; Sola stands behind him, squinting at him, confused.
+    motion: Kael leans in further, listening hard. Sola looks at him, looks at the wreck, then throws her hands up.
+    secs: 4
+    caption: "KAEL: Then why is it humming?"
+    sfx: [{sound: core_hum, hold: true, gain: 0.16}]   # the hum only Kael hears
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    frame: Wide shot. Kael crouches where he has just dropped into the corridor, a wrist lamp switched on, its white beam pointing ahead into the dark.
+    motion: Kael stands up from the crouch and sweeps the wrist lamp beam slowly across the corridor, dust drifting through the light.
+    secs: 4
+    caption: Sola never hears it. Nobody on Hollow ever has. Kael has heard it his whole life.
+    sfx: [{sound: core_hum, hold: true, gain: 0.22}]   # the hum only Kael hears
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, medium shot looking at the debris pile
+    frame: The lamp beam lands on a sealed metal cylinder glowing soft teal half-buried in the debris pile; Kael leans in from the side, eyes wide.
+    motion: The cylinder pulses brighter teal, slowly, like a heartbeat. Kael's eyes widen and he slowly kneels down beside it.
+    secs: 4
+    caption: A sealed Unbound data core. The kind people stopped talking about.
+    sfx: [{sound: core_hum, hold: true, gain: 0.32}]   # the hum only Kael hears
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, close-up on Kael's face
+    frame: Close-up of Kael's face lit teal from below, a sly grin, the glow reflected in his goggles.
+    motion: Kael's grin spreads, he wiggles his eyebrows and rubs his gloved hands together.
+    secs: 4
+    caption: "KAEL: One of these buys a ticket off this rock."
+    sfx: [{sound: core_hum, hold: true, gain: 0.28}]   # the hum only Kael hears
+  - set: wreck_inside
+    cast: [Kael Torvin]
+    framing: the same set, medium shot
+    frame: Kael kneels holding the glowing teal cylinder in both hands; faint teal light is glowing along his own fingers too.
+    motion: The cylinder and Kael's fingers pulse teal together in the same rhythm. Kael freezes, stares down at his hands, and blinks slowly. Then he holds completely still.
+    secs: 4
+    caption: "...so why is it humming WITH me?"
+    sfx: [{sound: core_hum, hold: true, gain: 0.38}]   # the hum only Kael hears
+choice:
+  question: Sell it for a way off Hollow, or hide it?
+  options: {A: Sell it to the Concord, B: Hide it}
+
+teaser: {shot: 6, secs: 2}     # Sloane: his fingers glow with the core

@@ -3,3 +3,7 @@ out/
 __pycache__/
 *.pyc
 images/_*.html
+reference/
+*/cartoon/sets/old-*/
+*/cartoon/sound/old-*/
+characters/*/2d-old*.jpg

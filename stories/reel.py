@@ -110,6 +110,8 @@ def card(series: Series, kind: str, ep: dict) -> Image.Image:
             y += int(font.size * gap)
         return y
 
+    if kind == "opening" and (ep.get("vote") or {}).get("total") and ep.get("asked") and ep.get("chosen"):
+        return recap_card(series, ep["asked"]["question"], ep["asked"]["options"], ep["vote"]["counts"], ep["chosen"])
     if kind == "opening":
         y = centred(series.title, head(56), 640, acc)
         centred(ep["opening"], head(118), y + 80)
@@ -139,6 +141,45 @@ def card(series: Series, kind: str, ep: dict) -> Image.Image:
             y = max(y + 180, yy + 40)
         y = centred("Comment " + " or ".join(ch["options"]) + ".", head(72), y + 60, acc)
         centred("Voting closes in 24 h. No votes? The story chooses.", body(46), y + 20)
+    return im
+
+
+def recap_card(series: Series, question: str, options: dict, counts: dict, chosen: str) -> Image.Image:
+    """Last episode's vote: the question, one bar per option with its share, the winner lit up."""
+    bg, fg, acc = (_rgb(series.color(k)) for k in ("bg", "fg", "accent"))
+    im = Image.new("RGB", (W, H), bg)
+    d = ImageDraw.Draw(im)
+    head = lambda s: _font(series.font("head"), s)  # noqa: E731
+    body = lambda s: _font(series.font("body"), s)  # noqa: E731
+    d.rectangle([40, 40, W - 40, H - 40], outline=acc, width=6)
+
+    def centred(text, font, y, fill=fg, width=W - 200, gap=1.18):
+        for line in _wrap(d, text, font, width):
+            d.text(((W - d.textlength(line, font=font)) / 2, y), line, font=font, fill=fill)
+            y += int(font.size * gap)
+        return y
+
+    total = sum(int(counts.get(k, 0)) for k in options) or 1
+    dim = tuple((a + b) // 2 for a, b in zip(fg, bg))
+    y = centred("LAST EPISODE", body(52), 560, dim)
+    y = centred(question, head(80), y + 30)
+    y += 60
+    for letter, label in options.items():
+        share = round(100 * int(counts.get(letter, 0)) / total)
+        won = letter == chosen
+        col = acc if won else dim
+        d.text((110, y), letter, font=head(96), fill=col)
+        lines = _wrap(d, label, body(50), W - 420)
+        yy = y + 8
+        for line in lines:
+            d.text((230, yy), line, font=body(50), fill=fg if won else dim)
+            yy += 58
+        bar_y = yy + 14
+        d.rectangle([230, bar_y, W - 230, bar_y + 46], outline=col, width=4)
+        d.rectangle([230, bar_y, 230 + int((W - 460) * share / 100), bar_y + 46], fill=col)
+        d.text((W - 210, bar_y - 4), f"{share}%", font=head(56), fill=col)
+        y = bar_y + 110
+    centred(f"YOU CHOSE {chosen}.", head(130), y + 40, acc)
     return im
 
 

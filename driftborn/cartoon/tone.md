@@ -1,0 +1,1 @@
+Mood: SCI-FI COMEDY-ADVENTURE. Snappy adult animated sci-fi comedy: rubbery exaggerated expressions, deadpan stares, quick double-takes, gadgets that misbehave and spark, big comic reactions with clear silhouettes and poses. Bold colours. A real world with real stakes, never babyish.

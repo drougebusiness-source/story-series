@@ -1,5 +1,8 @@
 # THE LAST DRAFT: brand kit
 
+> **Format since 2026-11-16: HORROR** (3amchoicess-style narrated "you" parts in short arcs). Writing rules:
+> `../HORROR-FORMAT.md`. Why, costs and what's left: `HORROR-PLAN.md`. The viewer is Cole.
+
 **One line:** a chemistry teacher and 5 of his students, two years into the end of the world. You decide who lives.
 
 ## Account
