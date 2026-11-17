@@ -31,7 +31,8 @@ RATE = 24000
 # ElevenLabs narration model. eleven_v3 is more expressive but swallowed short phrases and once switched voices
 # mid-line (11-16), so the steadier multilingual v2 is the default.
 ELEVEN_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
-ELEVEN_SETTINGS = {"stability": 0.4, "similarity_boost": 0.8, "style": 0.3, "use_speaker_boost": True, "speed": 1.0}
+ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.8, "style": 0.0, "use_speaker_boost": True, "speed": 1.0}
+# 11-17 #2: the same calm settings as the JIC narrator (owner likes JIC; style 0.3 sounded over-acted).
 # 11-17: livelier delivery (owner: flat, no drama); speed stays 1.0 (1.08 dropped words). Pauses are written into lines
 # as <break time="0.8s" /> tags, which ElevenLabs honours.
 KOKORO = Path.home() / ".cache" / "doodle"
@@ -79,7 +80,7 @@ def say(text: str, voice: str) -> np.ndarray:
     """Mono float32 audio at 24 kHz, cleaned of clicks and static (clean()). Paid engines are cached raw in
     out/voices/cache; the cleaning runs on every read, so old cached lines get cleaned too."""
     if not voice.startswith("kokoro"):
-        tag = f"{voice}|{ELEVEN_MODEL}|{json.dumps(ELEVEN_SETTINGS, sort_keys=True)}|phrases2" if voice.startswith("eleven") else voice   # a new model is a new take
+        tag = f"{voice}|{ELEVEN_MODEL}|{json.dumps(ELEVEN_SETTINGS, sort_keys=True)}|phrases4" if voice.startswith("eleven") else voice   # a new model is a new take
         f = ROOT / "out" / "voices" / "cache" / (hashlib.sha1(f"{tag}|{text}".encode()).hexdigest() + ".npy")
         if f.exists() and _length_ok(clean(np.load(f)), text):
             return clean(np.load(f))
@@ -218,23 +219,61 @@ def _say(text: str, voice: str) -> np.ndarray:
     raise ValueError(f"unknown voice engine in {voice!r}")
 
 
+def trim_silence(a: np.ndarray, rate: int) -> np.ndarray:
+    """Cut only true silence off the ends, judged on a smoothed 10 ms loudness envelope 50 dB under the peak, with
+    generous margins, so soft first sounds and trailing consonants ("t", "s", "x") are always kept."""
+    w = max(1, int(rate * 0.01))
+    n = len(a) // w
+    if n < 3:
+        return a
+    env = 20 * np.log10(np.sqrt((a[: n * w].reshape(n, w) ** 2).mean(1)) + 1e-9)
+    on = np.flatnonzero(env > env.max() - 50)
+    if not len(on):
+        return a
+    return a[max(0, (on[0] - 15) * w): min(len(a), (on[-1] + 25) * w)]   # 150 ms before, 250 ms after
+
+
 def _eleven_one(text: str, voice_id: str, before: str = "", after: str = "") -> np.ndarray:
     """One ElevenLabs reading. before/after give it the neighbouring words so separate phrases still flow."""
     settings = dict(ELEVEN_SETTINGS)
     if len(text.split()) <= 3:                           # very short lines garbled at low stability ("My sister?")
-        settings.update(stability=0.65, style=0.15)
-    body = {"text": text, "model_id": ELEVEN_MODEL, "voice_settings": settings}
-    if before:
-        body["previous_text"] = before
-    if after:
-        body["next_text"] = after
+        settings.update(stability=0.65)
+    body = {"text": text, "model_id": ELEVEN_MODEL, "voice_settings": settings}   # no previous/next text: with it,
+    # phrases ended early and lost their last sounds ("touched", "machines", "relax"; owner 11-17)
     req = urllib.request.Request(
         f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=pcm_24000", data=json.dumps(body).encode(),
         headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"], "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=120) as r:
         a = np.frombuffer(r.read(), dtype=np.int16).astype(np.float32) / 32768
-    nz = np.flatnonzero(np.abs(a) > 0.002)              # trim real silence only: soft "sh"/"s" starts must stay
-    return a[max(0, nz[0] - int(RATE * 0.12)): nz[-1] + int(RATE * 0.12)] if len(nz) else a
+    return trim_silence(a, RATE)
+
+
+def _checked_take(text: str, voice_id: str, tries: int = 3) -> np.ndarray:
+    """An ElevenLabs reading, checked by the free local transcriber right away and re-recorded (up to `tries`) if it
+    dropped a word; the best take is kept. Takes vary: one said "with her back to you", the next dropped "to you"."""
+    import subprocess, tempfile
+    py = ROOT.parent / "agent-office" / "reels" / ".venv" / "Scripts" / "python.exe"
+    best, best_score = None, -1.0
+    for k in range(tries):
+        a = _eleven_one(text, voice_id)
+        if not py.exists():
+            return a
+        with tempfile.TemporaryDirectory() as tmp:
+            f = Path(tmp) / "take.wav"
+            sf.write(f, a, RATE)
+            r = subprocess.run([str(py), str(ROOT / "take_check.py"), str(f), text], capture_output=True, text=True,
+                               cwd=str(ROOT))
+        try:
+            score_s, _, missing = r.stdout.strip().splitlines()[-1].partition(" ")
+            score = float(score_s) - 0.1 * len([w for w in missing.split(",") if w])
+        except (ValueError, IndexError):
+            return a
+        if score > best_score:
+            best, best_score = a, score
+        if not missing and float(score_s) >= 0.9:
+            return a
+        print(f"  retake {k + 1} for {text[:40]!r}: missing {missing or '-'}")
+    return best
 
 
 def _eleven_phrases(text: str, voice_id: str) -> np.ndarray:
@@ -249,7 +288,7 @@ def _eleven_phrases(text: str, voice_id: str) -> np.ndarray:
             continue
         before = " ".join(phrases[:i]).strip()
         after = " ".join(phrases[i + 1:]).strip()
-        out.append(_eleven_one(ph, voice_id, before, after))
+        out.append(_checked_take(ph, voice_id))
         if i < len(gaps):
             out.append(np.zeros(int(RATE * gaps[i]), np.float32))
     return np.concatenate(out) if out else np.zeros(1, np.float32)
@@ -380,7 +419,7 @@ def revoice(clip: Path, voice_id: str) -> np.ndarray:
         with urllib.request.urlopen(req, timeout=300) as r:
             f.parent.mkdir(parents=True, exist_ok=True)
             f.write_bytes(r.read())
-    return _decode(f, extra="highpass=f=80")
+    return _decode(f, extra="highpass=f=80,deesser=i=0.3")
 
 
 def bed_file(slug: str, key: str) -> Path | None:
@@ -422,8 +461,9 @@ def sfx_file(slug: str, key: str) -> Path:
     return f
 
 
-SPEECH_DB = -16.0
-BED_RMS = 0.018           # music/ambience about -35 dBFS (was -26: too loud, owner 11-17)
+SPEECH_DB = -19.0          # owner 11-17 #2: about 75-80% volume, not screaming
+VOICE_PEAK = 0.8
+BED_RMS = 0.012           # music/ambience about -35 dBFS (was -26: too loud, owner 11-17)
 SFX_LEVEL = 0.4           # all effects scaled down (owner 11-17: too loud over the narrator)          # every spoken line is set to this loudness (owner 11-16: nobody randomly louder or softer)
 
 
@@ -441,14 +481,18 @@ def speech_db(a: np.ndarray, rate: int = MIX) -> float:
 def level(a: np.ndarray) -> np.ndarray:
     """Set a line to SPEECH_DB. A gentle compressor first tames spiky peaks, so short or punchy lines reach the same
     loudness as the rest instead of being held down by their peaks (owner 11-17: nobody randomly quieter)."""
-    if len(a) > MIX // 10:
-        a = a / (np.abs(a).max() or 1) * 0.5
-        a = _decode(None, pcm=a, in_rate=MIX,
-                    extra="acompressor=threshold=-24dB:ratio=4:attack=3:release=60:makeup=1,alimiter=limit=0.9:level=0")
-    for _ in range(2):                                   # gain to target, then keep peaks under 0.95
+    for _ in range(2):                                   # gain to target, peaks never above 0.8 (about 75-80%)
         a = a * 10 ** ((SPEECH_DB - speech_db(a)) / 20)
-        a = a * min(1.0, 0.95 / (np.abs(a).max() or 1))
+        a = a * min(1.0, VOICE_PEAK / (np.abs(a).max() or 1))
     return a.astype(np.float32)
+
+
+def bg_level(a: np.ndarray, gain: float = 0.6) -> np.ndarray:
+    """A sound effect at least 9 dB under the voice (more for low gains) and never peaking above half the voice's
+    peak (owner 11-17: nothing in the background louder than 50% of the voice)."""
+    rms = np.sqrt(np.mean(a ** 2)) or 1
+    a = a / rms * 10 ** ((SPEECH_DB - 12 + 20 * np.log10(max(0.05, min(1.0, gain / 0.6)))) / 20)
+    return (a * min(1.0, VOICE_PEAK * 0.5 / (np.abs(a).max() or 1))).astype(np.float32)
 
 
 def fit_to_speech(a24: np.ndarray, clip: Path) -> np.ndarray:
@@ -461,17 +505,16 @@ def fit_to_speech(a24: np.ndarray, clip: Path) -> np.ndarray:
     db = 20 * np.log10(np.sqrt((raw[: n * w].reshape(n, w) ** 2).mean(1)) + 1e-9) if n else np.zeros(1)
     on = np.flatnonzero(db > db.max() - 30)
     s0, s1 = (on[0] * w, (on[-1] + 1) * w) if len(on) else (0, len(raw))
-    a = _decode(None, pcm=a24, extra="highpass=f=80")
-    nz = np.flatnonzero(np.abs(a) > 0.002)              # trim real silence only: soft first words stay
-    if len(nz):
-        a = a[max(0, nz[0] - int(MIX * 0.1)): nz[-1] + int(MIX * 0.1)]
+    a = _decode(None, pcm=a24, extra="highpass=f=80,deesser=i=0.3")
+    a = trim_silence(a, MIX)
     f = (len(a) / MIX) / max(0.3, (s1 - s0) / MIX)
     if abs(f - 1) > 0.03:
-        a = _decode(None, pcm=a, in_rate=MIX, extra=f"atempo={min(1.1, max(0.9, f)):.3f}")   # gentle: squeezing ate words
+        pass                                             # no speed change at all: even 10% smeared "I swear" (11-17)
     a = _fade(level(a), int(MIX * 0.02))
     return np.concatenate([np.zeros(s0, np.float32), a]).astype(np.float32)
 
 
+VOTE_HOLD = 1.0            # the vote screen stays this long after the question (owner 11-17)
 LEAD, TAIL = 0.15, 0.3    # silence before/after each line inside its shot (short-form pacing, owner 11-16)
 
 
@@ -513,13 +556,18 @@ def timeline(slug: str, ep_name: str = "ep1") -> list[tuple[float, np.ndarray | 
         room = secs - LEAD - TAIL
         if False and len(a) / RATE > room:               # no time-stretching (it sounded robotic): the shot gets longer
             a = stretch(a, min(1.08, (len(a) / RATE) / room))
-        a = _decode(None, pcm=a, extra="highpass=f=80")          # 24k -> 48k, no low thumps
+        a = _decode(None, pcm=a, extra="highpass=f=80,deesser=i=0.3")          # 24k -> 48k, no low thumps
         a = np.pad(level(a), int(MIX * 0.08))           # breathing room so the soft edge never clips a word
         a = _fade(a, int(MIX * 0.02))                     # same loudness as every other line; 20 ms soft edges: no clicks
         need = LEAD + len(a) / MIX + TAIL
         if need > secs:
             print(f"  shot lengthened {secs:.1f}s -> {need:.1f}s for {who}: {text}")
         out.append((max(secs, round(need, 2)), a, LEAD))
+    if ep.get("vote_line"):                              # the question, asked while the vote screen is up
+        a = say(ep["vote_line"], voices.get("narrator"))
+        a = _fade(np.pad(level(_decode(None, pcm=a, extra="highpass=f=80,deesser=i=0.3")), int(MIX * 0.08)),
+                  int(MIX * 0.02))
+        out.append((round(LEAD + len(a) / MIX + VOTE_HOLD, 2), a, LEAD))
     return out
 
 
@@ -558,14 +606,15 @@ def voiced(slug: str, ep_name: str = "ep1"):
             a = a[: max(0, n - start)]
             speech[start:start + len(a)] += a
             talking[start:start + len(a)] = 1
-            who, text = speaker_and_text(ep["shots"][i].get("caption", ""))
+            sh_i = ep["shots"][i] if i < len(ep["shots"]) else {"caption": "", "line": ep.get("vote_line", "")}
+            who, text = speaker_and_text(sh_i.get("caption", ""))
             on = np.flatnonzero(np.abs(a) > 0.004)         # where the words are (soft first words included)
             pad = int(MIX * 0.12)
             s0, s1 = ((start + max(0, int(on[0]) - pad), start + min(len(a), int(on[-1]) + pad)) if len(on)
                       else (start, start + len(a)))
-            lines.append({"shot": i + 1, "who": who, "text": ep["shots"][i].get("line", text),
+            lines.append({"shot": i + 1, "who": who, "text": sh_i.get("line", text),
                           "start": round(s0 / MIX, 3), "end": round(s1 / MIX, 3),
-                          "shout": bool(ep["shots"][i].get("shout"))})
+                          "shout": bool(sh_i.get("shout"))})
         t += secs
     qa_dir = ROOT / "out" / "qa" / f"{slug}-{ep_name}"
     qa_dir.mkdir(parents=True, exist_ok=True)
@@ -574,13 +623,14 @@ def voiced(slug: str, ep_name: str = "ep1"):
             break
         speech = repair_clicks(speech)
     sf.write(qa_dir / "speech.wav", np.clip(speech, -1, 1), MIX)       # voices only: the gate listens to these
+    voice_only = speech.copy()
     (qa_dir / "lines.json").write_text(json.dumps(lines, indent=1), encoding="utf-8")
     # sound effects: per shot `sfx: [{sound: key, at: secs into the shot, gain: 0-1, hold: true = loop the whole shot}]`
     t = 0.0
     for sh, (secs, _, _) in zip(ep["shots"], plan):
         for fx in sh.get("sfx", []):
             a = _decode(sfx_file(slug, fx["sound"]))
-            a = a / (np.abs(a).max() or 1) * float(fx.get("gain", 0.6)) * SFX_LEVEL   # effects stay subtle
+            a = bg_level(a, float(fx.get("gain", 0.6)))       # background: at most half the voice (owner 11-17)
             s0 = int(MIX * (t + float(fx.get("at", 0))))
             if fx.get("hold"):
                 a = np.resize(a, max(0, int(MIX * (t + secs)) - s0))
@@ -615,7 +665,9 @@ def voiced(slug: str, ep_name: str = "ep1"):
             seg[-xf:] *= np.linspace(1, 0, len(seg[-xf:]))
         bed[a0:a1] += seg
     duck = np.convolve(talking, np.ones(int(MIX * 0.3)) / int(MIX * 0.3), "same")  # smooth dip under speech
-    mix = speech + bed * (1 - 0.65 * np.clip(duck, 0, 1))   # dips well under speech
+    background = (speech - voice_only) + bed * (1 - 0.65 * np.clip(duck, 0, 1))   # music + effects, dipping under speech
+    mix = voice_only + background
+    sf.write(qa_dir / "background.wav", np.clip(background, -1, 1), MIX)
     tmp = ROOT / "out" / "voices" / f"{slug}-{ep_name}-mix.wav"
     tmp.parent.mkdir(parents=True, exist_ok=True)
     sf.write(tmp, np.clip(mix, -1, 1), MIX)

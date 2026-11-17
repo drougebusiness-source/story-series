@@ -1,19 +1,8 @@
 # Cut 2026-11-17 to 15-29 s (owner: short form; no teaser, no recap). Long version in backups/2026-11-17-long/.
 # Fixed 2026-11-17 from the owner's review: pauses, the right voice for each line, no narrated screen text.
+# Owner review #2 2026-11-17: whole sentences, pauses between them, the question over the vote screen.
 title: Scrap
 shots:
-- set: wreck_outside
-  cast: []
-  still: true
-  frame: 'The empty desert wreck site under the ringed planet: the huge torn warship hull half-buried in red sand.'
-  motion: Slow push in on the wreck.
-  secs: 3
-  caption: Kael hears machines. Nobody else does. And this old wreck is humming.
-  line: Kael hears machines. <break time="0.3s" /> Nobody else does. <break time="0.4s" /> And this old wreck is humming.
-  sfx:
-  - sound: core_hum
-    hold: true
-    gain: 0.06
 - set: wreck_outside
   cast:
   - Kael Torvin
@@ -35,16 +24,18 @@ shots:
   - Kael Torvin
   - Sola Venn
   framing: the same set seen closer, a medium shot near the hull opening
-  frame: Kael leans toward the dark hull opening with one hand cupped to his ear; Sola stands behind him, squinting at him,
-    confused.
-  motion: Kael leans in further, listening hard. Sola looks at him, looks at the wreck, looks at him again, then throws her
-    hands up.
-  secs: 3
+  frame: (the last frame of the shot before)
+  motion: Kael walks to the RIGHT, passing behind Sola, toward the dark hull opening at the right edge of the picture, and
+    stops beside the opening, staying on the right side of the frame for the rest of the shot. He leans in with one hand cupped
+    to his ear and says his line, puzzled. Sola stays where she is and turns her head to watch him, unimpressed. One continuous
+    walk, no cuts.
+  secs: 5
   caption: 'KAEL: Then why is it humming?'
   sfx:
   - sound: core_hum
     hold: true
     gain: 0.16
+  continues: true
 - set: wreck_inside
   cast:
   - Kael Torvin
@@ -52,9 +43,9 @@ shots:
   frame: The lamp beam on a sealed metal cylinder glowing soft teal, half-buried in the debris pile; Kael kneels beside it.
   motion: Kael lifts the cylinder out of the debris with both hands. It pulses brighter teal, slowly, like a heartbeat.
   secs: 3
-  caption: 'Inside: a sealed data core. Worth a fortune. And a hanging.'
-  line: Inside... <break time="0.3s" /> a sealed data core. <break time="0.4s" /> Worth a fortune. <break time="0.6s" /> And
-    a hanging.
+  caption: 'Inside: a sealed data core. Worth a fortune. And a hanging, if you''re caught with it.'
+  line: Inside, a sealed data core. <break time="0.6s" /> Worth a fortune. <break time="0.6s" /> And a hanging, if you're
+    caught with it.
   sfx:
   - sound: core_hum
     hold: true
@@ -80,3 +71,4 @@ choice:
   options:
     A: Sell it to the Concord
     B: Hide it
+vote_line: Do you sell it, or hide it? <break time="0.5s" /> Comment A or B.

@@ -1,5 +1,6 @@
 # Cut 2026-11-17 to 15-29 s (owner: short form; no teaser, no recap). Long version in backups/2026-11-17-long/.
 # Fixed 2026-11-17 from the owner's review: pauses, the right voice for each line, no narrated screen text.
+# Owner review #2 2026-11-17: whole sentences, pauses between them, the question over the vote screen.
 title: The Delete Pile
 stills: true
 shots:
@@ -14,7 +15,7 @@ shots:
     her mug.
   secs: 3
   caption: Citizen 213 has deleted eleven thousand people. He has never once looked up.
-  line: Citizen two-thirteen has deleted eleven thousand people. <break time="0.4s" /> He has never once looked up.
+  line: Citizen two-thirteen has deleted eleven thousand people. <break time="0.9s" /> He has never once looked up.
 - set: clerk_desk
   cast:
   - Ezra Vale
@@ -24,7 +25,8 @@ shots:
   motion: Ezra's smile drops, his eyes widen slowly and he leans toward the screen. Hold.
   secs: 3
   caption: 'Then he reads one. ... 39: MIRA VALE. UNPERSON.'
-  line: Then he reads one. <break time="0.9s" /> Thirty-nine. <break time="0.3s" /> Mira Vale. <break time="0.3s" /> Unperson.
+  line: Then, for the first time, he reads one. <break time="1.4s" /> Number thirty-nine. <break time="0.8s" /> Mira Vale.
+    <break time="0.8s" /> Unperson.
 - set: clerk_desk
   cast:
   - Ezra Vale
@@ -45,8 +47,8 @@ shots:
   motion: His finger trembles above the red key; the monitor glow pulses slowly like a blinking cursor; his hand pulls back
     an inch, then hovers again.
   secs: 3
-  caption: Every month, his sister still sends him a postcard from the farms.
-  line: Every month, his sister still sends him a postcard from the farms.
+  caption: Mira Vale is his sister. And every month, she still sends him a postcard from the farms.
+  line: Mira Vale is his sister. <break time="0.8s" /> And every month, she still sends him a postcard from the farms.
 - set: records_floor
   cast:
   - Juno Park
@@ -56,8 +58,8 @@ shots:
     at his screen.
   motion: Juno slowly lowers her mug, eyes fixed on Ezra, then gives a small, too-sweet smile. Ezra doesn't move.
   secs: 3
-  caption: Every keystroke here is logged. And Juno has stopped typing.
-  line: Every keystroke here is logged. <break time="0.7s" /> And Juno has stopped typing.
+  caption: Every keystroke on this floor is logged. And Juno has stopped typing.
+  line: Every keystroke on this floor is logged. <break time="1.2s" /> And Juno has stopped typing.
   sfx:
   - sound: ominous_drone
     at: 0.3
@@ -67,3 +69,5 @@ choice:
   options:
     A: Delete it as ordered
     B: Secretly copy the file first
+vote_line: What should Ezra do? <break time="0.5s" /> Delete the file on his sister, or copy it in secret? <break time="0.5s"
+  /> Comment A, or B.

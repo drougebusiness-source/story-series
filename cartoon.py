@@ -174,7 +174,7 @@ class Episode:
                     run(["ffmpeg", "-v", "error", "-y", "-sseof", "-0.1", "-i", str(self.out / f"shot{i - 1}.mp4"),
                          "-frames:v", "1", "-q:v", "2", str(key)])
                 if not raw.exists() and (self.ep.get("stills") or shot.get("still")):
-                    self._still(self.out / f"key{i}.jpg", raw, float(shot["secs"]), i)   # free, nothing can glitch
+                    self._still(self.out / f"key{i}.jpg", raw, float(shot["secs"]), i, shot.get("move"))   # free, nothing can glitch
                     print("still", i)
                 if not raw.exists():
                     raw.write_bytes(self._animate((self.out / f"key{i}.jpg").read_bytes(),
@@ -190,9 +190,13 @@ class Episode:
             # shot lengths fitted to the voice lines (lip-synced shots keep their own length): needs the shots made
             lengths = [p[0] for p in voice.timeline(self.s.slug, self.ep_name)]
             for i, shot in enumerate(self.ep["shots"], 1):
+                if self.ep.get("stills") or shot.get("still"):   # stills: drawn at their exact final length, so a
+                    self._still(self.out / f"key{i}.jpg", self.out / f"shot{i}.mp4", lengths[i - 1], i,  # move ends
+                                shot.get("move"), exact=True)    # exactly where it should (no trimmed-off endings)
                 clips.append(self._finish(self.out / f"shot{i}.mp4", shot, lengths[i - 1], tmp / f"c{i}.mp4",
                                           tmp / f"ov{i}.png"))
-            clips.append(self._card(tmp))
+            card_secs = lengths[len(self.ep["shots"])] if len(lengths) > len(self.ep["shots"]) else 1.0
+            clips.append(self._card(tmp, card_secs))
             n = len(clips)
             joined = tmp / "joined.mp4"
             run(["ffmpeg", "-v", "error", "-y", *sum((["-i", str(c)] for c in clips), []), "-filter_complex",
@@ -270,10 +274,10 @@ class Episode:
             print(f"  {final.name}: the audio is not clean (see AUDIO lines); the quality gate will fail it")
         print(final)
 
-    def _still(self, key: Path, out: Path, secs: float, i: int):
+    def _still(self, key: Path, out: Path, secs: float, i: int, move: str | None = None, exact: bool = False):
         """A shot made from its picture with a slow camera move (stills mode, the narrated-horror look: 3amchoicess
         reels are stills). Long enough for any narration; _finish trims it. Moves alternate so cuts feel alive."""
-        dur = secs * 1.8 + 4
+        dur = secs if exact else secs * 1.8 + 4
         frames = int(dur * reel.FPS)
         moves = [f"z='1+0.12*on/{frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'",          # slow push in
                  f"z='1.12-0.12*on/{frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'",       # slow pull out
@@ -281,7 +285,7 @@ class Episode:
                  f"z='1+0.1*on/{frames}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1-on/{frames})'"]  # push in, rising
         run(["ffmpeg", "-v", "error", "-y", "-i", str(key), "-filter_complex",
              f"[0]scale={reel.W * 2}:{reel.H * 2}:force_original_aspect_ratio=increase,crop={reel.W * 2}:{reel.H * 2},"
-             f"zoompan={moves[(i - 1) % 4]}:d={frames}:s={reel.W}x{reel.H}:fps={reel.FPS},format=yuv420p",
+             f"zoompan={moves[{'in': 0, 'out': 1, 'drift': 2, 'rise': 3}[move] if move else (i - 1) % 4]}:d={frames}:s={reel.W}x{reel.H}:fps={reel.FPS},format=yuv420p",
              "-frames:v", str(frames), "-c:v", "libx264", "-crf", "18", str(out)])
 
     def _animate(self, key: bytes, prompt: str, secs: int) -> bytes:
@@ -342,7 +346,7 @@ class Episode:
              "-c:a", "aac", "-ar", "48000", "-ac", "2", str(out)])
         return out
 
-    def _card(self, tmp: Path) -> Path:
+    def _card(self, tmp: Path, secs: float = 1.0) -> Path:
         png = self.out / "card.png"
         panel = ROOT / "out" / "cards" / "driftborn-panel-1.png"
         if self.s.slug == "driftborn" and panel.exists():   # Driftborn's sci-fi screen card
@@ -351,8 +355,10 @@ class Episode:
         else:
             reel.card(self.s, "choice", self.ep).save(png)
         cc = tmp / "card.mp4"
+        import shutil                                    # the vote screen is the post's thumbnail (owner 11-17)
+        shutil.copy(png, ROOT / "out" / "cartoon" / f"{self.s.slug}-{self.ep_name}-cover.png")
         run(["ffmpeg", "-v", "error", "-y", "-loop", "1", "-i", str(png), "-f", "lavfi", "-i",
-             "anullsrc=r=48000:cl=stereo", "-t", "3", "-vf", "format=yuv420p", "-r", str(reel.FPS),
+             "anullsrc=r=48000:cl=stereo", "-t", f"{secs:.2f}", "-vf", "format=yuv420p", "-r", str(reel.FPS),
              "-c:v", "libx264", "-c:a", "aac", "-ar", "48000", "-ac", "2", str(cc)])
         return cc
 

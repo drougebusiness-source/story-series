@@ -66,6 +66,32 @@ def loudness(speech: np.ndarray, lines: list[dict], rate: int, tol: float = 3.0)
             if abs(v - med) > tol]
 
 
+def background_check(speech: np.ndarray, bg_file: Path, rate: int) -> list[str]:
+    """Owner 11-17: nothing in the background louder than 50% of the voice, and the voice never slammed."""
+    out = []
+    if np.abs(speech).max() > 0.85:
+        out.append(f"the voice peaks at {np.abs(speech).max():.2f} (keep it at about 0.8)")
+    if not bg_file.exists():
+        return out
+    bg, _ = sf.read(bg_file, dtype="float32")
+    w = int(rate * 0.4)
+    n = min(len(bg), len(speech)) // w
+    worst = -99.0
+    import voice as _v
+    voice_db = _v.speech_db(speech, rate)
+    for k in range(n):
+        v = speech[k * w:(k + 1) * w]; b = bg[k * w:(k + 1) * w]
+        vr = np.sqrt(np.mean(v ** 2))
+        if vr < 10 ** ((voice_db - 12) / 20):            # judge only where someone is really talking, not pause edges
+            continue
+        worst = max(worst, 20 * np.log10((np.sqrt(np.mean(b ** 2)) + 1e-9) / vr))
+    if worst > -6.0:
+        out.append(f"background reaches {worst:+.1f} dB against the voice (must stay at or under -6 dB, half the voice)")
+    if np.abs(bg).max() > 0.5 * max(np.abs(speech).max(), 1e-6):
+        out.append(f"a background sound peaks at {np.abs(bg).max():.2f}, over half the voice's peak")
+    return out
+
+
 def spikes(path: Path) -> list[str]:
     """A4: overall level near -15 LUFS, short-term loudness never jumps far above it, peaks under -0.5 dBFS."""
     r = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(path), "-af", "ebur128=peak=true",
@@ -246,8 +272,8 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
     # length (owner 11-16: short form, 15-29 s, never over 30)
     total = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0",
                                   str(final)], capture_output=True, text=True).stdout or 0)
-    if total > 30.0:
-        fail.append(f"length: {total:.1f} s, over the 30 s limit (aim for 15-29 s)")
+    if total > 40.0:
+        fail.append(f"length: {total:.1f} s, over the 40 s hard limit (aim for 15-35 s; owner 11-17)")
     elif total < 15.0:
         warn.append(f"length: {total:.1f} s, under the 15-29 s sweet spot")
     # sound
@@ -267,6 +293,7 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
         fail.append(f"voice: {p}")
     fail += [f"sound: {p}" for p in voice.audio_check(final, label=final.name) if "dead-silent" in p]
     fail += [f"talking over: {p}" for p in overlaps(lines)]
+    fail += [f"mix: {p}" for p in background_check(speech, qa_dir / "background.wav", rate)]
     fail += [f"loudness: {p}" for p in loudness(speech, lines, rate)]
     fail += [f"loudness: {p}" for p in spikes(final)]
     bad, notes = words(qa_dir)
