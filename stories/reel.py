@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw, ImageFont
 from .series import Series
 
 W, H, FPS = 1080, 1920, 30
-CARD_SECONDS = {"opening": 2.2, "dice": 2.8, "choice": 6.0, "death": 4.0}
+CARD_SECONDS = {"opening": 1.5, "dice": 2.2, "choice": 3.5, "death": 3.0}   # short-form (owner 11-16)
 
 
 def _font(path: Path, size: int) -> ImageFont.FreeTypeFont:
@@ -235,7 +235,7 @@ def _clip_karaoke(img: Image.Image, seconds: float, out: Path, overlays: list[tu
           "-r", str(FPS), str(out)])
 
 
-LEAD, TAIL = 0.35, 0.6       # quiet before and after each narrated scene's line
+LEAD, TAIL = 0.15, 0.3       # quiet before and after each narrated scene's line (short-form)
 
 
 def pad(seconds: float, path: Path, seed: int = 0) -> Path:

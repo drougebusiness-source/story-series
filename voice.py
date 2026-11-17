@@ -28,6 +28,10 @@ import yaml
 from stories.series import ROOT
 
 RATE = 24000
+# ElevenLabs narration model. eleven_v3 is more expressive but swallowed short phrases and once switched voices
+# mid-line (11-16), so the steadier multilingual v2 is the default.
+ELEVEN_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
+ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.75, "speed": 1.08}   # brisk: short-form (owner 11-16)
 KOKORO = Path.home() / ".cache" / "doodle"
 _kokoro = None
 
@@ -74,7 +78,8 @@ def say(text: str, voice: str) -> np.ndarray:
     """Mono float32 audio at 24 kHz, cleaned of clicks and static (clean()). Paid engines are cached raw in
     out/voices/cache; the cleaning runs on every read, so old cached lines get cleaned too."""
     if not voice.startswith("kokoro"):
-        f = ROOT / "out" / "voices" / "cache" / (hashlib.sha1(f"{voice}|{text}".encode()).hexdigest() + ".npy")
+        tag = f"{voice}|{ELEVEN_MODEL}|{ELEVEN_SETTINGS['speed']}" if voice.startswith("eleven") else voice   # a new model is a new take
+        f = ROOT / "out" / "voices" / "cache" / (hashlib.sha1(f"{tag}|{text}".encode()).hexdigest() + ".npy")
         if f.exists() and _length_ok(clean(np.load(f)), text):
             return clean(np.load(f))
         for _ in range(3):                         # an engine that rambles or reads the notes aloud: try again
@@ -192,7 +197,7 @@ def _say(text: str, voice: str) -> np.ndarray:
     if engine == "eleven":
         req = urllib.request.Request(
             f"https://api.elevenlabs.io/v1/text-to-speech/{name}?output_format=pcm_24000",
-            data=json.dumps({"text": text, "model_id": os.environ.get("ELEVENLABS_MODEL", "eleven_v3")}).encode(),
+            data=json.dumps({"text": text, "model_id": ELEVEN_MODEL, "voice_settings": ELEVEN_SETTINGS}).encode(),
             headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"], "Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=120) as r:
             return np.frombuffer(r.read(), dtype=np.int16).astype(np.float32) / 32768
@@ -387,7 +392,7 @@ def level(a: np.ndarray) -> np.ndarray:
     return (a * min(1.0, 0.95 / pk)).astype(np.float32)
 
 
-LEAD, TAIL = 0.3, 0.5     # silence before each line starts and after it ends, inside its shot
+LEAD, TAIL = 0.15, 0.3    # silence before/after each line inside its shot (short-form pacing, owner 11-16)
 
 
 def timeline(slug: str, ep_name: str = "ep1") -> list[tuple[float, np.ndarray | None, float]]:
@@ -418,7 +423,8 @@ def timeline(slug: str, ep_name: str = "ep1") -> list[tuple[float, np.ndarray | 
         if len(a) / RATE > room:                         # only a gentle speed-up; past that the shot gets longer
             a = stretch(a, min(1.08, (len(a) / RATE) / room))
         a = _decode(None, pcm=a, extra="highpass=f=80")          # 24k -> 48k, no low thumps
-        a = _fade(level(a), int(MIX * 0.02))           # same loudness as every other line; 20 ms soft edges: no clicks
+        a = np.pad(level(a), int(MIX * 0.08))           # breathing room so the soft edge never clips a word
+        a = _fade(a, int(MIX * 0.02))                     # same loudness as every other line; 20 ms soft edges: no clicks
         need = LEAD + len(a) / MIX + TAIL
         if need > secs:
             print(f"  shot lengthened {secs:.1f}s -> {need:.1f}s for {who}: {text}")
@@ -462,8 +468,12 @@ def voiced(slug: str, ep_name: str = "ep1"):
             speech[start:start + len(a)] += a
             talking[start:start + len(a)] = 1
             who, text = speaker_and_text(ep["shots"][i].get("caption", ""))
+            on = np.flatnonzero(np.abs(a) > 0.004)         # where the words are (soft first words included)
+            pad = int(MIX * 0.12)
+            s0, s1 = ((start + max(0, int(on[0]) - pad), start + min(len(a), int(on[-1]) + pad)) if len(on)
+                      else (start, start + len(a)))
             lines.append({"shot": i + 1, "who": who, "text": ep["shots"][i].get("line", text),
-                          "start": round(start / MIX, 3), "end": round((start + len(a)) / MIX, 3),
+                          "start": round(s0 / MIX, 3), "end": round(s1 / MIX, 3),
                           "shout": bool(ep["shots"][i].get("shout"))})
         t += secs
     qa_dir = ROOT / "out" / "qa" / f"{slug}-{ep_name}"

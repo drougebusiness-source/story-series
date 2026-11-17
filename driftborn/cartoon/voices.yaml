@@ -5,6 +5,8 @@ narrator:
   brief: a deep, calm, sophisticated space-documentary narrator, like an old starship log
   kokoro: am_onyx@0.95
   gemini: Charon
+  eleven: VMCgCMbBs53ElBxVD4VB     # "Steven - Deep Documentary Narrator" (11-16: Gemini narration dropped words)
+  engine: eleven
 kael:
   name: Kael Torvin
   brief: a wiry 19-year-old junk-diver raised on a rust mining moon; bright, clear, quick young teen-hero voice (owner 11-16, the energetic cocky rebel-kid type), cheeky and curious, voice of a kid who talks to machines

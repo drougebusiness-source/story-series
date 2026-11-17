@@ -5,6 +5,8 @@ narrator:
   brief: a calm, official state-broadcast announcer; crisp received-pronunciation English, measured and emotionless
   kokoro: bm_george@0.92
   gemini: Charon
+  eleven: dqbqOZM4uhsyx1WtTAgT     # "Max - 1940s RP British voice" (11-16: Gemini narration dropped words)
+  engine: eleven
 ezra:
   name: Ezra Vale
   brief: a narrow, tidy 26-year-old records clerk; precise, quiet, clipped proper English, polite to a fault, nervous underneath

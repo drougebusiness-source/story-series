@@ -5,6 +5,8 @@ narrator:
   brief: an old tavern storyteller; warm, gravelly working-class English, a bit theatrical, like he's had one ale
   kokoro: bm_fable
   gemini: Algenib
+  eleven: htZQqY7WtacRNV7s62Iy     # "Daniel - The Gruff Old British Wizard" (11-16: Gemini narration dropped words)
+  engine: eleven
 wren:
   name: Wren Ashby
   brief: a short, freckled 23-year-old squire, a woman; scrappy commoner English (West Country), stubborn and earnest, brave but cracks when cornered

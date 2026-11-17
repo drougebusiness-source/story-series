@@ -1,4 +1,5 @@
 title: The Delete Pile
+stills: true     # 11-16: narrator-only, so pictures with slow camera moves; no AI animation glitches
 shots:
   - set: records_floor
     cast: [Ezra Vale, Juno Park]

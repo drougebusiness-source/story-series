@@ -7,9 +7,10 @@ slot_utc: "01"        # 7 PM Central
 colors: {bg: "#2B2B2B", fg: "#E8E1D3", accent: "#D9692B", accent2: "#3E6E6E"}
 font_head: SpecialElite-Regular.ttf
 font_body: Inter.ttf
-style: >-
-  Gritty graphic novel ink illustration, heavy black linework, desaturated teal and ash palette with warm orange
-  firelight, post-apocalyptic overgrown suburb, no gore.
+style: >-   # look B, the owner's pick 2026-11-16 (was gritty graphic-novel ink)
+  Flat minimalist vector illustration, simple geometric shapes, thin or no outlines, smooth flat colour fills with soft
+  gradients, deep blue-black darkness outside one warm light source, post-apocalyptic overgrown suburb, quiet dread,
+  no gore.
 characters:
   Cole Mercer: a lanky 34-year-old man, tape-mended glasses, brown cardigan over a stab vest, chemistry kit satchel
   Dani Ortiz: a 17-year-old girl, dark curly hair in a bun, long-sleeved hoodie

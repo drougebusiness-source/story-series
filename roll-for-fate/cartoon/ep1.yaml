@@ -6,6 +6,7 @@ title: Stripped
 # Plant: Wren lost her dagger a week ago (shot 1), so someone took it to frame her. Pays off when the thief is found.
 shots:
   - set: lantern_hall
+    still: true      # hybrid (11-16): a picture with a slow camera move, no AI animation
     cast: [Wren Ashby, Sister Maelle]
     frame: Wide shot. Wren kneels in her oversized battered plate armour before Sister Maelle, who stands tall holding her lantern staff. The whole hall is watching in silence.
     motion: The lanterns sway gently. Wren's too-big helmet slips forward over her eyes; she pushes it back up with one finger, trying to look dignified. Maelle doesn't blink.
@@ -35,6 +36,7 @@ shots:
     caption: "MAELLE: Then the Light will judge you. Your armour, please."
     sfx: [{sound: armour_clang, at: 4.6, gain: 0.7}]
   - set: lantern_hall
+    still: true      # hybrid (11-16): a picture with a slow camera move, no AI animation
     cast: []
     framing: the same set, close-up on the stone floor
     frame: Close-up of the polished stone floor, Wren's steel boots at the top edge of the frame, the dented breastplate lying there.
@@ -43,6 +45,7 @@ shots:
     caption: ""
     sfx: [{sound: armour_clang, at: 1.4, gain: 0.45}, {sound: armour_clang, at: 3.0, gain: 0.6}]
   - set: stable_night
+    still: true      # hybrid (11-16): a picture with a slow camera move, no AI animation
     cast: [Wren Ashby]
     frame: Wren sits slumped on the straw, no armour, chin on her knees, in her maroon quilted jacket with green sleeves, green trousers and brown boots. A horse leans out of the stall beside her.
     motion: The horse lowers its head and nibbles Wren's hair. Wren swats it away without looking. It nibbles again. She sighs.

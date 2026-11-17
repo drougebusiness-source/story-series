@@ -29,6 +29,10 @@ def main(slug: str, ep: str = "ep1"):
     for n in ("GEMINI_API_KEY", "ELEVENLABS_API_KEY"):
         _env(n)
     e = cartoon.Episode(slug, ep)
+    out = cartoon.ROOT / "out" / "cartoon"                # a fresh render replaces every old finished file
+    for old in out.glob(f"{slug}-{ep}-*.mp4"):
+        old.unlink()
+    (cartoon.ROOT / "out" / "qa" / f"{slug}-{ep}" / "PASS.json").unlink(missing_ok=True)
     e.keys()
     e.video()
     voice.voiced(slug, ep)

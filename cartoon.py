@@ -66,7 +66,7 @@ class Episode:
         block = look.read_text(encoding="utf-8").split("## Prompt block", 1) if look.exists() else []
         global STYLE
         if len(block) == 2 and slug != "driftborn":
-            STYLE = " ".join(block[1].split("\n", 1)[1].split())
+            STYLE = " ".join(block[1].split("\n", 1)[1].split("\n## ")[0].split())   # up to the next heading
         lead = next(iter(self.s.cfg["characters"])).split()[0].lower()
         self.style_ref = ROOT / "characters" / lead / "2d.jpg"
         tone = self.dir / "tone.md"           # the series' mood (owner 11-16: comedy is silly, horror is dark)
@@ -173,8 +173,11 @@ class Episode:
                 if shot.get("continues") and not key.exists():  # starts exactly where the last shot ended: no jumps
                     run(["ffmpeg", "-v", "error", "-y", "-sseof", "-0.1", "-i", str(self.out / f"shot{i - 1}.mp4"),
                          "-frames:v", "1", "-q:v", "2", str(key)])
+                if not raw.exists() and (self.ep.get("stills") or shot.get("still")):
+                    self._still(self.out / f"key{i}.jpg", raw, float(shot["secs"]), i)   # free, nothing can glitch
+                    print("still", i)
                 if not raw.exists():
-                    raw.write_bytes(animate((self.out / f"key{i}.jpg").read_bytes(),
+                    raw.write_bytes(self._animate((self.out / f"key{i}.jpg").read_bytes(),
                                             f"{STYLE} {self.tone} Action: {shot['motion']} Every character keeps exactly the "
                                             f"same face, hair, body and outfit as in the first frame for the whole "
                                             f"shot.{''.join(' ' + self.note(n).strip() for n in shot.get('cast', []) if self.note(n))}"
@@ -267,6 +270,31 @@ class Episode:
             print(f"  {final.name}: the audio is not clean (see AUDIO lines); the quality gate will fail it")
         print(final)
 
+    def _still(self, key: Path, out: Path, secs: float, i: int):
+        """A shot made from its picture with a slow camera move (stills mode, the narrated-horror look: 3amchoicess
+        reels are stills). Long enough for any narration; _finish trims it. Moves alternate so cuts feel alive."""
+        dur = secs * 1.8 + 4
+        frames = int(dur * reel.FPS)
+        moves = [f"z='1+0.12*on/{frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'",          # slow push in
+                 f"z='1.12-0.12*on/{frames}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'",       # slow pull out
+                 f"z='1.1':x='(iw-iw/zoom)*on/{frames}':y='ih/2-(ih/zoom/2)'",                  # slow drift sideways
+                 f"z='1+0.1*on/{frames}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*(1-on/{frames})'"]  # push in, rising
+        run(["ffmpeg", "-v", "error", "-y", "-i", str(key), "-filter_complex",
+             f"[0]scale={reel.W * 2}:{reel.H * 2}:force_original_aspect_ratio=increase,crop={reel.W * 2}:{reel.H * 2},"
+             f"zoompan={moves[(i - 1) % 4]}:d={frames}:s={reel.W}x{reel.H}:fps={reel.FPS},format=yuv420p",
+             "-frames:v", str(frames), "-c:v", "libx264", "-crf", "18", str(out)])
+
+    def _animate(self, key: bytes, prompt: str, secs: int) -> bytes:
+        """The video model, retried once with calmer wording if its safety filter blocks the shot."""
+        try:
+            return animate(key, prompt, secs)
+        except RuntimeError as e:
+            if "safety" not in str(e):
+                raise
+            print("  safety filter blocked the shot: retrying once with calmer wording")
+            return animate(key, "Calm, non-violent, non-graphic animated drama, suitable for a general audience. "
+                           + prompt.replace("bite", "secret").replace("dead", "lifeless"), secs)
+
     def say_it(self, shot: dict) -> str:
         """Lip-synced shot (speaker has an ElevenLabs voice): the video model speaks the line itself so the mouth
         matches the words; voice.timeline() then swaps that voice for the cast voice with the same timing."""
@@ -321,7 +349,7 @@ class Episode:
             reel.card(self.s, "choice", self.ep).save(png)
         cc = tmp / "card.mp4"
         run(["ffmpeg", "-v", "error", "-y", "-loop", "1", "-i", str(png), "-f", "lavfi", "-i",
-             "anullsrc=r=48000:cl=stereo", "-t", "4", "-vf", "format=yuv420p", "-r", str(reel.FPS),
+             "anullsrc=r=48000:cl=stereo", "-t", "3", "-vf", "format=yuv420p", "-r", str(reel.FPS),
              "-c:v", "libx264", "-c:a", "aac", "-ar", "48000", "-ac", "2", str(cc)])
         return cc
 

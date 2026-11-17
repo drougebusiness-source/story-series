@@ -26,7 +26,7 @@ log = logging.getLogger(__name__)
 
 RATE = 48000
 SPEECH_DB = -20.0           # every line the same loudness (owner 11-16: nobody randomly louder or softer)
-MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_v3")
+MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")   # steadier than v3 (11-16)
 CACHE = Path(os.environ.get("STORIES_CACHE", Path.home() / ".cache" / "stories")) / "voice"
 
 
@@ -84,14 +84,14 @@ def _resample(pcm16: bytes, rate_in: int) -> np.ndarray:
 
 def speak(text: str, voice_id: str) -> tuple[np.ndarray, list[tuple[str, float, float]]]:
     """The narrated line (mono float32, 48 kHz, levelled) and its word timings."""
-    key = hashlib.sha1(f"{MODEL}|{voice_id}|{text}".encode()).hexdigest()
+    key = hashlib.sha1(f"{MODEL}|1.08|{voice_id}|{text}".encode()).hexdigest()
     f = CACHE / f"{key}.json"
     if f.exists():
         d = json.loads(f.read_text(encoding="utf-8"))
     else:
         req = urllib.request.Request(
             f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps?output_format=pcm_24000",
-            data=json.dumps({"text": text, "model_id": MODEL}).encode(),
+            data=json.dumps({"text": text, "model_id": MODEL, "voice_settings": {"stability": 0.5, "similarity_boost": 0.75, "speed": 1.08}}).encode(),
             headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"], "Content-Type": "application/json"})
         for attempt in range(4):
             try:

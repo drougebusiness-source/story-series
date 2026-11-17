@@ -41,7 +41,10 @@ Driftborn is a cartoon with bean heads; THE LAST DRAFT has real human proportion
 - New characters and sets must use `characters/cole/2d.jpg` as the style reference (not Kael's).
 - Note: the painted bus in `school_yard` shows partial letters on its side; crop or avoid close-ups of it.
 
-## Prompt block (every 2D LAST DRAFT keyframe and shot)
+## Prompt block (every 2D LAST DRAFT keyframe and shot; look B, chosen by the owner 2026-11-16)
+Frame from a narrated horror story video in a flat minimalist vector illustration style: simple geometric shapes, very thin or no outlines, smooth flat colour fills with soft gradients, almost no texture, clean and graphic, simplified faces. Deep blue-black darkness everywhere outside ONE warm light source (a lantern, flashlight, phone screen or fire) that cuts a clear beam or pool of light. Quiet dread. No gore. Original characters and designs, not from any existing show.
+
+## Old look (gritty ink, replaced 2026-11-16 by the owner's pick of the flat horror look B)
 Frame from an adult animated survival-drama series, 2D cel animation in a gritty comic-book ink style: realistic,
 grounded human proportions, bold heavy black ink outlines with spotted solid black shadow areas, flat desaturated
 colour fills in ash greys, dusty bone and dead teal, one warm orange light source per scene that casts a hard orange
