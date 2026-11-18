@@ -10,7 +10,7 @@ shots:
     and lying on the altar right beside it a small dagger with a copper-wire handle. No people in the picture.'
   motion: The lanterns sway gently; the light glints on the dagger.
   secs: 3
-  caption: Someone stole the Order's holy flame. Beside the empty case, they found Wren's dagger.
+  caption: Someone stole the Order's holy flame. And beside the empty case, they found Wren's dagger.
   line: Someone stole the Order's holy flame. <break time="0.8s" /> And beside the empty case, they found Wren's dagger.
 - set: lantern_hall
   cast:
@@ -56,7 +56,7 @@ shots:
     never leaves her head. Only its head and beak move as it talks to her, smug. Wren slowly rolls her eyes up toward the
     raven on her head, then gapes in disbelief. Small movements only.
   secs: 6
-  caption: 'CROWS: Relax. I watched who did it. I''ll tell you everything... for one piece of cheese.'
+  caption: 'CROWS: Relax. I watched who did it. I will tell you everything, for one piece of cheese.'
   line: Relax. I watched who did it. <break time="0.5s" /> I will tell you everything, for one piece of cheese.
   continues: true
   voice_tts: true

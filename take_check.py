@@ -17,8 +17,11 @@ pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", wav, "-f", "f32le", "-ac", 
 m = WhisperModel("base.en", device="cpu", compute_type="int8")
 heard = " ".join(s.text.strip() for s in m.transcribe(np.frombuffer(pcm, np.float32), beam_size=5)[0])
 want, got = norm(text), norm(heard)
+# names (capitalised mid-sentence) are often spelled differently by the transcriber ("Myra" -> "Mira"): skip them
+names = {w.lower().strip(".,!?;:") for i, w in enumerate(text.split())
+         if w[:1].isupper() and i > 0 and not text.split()[i - 1].endswith((".", "?", "!"))}
 score = difflib.SequenceMatcher(None, want, got).ratio()
 gw = got.split()
-missing = [w for w in want.split() if (len(w) > 1 or w == "i") and not any(difflib.SequenceMatcher(None, w, h).ratio() >= 0.75
+missing = [w for w in want.split() if w not in names and (len(w) > 1 or w == "i") and not any(difflib.SequenceMatcher(None, w, h).ratio() >= 0.75
                                                              for h in gw)]
 print(f"{score:.2f} {','.join(missing)}")

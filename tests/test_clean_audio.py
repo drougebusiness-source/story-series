@@ -9,15 +9,19 @@ def _speechlike(secs, rate=24000):
     return (0.3 * np.sin(2 * np.pi * 180 * t) * (0.6 + 0.4 * np.sin(2 * np.pi * 3 * t))).astype(np.float32)
 
 
-def test_clean_removes_static_bursts_and_clicks():
+def test_clean_never_touches_speech_sounds():
+    """Owner 11-17: clean() used to zero out noisy bursts, which silenced every S/SH/T inside words ("My sister?"
+    became "Duh"). It must leave the voice exactly as recorded and only trim true silence off the ends."""
     rng = np.random.default_rng(1)
-    a = np.concatenate([rng.uniform(-0.9, 0.9, 240).astype(np.float32),     # click at the start
-                        np.zeros(2400, np.float32), _speechlike(1.0), np.zeros(4800, np.float32),
-                        rng.uniform(-0.8, 0.8, 3600).astype(np.float32)])    # static burst at the end
+    hiss = (0.15 * rng.uniform(-1, 1, 2400)).astype(np.float32)             # an "s" sound: a short noisy burst
+    word = np.concatenate([_speechlike(0.3), hiss, _speechlike(0.3)])
+    a = np.concatenate([np.zeros(12000, np.float32), word, np.zeros(12000, np.float32)])
     c = voice.clean(a)
-    assert np.abs(np.diff(c)).max() < 0.5
-    assert all(r <= voice.NOISE_RATIO_DB for *_, r in voice._bursts(c, 24000))
-    assert len(c) / 24000 < 1.2          # dead air and junk trimmed, the voice kept
+    assert len(c) < len(a)                                                    # silence at the ends is trimmed
+    k = len(c) - 1
+    # the word survives intact: the result contains the hiss samples unchanged (nothing zeroed or smoothed)
+    joined = c.tobytes()
+    assert hiss.tobytes() in joined
 
 
 def test_audio_check_flags_clicks_and_dead_gaps():

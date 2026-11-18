@@ -5,6 +5,7 @@ narrator:
   kokoro: am_michael@0.95
   gemini: Schedar
   eleven: tZssYepgGaQmegsMEXjK     # LOCKED 11-17 #2: "True - Crime & Horror Narrator" (crisp consonants, 10/10). Ray was disliked
+  speed: 1.05     # owner 11-17: fit the length
 cole:
   name: Cole Mercer
   brief: a lanky 34-year-old ex-chemistry teacher from Ohio; kind, dry, tired dad-humour, gentle Midwest voice that keeps everyone calm

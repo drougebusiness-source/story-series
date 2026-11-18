@@ -36,6 +36,7 @@ shots:
     hold: true
     gain: 0.16
   continues: true
+  owner_ok: '2026-11-17: the owner watched this walk and liked it; keep it'
 - set: wreck_inside
   cast:
   - Kael Torvin
@@ -60,15 +61,16 @@ shots:
   motion: The tiny screen crackles and Sola's small face on it talks, suspicious. The wrist lamp, the broken ceiling light
     behind and the comm screen all flicker teal at once, in time with the hum.
   secs: 5
-  caption: 'SOLA: Kael? Why is my radio humming?'
+  caption: 'SOLA: Kael? ... Why is my radio humming?'
   sfx:
   - sound: core_hum
     hold: true
     gain: 0.42
   voice_tts: true
+  line: Kael? <break time="0.6s" /> Why is my radio humming?
 choice:
   question: The core hums with Kael, and now Sola hears it too. Sell it or hide it?
   options:
     A: Sell it to the Concord
     B: Hide it
-vote_line: Do you sell it, or hide it? <break time="0.5s" /> Comment A or B.
+vote_line: Do you sell it, or hide it? <break time="0.6s" /> Vote A or B in the comments.

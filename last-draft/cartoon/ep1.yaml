@@ -9,9 +9,8 @@ shots:
   frame: The empty overgrown street of the dead town at dusk, abandoned cars, dark houses, nobody in sight.
   motion: Slow push in.
   secs: 3
-  caption: Two years ago, the dead got up. You were a chemistry teacher. Now seven of you survive in your old school.
-  line: Two years ago, the dead got up. <break time="0.7s" /> You were a chemistry teacher. <break time="0.5s" /> Now seven
-    of you survive inside your old high school.
+  caption: Two years ago, the dead got up. Seven of you now hide in the high school where you taught chemistry.
+  line: Two years ago, the dead got up. <break time="0.6s" /> Seven of you now hide in the high school where you taught chemistry.
 - set: school_hallway
   cast: []
   frame: Almost total darkness. One camping lantern on the floor in the near foreground, its small orange pool lighting a
@@ -20,12 +19,12 @@ shots:
   motion: The lantern flame gutters low. From the black at the far end of the hall comes a slow scratching. The hand on the
     sleeping bag goes completely still. Long hold.
   secs: 3
-  caption: Tonight, at two in the morning, somebody down the hall is scratching.
-  line: Tonight, at two in the morning, <break time="0.5s" /> somebody down the hall is scratching.
+  caption: At two in the morning, somebody down the hall is scratching.
+  line: At two in the morning, somebody down the hall is scratching.
   sfx:
   - sound: slow_scratch
     at: 1.4
-    gain: 0.5
+    gain: 0.25
 - set: school_yard
   cast:
   - Dani Ortiz
@@ -47,7 +46,7 @@ shots:
     paper with seven tally marks in black marker. Everything else is shadow.
   motion: A draft lifts the corner of the paper and lets it fall. The lantern light trembles across the seven marks.
   secs: 3
-  caption: The group has one rule. A bite means a bullet.
+  caption: Your group has one rule. A bite means a bullet.
   line: Your group has one rule. <break time="0.8s" /> A bite means a bullet.
 - set: school_hallway
   cast:

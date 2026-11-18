@@ -46,6 +46,28 @@ def jumps(f: np.ndarray, fps: float = 24.0) -> list[str]:
     return out
 
 
+def caption_mismatch(shots: list[dict]) -> list[str]:
+    """Owner 11-17: the words on screen must match the words spoken (the caption said "old school", the voice
+    "old high school")."""
+    def words(t):
+        t = re.sub(r"<[^>]+>", " ", t or "")
+        t = re.sub(r"^[A-Z][A-Z .'\"-]{1,30}:\s*", "", t.strip())
+        return re.sub(r"[^a-z0-9 ]+", " ", t.lower().replace("-", " ")).split()
+    out = []
+    for i, sh in enumerate(shots, 1):
+        if not sh.get("line"):
+            continue
+        cap, said = words(sh.get("caption", "")), words(sh["line"])
+        nums = [w for w in cap if w.isdigit()]
+        cap = [w for w in cap if not w.isdigit()]          # numbers are written as digits on screen, words in speech
+        extra = [w for w in cap if w not in said]
+        missing = [w for w in said if w not in cap and not nums]
+        if extra or (missing and not nums):
+            out.append(f"shot {i}: caption and voice differ (on screen only: {' '.join(extra) or '-'}; "
+                       f"spoken only: {' '.join(missing) or '-'})")
+    return out
+
+
 def overlaps(lines: list[dict], gap: float = 0.15) -> list[str]:
     """A2: lines sorted by start must each end before the next begins (with a small breath between)."""
     out, ls = [], sorted(lines, key=lambda x: x["start"])
@@ -218,6 +240,9 @@ def ai_shots(shots: list[dict], src: Path, qa_dir: Path, notes: dict | None = No
             severe.append(f"shot {i}: picture review could not run ({e})")
             continue
         for p in res.get("problems", []):
+            if shot.get("owner_ok"):                     # the owner watched this shot and approved it
+                minor.append(f"shot {i}: {p.get('what')} (owner approved the shot: {shot['owner_ok']})")
+                continue
             (severe if p.get("severity") == "severe" else minor).append(f"shot {i}: {p.get('what')}")
     return severe, minor
 
@@ -228,13 +253,19 @@ def ai_lines(speech: np.ndarray, rate: int, lines: list[dict], qa_dir: Path) -> 
         f = qa_dir / f"line{ln['shot']}.wav"
         sf.write(f, speech[int(ln["start"] * rate):int(ln["end"] * rate)], rate)
         try:
-            res = _gemini([{"text": LINE_REVIEW.format(who=ln["who"], text=re.sub(r"<[^>]+>", " ... ", ln["text"]),
+            parts_l = [{"text": LINE_REVIEW.format(who=ln["who"], text=re.sub(r"<[^>]+>", " ... ", ln["text"]),
                                                        shout="The script says they shout." if ln.get("shout") else
                                                        "They should speak at a normal volume.")},
-                           {"inline_data": {"mime_type": "audio/wav", "data": base64.b64encode(f.read_bytes()).decode()}}])
+                           {"inline_data": {"mime_type": "audio/wav", "data": base64.b64encode(f.read_bytes()).decode()}}]
+            res = _gemini(parts_l)
         except Exception as e:
             severe.append(f"shot {ln['shot']} line: sound review could not run ({e})")
             continue
+        if any(p.get("severity") == "severe" for p in res.get("problems", [])):
+            again = _gemini(parts_l)                     # a severe voice finding must be heard again too
+            if not any(p.get("severity") == "severe" for p in again.get("problems", [])):
+                for p in res.get("problems", []):
+                    p["severity"] = "minor"; p["what"] = f"{p.get('what')} (not heard again on a second listen)"
         for p in res.get("problems", []):
             (severe if p.get("severity") == "severe" else minor).append(f"shot {ln['shot']} ({ln['who']}): {p.get('what')}")
     return severe, minor
@@ -293,7 +324,17 @@ def gate(slug: str, ep: str = "ep1", ai: bool = True) -> bool:
         fail.append(f"voice: {p}")
     fail += [f"sound: {p}" for p in voice.audio_check(final, label=final.name) if "dead-silent" in p]
     fail += [f"talking over: {p}" for p in overlaps(lines)]
+    fail += [f"caption: {p}" for p in caption_mismatch(shots)]
     fail += [f"mix: {p}" for p in background_check(speech, qa_dir / "background.wav", rate)]
+    cast = voice.load_voices(ROOT / slug)
+    for ln in lines:                                     # a take much duller than its own voice (S/T sounds lost) fails
+        vid = (cast.get(ln["who"]) or cast.get("narrator") or "").split(":")[-1].split("@")[0]
+        if not vid:
+            continue
+        seg = voice._decode(None, pcm=speech[int(ln["start"] * rate):int(ln["end"] * rate)], in_rate=rate, rate=24000)
+        b, ref = voice.hf_share(seg, 24000), voice.voice_brightness(vid)
+        if b < 0.6 * ref:
+            warn.append(f"voice: shot {ln['shot']} ({ln['who']}) may sound dull/muffled (brightness {b:.2f}, this voice is normally {ref:.2f})")
     fail += [f"loudness: {p}" for p in loudness(speech, lines, rate)]
     fail += [f"loudness: {p}" for p in spikes(final)]
     bad, notes = words(qa_dir)

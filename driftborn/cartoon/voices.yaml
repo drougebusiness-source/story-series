@@ -6,6 +6,7 @@ narrator:
   kokoro: am_onyx@0.95
   gemini: Charon
   eleven: G3cUz6hG8hPYnPdbmlvo     # LOCKED 11-17 #2: the JIC Narrator (owner: calm like JIC Precautions). Ed was too enthusiastic
+  speed: 0.9     # owner 11-17: pace
 kael:
   name: Kael Torvin
   brief: a wiry 19-year-old junk-diver raised on a rust mining moon; bright, clear, quick young teen-hero voice (owner 11-16, the energetic cocky rebel-kid type), cheeky and curious, voice of a kid who talks to machines
