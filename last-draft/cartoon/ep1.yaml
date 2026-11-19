@@ -79,4 +79,5 @@ choice:
   options:
     A: Wake the group and tell them
     B: Keep her secret and watch her
-vote_line: Do you wake the group, or keep her secret? <break time="0.5s" /> Vote A or B in the comments.
+vote_line: What do you do? <break time="0.4s" /> Wake the group, or keep her secret? <break time="0.4s" /> Vote A or B in
+  the comments.

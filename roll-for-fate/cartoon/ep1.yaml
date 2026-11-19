@@ -21,9 +21,7 @@ shots:
   motion: Wren keeps her arm raised and pointing up the whole time and protests indignantly, her outraged face exaggerated
     and comic. Her arm and hand stay where they are. Small movements only.
   secs: 4
-  caption: 'WREN: By the Light, it wasn''t me! I can''t even reach that high!'
-  voice_tts: true
-  line: By the Light, it wasn't me! I can't even reach that high!
+  caption: 'WREN: I swear on the Light, I can''t even reach that shelf!'
 - set: lantern_hall
   still: true
   cast: []
@@ -65,4 +63,5 @@ choice:
   options:
     A: Pay the raven and follow him
     B: Break into the vault yourself (roll 13+)
-vote_line: Should Wren follow the raven, or break into the vault herself? <break time="0.5s" /> Comment A or B.
+vote_line: What should Wren do? <break time="0.4s" /> Follow the raven, or break into the vault herself? <break time="0.4s"
+  /> Vote A or B in the comments.

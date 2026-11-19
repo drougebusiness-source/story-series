@@ -25,19 +25,8 @@ shots:
   motion: Ezra's smile drops, his eyes widen slowly and he leans toward the screen. Hold.
   secs: 3
   caption: 'Then he reads one. Number 39: Myra Vale. Unperson.'
-  line: Then he reads one. <break time="0.9s" /> Number thirty-nine. <break time="0.5s" /> Myra Vale. <break time="0.5s" />
+  line: Then he reads one. <break time="0.6s" /> Number thirty-nine. <break time="0.3s" /> Myra Vale. <break time="0.3s" />
     Unperson.
-- set: clerk_desk
-  cast:
-  - Ezra Vale
-  framing: the same set, close on the desk and Ezra's hand
-  frame: Ezra's hand hovers over the keyboard, one finger above a single red key, the green monitor glow on his knuckles.
-    No scars, stitches or marks on his face, hands or suit.
-  motion: His finger trembles above the red key; the monitor glow pulses slowly like a blinking cursor; his hand pulls back
-    an inch, then hovers again.
-  secs: 1
-  caption: 'EZRA: My sister?'
-  line: My sister?
 - set: clerk_desk
   cast:
   - Ezra Vale
@@ -63,10 +52,11 @@ shots:
   sfx:
   - sound: ominous_drone
     at: 0.3
-    gain: 0.5
+    gain: 0.2
 choice:
   question: Delete his sister, or steal her file?
   options:
     A: Delete it as ordered
     B: Secretly copy the file first
-vote_line: Delete her file, or copy it in secret? <break time="0.4s" /> Vote A or B in the comments.
+vote_line: What should Ezra do? <break time="0.4s" /> Delete her file, or copy it in secret? <break time="0.4s" /> Vote A
+  or B in the comments.

@@ -31,7 +31,8 @@ RATE = 24000
 # ElevenLabs narration model. eleven_v3 is more expressive but swallowed short phrases and once switched voices
 # mid-line (11-16), so the steadier multilingual v2 is the default.
 ELEVEN_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
-ELEVEN_SETTINGS = {"stability": 0.5, "similarity_boost": 0.8, "style": 0.0, "use_speaker_boost": True, "speed": 1.0}
+ELEVEN_SETTINGS = {"stability": 0.7, "similarity_boost": 0.85, "style": 0.0, "use_speaker_boost": True, "speed": 1.0}
+ELEVEN_SEED = 4117        # fixed seed: the same voice character in every phrase (owner heard "3 narrators in one")
 # 11-17 #3: a touch slower (owner: narrators too fast). Below ~0.9 ElevenLabs can drag; 1.08 dropped words.
 # 11-17 #2: the same calm settings as the JIC narrator (owner likes JIC; style 0.3 sounded over-acted).
 # 11-17: livelier delivery (owner: flat, no drama); speed stays 1.0 (1.08 dropped words). Pauses are written into lines
@@ -81,7 +82,7 @@ def say(text: str, voice: str) -> np.ndarray:
     """Mono float32 audio at 24 kHz, cleaned of clicks and static (clean()). Paid engines are cached raw in
     out/voices/cache; the cleaning runs on every read, so old cached lines get cleaned too."""
     if not voice.startswith("kokoro"):
-        tag = f"{voice}|{ELEVEN_MODEL}|{json.dumps(ELEVEN_SETTINGS, sort_keys=True)}|whole2" if voice.startswith("eleven") else voice   # a new model is a new take
+        tag = f"{voice}|{ELEVEN_MODEL}|{json.dumps(ELEVEN_SETTINGS, sort_keys=True)}|phrase5" if voice.startswith("eleven") else voice   # a new model is a new take
         f = ROOT / "out" / "voices" / "cache" / (hashlib.sha1(f"{tag}|{text}".encode()).hexdigest() + ".npy")
         if f.exists() and _length_ok(clean(np.load(f)), text):
             return clean(np.load(f))
@@ -288,7 +289,7 @@ def voice_brightness(voice_id: str) -> float:
     return hf
 
 
-def _eleven_timed(text: str, voice_id: str, speed: float = 1.0) -> tuple[np.ndarray, dict]:
+def _eleven_timed(text: str, voice_id: str, speed: float = 1.0, seed: int | None = None) -> tuple[np.ndarray, dict]:
     """One whole-line ElevenLabs reading plus when every character is spoken."""
     import base64
     settings = dict(ELEVEN_SETTINGS, speed=speed)
@@ -296,7 +297,8 @@ def _eleven_timed(text: str, voice_id: str, speed: float = 1.0) -> tuple[np.ndar
         settings.update(stability=0.65)
     req = urllib.request.Request(
         f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}/with-timestamps?output_format=pcm_24000",
-        data=json.dumps({"text": text, "model_id": ELEVEN_MODEL, "voice_settings": settings}).encode(),
+        data=json.dumps({"text": text, "model_id": ELEVEN_MODEL, "voice_settings": settings,
+                         "seed": ELEVEN_SEED if seed is None else seed}).encode(),
         headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"], "Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=180) as r:
         d = json.loads(r.read())
@@ -340,46 +342,38 @@ def _transcriber_ok(a: np.ndarray, text: str) -> tuple[bool, str]:
         return True, ""
 
 
-def _eleven_phrases(text: str, voice_id: str, tries: int = 4, speed: float = 1.0) -> np.ndarray:
-    """A line with <break time="Xs" /> pauses. The WHOLE line is read in one go (separately read short phrases came
-    out glitched, 11-17); the pauses are then cut in at the word boundaries ElevenLabs reports. Every take must pass
-    the transcriber AND the listener, or it is re-recorded."""
-    parts = re.split(r'<break time="([\d.]+)s" */>', text)
-    phrases, gaps = [p.strip() for p in parts[0::2]], [float(x) for x in parts[1::2]]
-    plain = " ".join(p for p in phrases if p)
+def _phrase_take(text: str, voice_id: str, speed: float, tries: int = 4) -> np.ndarray:
+    """One phrase, recorded fresh on its own and checked: brightness against this voice, the transcriber and the
+    listener (heard twice). Re-recorded up to `tries`; the best take is kept."""
     best, best_key = None, None
     for k in range(tries):
-        a, al = _eleven_timed(plain, voice_id, speed)
+        a = _eleven_timed(text, voice_id, speed, ELEVEN_SEED + k)[0]   # a retake needs a new seed
         bright = hf_share(a)
-        dull = bright < 0.7 * voice_brightness(voice_id)   # much duller than this voice normally is: S/T lost ("Duh")
-        ok_t, miss_t = _transcriber_ok(a, plain)
-        ok_l, miss_l = (False, "skipped: dull take") if dull else _listener_ok(a, plain)
-        key = (not dull) + ok_t + ok_l, bright           # most checks passed, then the clearest
+        dull = bright < 0.7 * voice_brightness(voice_id)
+        ok_t, miss_t = _transcriber_ok(a, text)
+        ok_l, miss_l = (False, "skipped: dull take") if dull else _listener_ok(a, text)
+        key = (not dull) + ok_t + ok_l, bright
         if best_key is None or key > best_key:
-            best, best_key, best_al = a, key, al
+            best, best_key = a, key
         if not dull and ok_t and ok_l:
             break
-        print(f"  retake {k + 1} for {plain[:40]!r}: brightness {bright:.2f} | transcriber {miss_t or 'ok'} | "
-              f"listener {miss_l}")
-    a, al = best, best_al
-    if not gaps or not al.get("characters"):
-        return trim_silence(a, RATE)
-    # cut points: halfway between the last letter of a phrase and the first letter of the next
-    ends, pos = [], 0
-    starts_t, ends_t = al["character_start_times_seconds"], al["character_end_times_seconds"]
-    for ph in phrases[:-1]:
-        pos += len(ph)
-        e = ends_t[min(pos, len(ends_t)) - 1]
-        nxt = pos + 1 if pos + 1 < len(starts_t) else len(starts_t) - 1
-        ends.append((e + starts_t[nxt]) / 2)
-        pos += 1                                         # the joining space
-    out, prev = [], 0
-    for cut, gap in zip(ends, gaps):
-        c = int(cut * RATE)
-        out += [a[prev:c], np.zeros(int(RATE * gap), np.float32)]
-        prev = c
-    out.append(a[prev:])
-    return trim_silence(np.concatenate(out), RATE)
+        print(f"  retake {k + 1} for {text[:40]!r}: brightness {bright:.2f} | transcriber {miss_t or 'ok'} | listener {miss_l}")
+    return trim_silence(best, RATE)
+
+
+def _eleven_phrases(text: str, voice_id: str, tries: int = 4, speed: float = 1.0) -> np.ndarray:
+    """A line with <break time="Xs" /> pauses. Owner 11-17 #4: every dramatic pause starts a NEW, separately
+    recorded phrase (cutting one reading at word timings clipped "call/skip" and halved a breath). Phrases are joined
+    by exact silences. (Separate phrases only sounded broken before because clean() was silencing S/T sounds.)"""
+    parts = re.split(r'<break time="([\d.]+)s" */>', text)
+    phrases, gaps = [p.strip() for p in parts[0::2]], [float(x) for x in parts[1::2]]
+    out = []
+    for i, ph in enumerate(phrases):
+        if ph:
+            out.append(_phrase_take(ph, voice_id, speed, tries))
+        if i < len(gaps):
+            out.append(np.zeros(int(RATE * gaps[i]), np.float32))
+    return np.concatenate(out) if out else np.zeros(1, np.float32)
 
 
 def _gemini_say(text: str, voice_name: str, brief: str, speed: float = 1.0) -> np.ndarray:

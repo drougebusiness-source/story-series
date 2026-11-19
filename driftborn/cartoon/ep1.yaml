@@ -14,11 +14,13 @@ shots:
   motion: Sola talks to Kael, deadpan, keeping the binoculars still at her chest. Kael stays standing with his hands on his
     hips and slowly tilts his head, listening. Small, calm movements only.
   secs: 5
-  caption: 'SOLA: Ninety years dead. If you go in there and die, I''m keeping your boots.'
+  caption: 'SOLA: This wreck''s been dead ninety years. If you go in there and die, I''m keeping your boots.'
   sfx:
   - sound: core_hum
     hold: true
     gain: 0.1
+  voice_tts: true
+  line: This wreck's been dead ninety years. If you go in there and die, I'm keeping your boots.
 - set: wreck_outside
   cast:
   - Kael Torvin
@@ -44,9 +46,8 @@ shots:
   frame: The lamp beam on a sealed metal cylinder glowing soft teal, half-buried in the debris pile; Kael kneels beside it.
   motion: Kael lifts the cylinder out of the debris with both hands. It pulses brighter teal, slowly, like a heartbeat.
   secs: 3
-  caption: 'Inside: a sealed data core. Worth a fortune. And a hanging, if you''re caught with it.'
-  line: Inside, a sealed data core. <break time="0.6s" /> Worth a fortune. <break time="0.6s" /> And a hanging, if you're
-    caught with it.
+  caption: Inside, a sealed data core worth a fortune. And a hanging, if you're caught with it.
+  line: Inside, a sealed data core worth a fortune. <break time="0.8s" /> And a hanging, if you're caught with it.
   sfx:
   - sound: core_hum
     hold: true
@@ -73,4 +74,4 @@ choice:
   options:
     A: Sell it to the Concord
     B: Hide it
-vote_line: Do you sell it, or hide it? <break time="0.6s" /> Vote A or B in the comments.
+vote_line: What should Kael do? <break time="0.4s" /> Sell it, or hide it? <break time="0.4s" /> Vote A or B in the comments.
