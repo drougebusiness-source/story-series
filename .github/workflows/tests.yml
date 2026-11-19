@@ -13,4 +13,5 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: sudo apt-get update -q && sudo apt-get install -yq ffmpeg && pip install -r requirements.txt -r requirements-dev.txt
-      - run: python -m pytest -q
+      # The render stack (voice/qa/lipsync) runs only on the PC and needs its audio libraries; GitHub tests what it runs.
+      - run: python -m pytest -q --ignore=lipsync_test.py --ignore=tests/test_clean_audio.py --ignore=tests/test_qa.py --ignore=tests/test_voices.py
