@@ -5,32 +5,35 @@ narrator:
   brief: a deep, calm, sophisticated space-documentary narrator, like an old starship log
   kokoro: am_onyx@0.95
   gemini: Charon
-  eleven: G3cUz6hG8hPYnPdbmlvo     # LOCKED 11-17 #2: the JIC Narrator (owner: calm like JIC Precautions). Ed was too enthusiastic
   speed: 0.9     # owner 11-17: pace
+  eleven: G3cUz6hG8hPYnPdbmlvo     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 kael:
   name: Kael Torvin
   brief: a wiry 19-year-old junk-diver raised on a rust mining moon; bright, clear, quick young teen-hero voice (owner 11-16, the energetic cocky rebel-kid type), cheeky and curious, voice of a kid who talks to machines
   kokoro: am_puck
-  eleven: S0ypc51SmsvcKXTWvjqJ
   gemini: Zubenelgenubi
+  eleven: vBKc2FfBKJfcZNyEt1n6     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 sola:
   name: Sola Venn
   brief: a 21-year-old engineer; quick, dry and sarcastic, clipped spacer slang, sounds like she's always mid-repair
   kokoro: af_nova
-  eleven: dmWfLQZJq7wNPv9WmtiM
   gemini: Zephyr
+  eleven: dmWfLQZJq7wNPv9WmtiM     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 iva:
   name: Captain Iva Rhoss
   brief: a 35-year-old smuggler pilot; husky, laid-back southern country drawl, warm but dangerous when serious
   kokoro: af_bella@0.95
   gemini: Kore
+  eleven: Bj9UqZbhQsanLzgalpEG     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 holt:
   name: Prefect Daren Holt
   brief: a calm 45-year-old Concord officer; polished, very proper upper-class English, soft-spoken and precise, never raises his voice
   kokoro: bm_george
   gemini: Iapetus
+  eleven: j9jfwdrw7BRfcR43Qohk     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 wick:
   name: Wick
   brief: a hulking 300-year-old mining robot; slow, deep, rumbling and kind, slightly metallic, old-fashioned words
   kokoro: am_santa@0.8
   gemini: Orus
+  eleven: bFrjFL4nlpeYNwNRhXxq     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)

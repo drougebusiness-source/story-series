@@ -5,30 +5,34 @@ narrator:
   brief: a calm, official state-broadcast announcer; crisp received-pronunciation English, measured and emotionless
   kokoro: bm_george@0.92
   gemini: Charon
-  eleven: FFlil81wBQMaZFTvhOFV     # LOCKED 11-17 #4: "Duncan" upper-class RP (owner: polished, imperial, not deep)
+  eleven: 7p1Ofvcwsv7UBPoFNcpI     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 ezra:
   name: Ezra Vale
   brief: a narrow, tidy 26-year-old records clerk; precise, quiet, clipped proper English, polite to a fault, nervous underneath
   kokoro: bm_lewis@0.95
   gemini: Iapetus
-  eleven: LqEivuybhPFCy1j3NdDP     # LOCKED 11-17 #3: "Kalum - Conversational" (clean RP). Lee had static
+  eleven: av1BMOR1GPgThz9p4fLo     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 mira:
   name: Mira Vale
   brief: a 22-year-old rebel radio operator; low, quick and sharp, the only one who doesn't sound rehearsed, a little rough at the edges
   kokoro: bf_lily
   gemini: Pulcherrima
+  eleven: pFZP5JQG7iQjIQuC4Bku     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 crane:
   name: Director Halden Crane
   brief: a silver-haired Ministry director in his 60s; warm, velvety, unhurried upper-class English with a soft smile you can hear, quietly menacing
   kokoro: bm_fable@0.88
   gemini: Algieba
+  eleven: 7p1Ofvcwsv7UBPoFNcpI     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 juno:
   name: Juno Park
   brief: a cheerful 28-year-old clerk; bright, chirpy, overly polite and prim, every sentence sounds like a customer-service smile
   kokoro: bf_alice
   gemini: Laomedeia
+  eleven: Gv42yFG3G6CHLsU5y8g6     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 brann:
   name: Officer Brann Kols
   brief: a broad 40-year-old riot officer; flat, heavy, clipped commands, deep chest voice, no warmth
   kokoro: bm_daniel@0.9
   gemini: Alnilam
+  eleven: nPvIP7YzPX8Whz6ZKp2R     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)

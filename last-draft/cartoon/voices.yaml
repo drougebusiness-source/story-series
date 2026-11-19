@@ -4,43 +4,47 @@ narrator:
   brief: horror narrator, a low, calm, measured American man telling you a scary story at 2 AM, never theatrical
   kokoro: am_michael@0.95
   gemini: Schedar
-  eleven: tZssYepgGaQmegsMEXjK     # LOCKED 11-17 #2: "True - Crime & Horror Narrator" (crisp consonants, 10/10). Ray was disliked
   speed: 1.05     # owner 11-17: fit the length
+  eleven: tZssYepgGaQmegsMEXjK     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 cole:
   name: Cole Mercer
   brief: a lanky 34-year-old ex-chemistry teacher from Ohio; kind, dry, tired dad-humour, gentle Midwest voice that keeps everyone calm
   kokoro: am_eric
-  eleven: 8hmpa25DrgOJjzYgU64z
   gemini: Achird
+  eleven: Cz0K1kOv9tD8l0b5Qu53     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 dani:
   name: Dani Ortiz
   brief: a 17-year-old Midwest girl; guarded, quiet, quick short answers, tough on the outside
   kokoro: af_river
   gemini: Kore
-  eleven: wSRCyzJYBsTZLFcumuu8     # LOCKED 11-17: "Celeste - Soft whisper" (listen-checked; owner: one voice per character, keep it)
+  eleven: wSRCyzJYBsTZLFcumuu8     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 tank:
   name: Marcus "Tank" Bell
   brief: a big gentle 18-year-old ex-linebacker; deep, slow, warm, friendly small-town Midwest kid
   kokoro: am_fenrir@0.9
-  eleven: UPlXPHEQFgDFTFd0qJ9R
   gemini: Umbriel
+  eleven: 3XOBzXhnDY98yeWQ3GdM     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 lily:
   name: Lily Tran
   brief: a small 15-year-old artist; soft, thoughtful, speaks a little fast when nervous
   kokoro: af_sky
   gemini: Achernar
+  eleven: FGY2WhTYpPnrIDTdsKH5     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 owen:
   name: Owen Pike
   brief: a skinny 17-year-old wiseguy; fast, smirking, sarcastic, a mall-rat Midwest drawl
   kokoro: am_puck@1.05
   gemini: Puck
+  eleven: MYiFAKeVwcvm4z9VsFAR     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 priya:
   name: Priya Shah
   brief: a 16-year-old self-taught medic; calm, firm, practical, the one who sounds older than she is
   kokoro: af_kore
   gemini: Erinome
+  eleven: RXtWW6etvimS8QJ5nhVk     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 rook:
   name: Rook
   brief: a weathered ex-soldier in his 40s; low gravelly rural Midwest voice, few words, hard to read
   kokoro: am_onyx@0.9
   gemini: Algenib
+  eleven: Tw2LVqLUUWkxqrCfFOpw     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)

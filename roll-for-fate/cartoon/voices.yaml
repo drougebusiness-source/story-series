@@ -5,38 +5,41 @@ narrator:
   brief: an old tavern storyteller; warm, gravelly working-class English, a bit theatrical, like he's had one ale
   kokoro: bm_fable
   gemini: Algenib
-  eleven: HOLINJYuuNipXUTD7z8k     # LOCKED 11-17 #2: "Paul - Natural British Storyteller" (clean S sounds). David had a lisp
   engine: eleven
+  eleven: HOLINJYuuNipXUTD7z8k     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 wren:
   name: Wren Ashby
   brief: a short, freckled 23-year-old squire, a woman; scrappy commoner English (West Country), stubborn and earnest, brave but cracks when cornered
   kokoro: bf_emma
-  eleven: jUPSOpRcPt8GMPsWx5fy
   gemini: Leda
+  eleven: jUPSOpRcPt8GMPsWx5fy     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 crows:
   name: Crows
   brief: a sly black raven from far away; dry, smug, silky voice with a clear French accent, owner 11-16, never in a hurry
   kokoro: im_nicola     # free test picks in out/voices/crows-accent-test.wav
   gemini: Puck
-  eleven: kiw9hkUW1gcPQwsQSs4e     # LOCKED 11-17: "Cyril - French-Accented" (listen-checked; owner: one voice per character, keep it)
+  eleven: kiw9hkUW1gcPQwsQSs4e     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 fennick:
   name: Fennick Vale
   brief: a lanky 30-year-old cursed bard; charming, quick, roguish Cockney showman, voice a little hoarse from the curse
   kokoro: bm_lewis
   gemini: Fenrir
+  eleven: N2lVS1w4EtoT3dr4eOWO     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 brunhild:
   name: Brunhild Ashfall
   brief: a stout old dwarf smith, a woman; deep, gruff, loud Yorkshire, blunt and funny
   kokoro: bf_alice@0.85
   gemini: Gacrux
+  eleven: aAsWcN5jdLdiYG7Hq0YL     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 osric:
   name: Osric Dimm
   brief: a pale, nervous 19-year-old necromancer; thin, fast, stammering commoner English, apologises a lot
   kokoro: bm_daniel@1.12
   gemini: Enceladus
+  eleven: Sq93GQT4X1lKDXsQcixO     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
 maelle:
   name: Sister Maelle
   brief: a tall 40-year-old cleric of the Order; cold, stern, slow and formal, the only proper-sounding voice in town
   kokoro: bf_isabella@0.92
-  eleven: USEQXnsXRJlw2k9LUzG4
   gemini: Kore
+  eleven: USEQXnsXRJlw2k9LUzG4     # OWNER PICK 2026-11-19 (the owner chose this voice; never change it without asking)
