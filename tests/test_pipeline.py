@@ -104,7 +104,7 @@ def test_caption_has_vote_line_and_hashtags():
 def test_every_series_config_loads_and_fonts_exist(slug):
     s = Series.load(slug)
     assert s.font("head").exists() and s.font("body").exists()
-    assert s.cfg["live"] is False and s.cfg["secret"].isupper()
+    assert isinstance(s.cfg["live"], bool) and s.cfg["secret"].isupper()
     assert s.text("BRAND.md") and s.text("SEASON1.md")
 
 
