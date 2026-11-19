@@ -4,7 +4,7 @@ One episode per series every **Monday, Wednesday and Friday evening** (Central):
 6 PM COMPLIANT (@citizen.213), 7 PM THE LAST DRAFT (@lastdraft.survival), 8 PM ROLL FOR FATE (@roll.for.fate),
 9 PM DRIFTBORN (@driftborn.saga). Episode 1 of all four goes out Friday 2026-11-20.
 
-**Video check: ON**
+**Video check: ON** (owner confirmed 2026-11-19: "Show me first")
 (While ON, the owner OKs each finished batch of videos before it's queued. The owner turns it OFF by saying so;
 then a video that passes the quality gate is queued on its own. Scripts ALWAYS need the owner's OK.)
 
