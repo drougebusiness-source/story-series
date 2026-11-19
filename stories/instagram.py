@@ -43,10 +43,13 @@ class Account:
         return _check(self.http.get(f"{GRAPH}/{self.ig}", params={
             "fields": "username", "access_token": self.token}, timeout=30)).get("username", "")
 
-    def post_reel(self, video: Path, caption: str) -> dict:
-        container = _check(self.http.post(f"{GRAPH}/{self.ig}/media", data={
-            "media_type": "REELS", "upload_type": "resumable", "caption": caption, "share_to_feed": "true",
-            "access_token": self.token}, timeout=60))["id"]
+    def post_reel(self, video: Path, caption: str, thumb_offset_ms: int | None = None) -> dict:
+        """thumb_offset_ms picks the cover frame (ours: the vote screen near the end)."""
+        data = {"media_type": "REELS", "upload_type": "resumable", "caption": caption, "share_to_feed": "true",
+                "access_token": self.token}
+        if thumb_offset_ms is not None:
+            data["thumb_offset"] = str(int(thumb_offset_ms))
+        container = _check(self.http.post(f"{GRAPH}/{self.ig}/media", data=data, timeout=60))["id"]
         with open(video, "rb") as f:
             _check(self.http.post(f"{RUPLOAD}/ig-api-upload/{GRAPH_VERSION}/{container}",
                                   headers={"Authorization": f"OAuth {self.token}", "offset": "0",

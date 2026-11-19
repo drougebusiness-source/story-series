@@ -3,7 +3,8 @@
 Rules (shown to viewers on the pinned "How this works" post):
 - A vote is the first standalone A, B or C in a comment ("A", "b!", "Option C", "A because...").
 - One vote per account: the latest one counts. The series' own account is ignored.
-- Only comments made within 24 h of the post count.
+- Only comments made before voting closes count (noon Central the day before the next episode, see schedule.py;
+  older episodes without a close time use 24 h).
 - Most votes wins. No votes or a tie -> the story (the AI) chooses, and the next episode says so.
 """
 from __future__ import annotations
@@ -33,16 +34,18 @@ def _ts(s: str) -> datetime:
     return datetime.strptime(s.replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z")
 
 
-def tally(comments: list[dict], options: list[str], posted_at: str, own_username: str = "") -> dict:
+def tally(comments: list[dict], options: list[str], posted_at: str, own_username: str = "",
+          close_at: str = "") -> dict:
     """comments: Instagram comment objects with text, timestamp and username."""
     start = _ts(posted_at)
+    end = _ts(close_at) if close_at else start + WINDOW
     latest: dict[str, tuple[datetime, str]] = {}
     for c in comments:
         user = (c.get("username") or c.get("from", {}).get("username") or c.get("id", "")).lower()
         if own_username and user == own_username.lower():
             continue
         when = _ts(c["timestamp"])
-        if not (start <= when <= start + WINDOW):
+        if not (start <= when <= end):
             continue
         v = parse_vote(c.get("text", ""), options)
         if v and (user not in latest or when >= latest[user][0]):

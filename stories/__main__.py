@@ -5,7 +5,10 @@
                                                 write + render the NEXT episode to out/ without posting or changing
                                                 the story (episode 1 is kept as the approved draft)
     python -m stories episode <series>          the scheduled job: count the last vote, write, draw, render, post
-    python -m stories slot <HH>                 run `episode` for the series whose slot_utc is HH (GitHub's cron)
+    python -m stories post <series>             post the next episode the PC rendered and published as a GitHub release
+                                                (tag <series>-epN: video + post.json). Not ready -> skip, post nothing
+    python -m stories slot <HH>                 run `post` for the series whose slot_utc is HH (GitHub's cron)
+    python -m stories tally                     count the votes of every episode whose voting has closed
     python -m stories status                    one line per series
     python -m stories art <series> [--n 3]      Gemini profile picture options -> out/art/
 
@@ -21,7 +24,9 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import art, gemini, reel, votes, writer
+import requests
+
+from . import art, gemini, reel, schedule, votes, writer
 from .instagram import Account, PostError
 from .series import ROOT, SLUGS, Series
 
@@ -63,10 +68,12 @@ def count_last_vote(series: Series, prev: dict | None, acct: Account | None) -> 
         return None
     try:
         own = acct.username()
-        result = votes.tally(acct.comments(prev["media_id"]), list(prev["choice"]["options"]), prev["posted_at"], own)
+        result = votes.tally(acct.comments(prev["media_id"]), list(prev["choice"]["options"]), prev["posted_at"], own,
+                             prev.get("close_at", ""))
     except PostError as e:
         log.warning("couldn't read the comments, the story will choose: %s", e)
-        return {"counts": {}, "total": 0, "winner": None, "share": 0, "error": str(e)[:200]}
+        prev["result"] = {"counts": {}, "total": 0, "winner": None, "share": 0, "error": str(e)[:200]}
+        return prev["result"]
     prev["result"] = result
     prev["stats"] = acct.insights(prev["media_id"])
     return result
@@ -132,6 +139,95 @@ def cmd_episode(slug: str) -> int:
     return 0
 
 
+REPO = os.environ.get("GITHUB_REPOSITORY", "drougebusiness-source/story-series")
+
+
+def release_file(tag: str, name: str) -> bytes | None:
+    """A file from the public GitHub release `tag`, or None if it isn't there (yet)."""
+    r = requests.get(f"https://github.com/{REPO}/releases/download/{tag}/{name}", timeout=300)
+    if r.status_code == 404:
+        return None
+    r.raise_for_status()
+    return r.content
+
+
+def cartoon_caption(series: Series, post: dict, now: datetime) -> str:
+    opts = "\n".join(f"{k}: {v}" for k, v in post["options"].items())
+    letters = " or ".join(post["options"])
+    return (f"EP {post['n']}: {post['title']}\n\n{post['question']}\n{opts}\n\n"
+            f"Comment {letters}. Voting closes {schedule.close_words(now)}. Most votes wins. "
+            f"No votes? The story chooses.\n\nNew episodes every Monday, Wednesday and Friday.\n\n"
+            f"{series.cfg.get('hashtags', '')}").strip()
+
+
+def cmd_post(slug: str) -> int:
+    """The scheduled job (owner's week: Mon/Wed/Fri evenings). The PC writes, renders and quality-checks each
+    episode, and after the owner's OK publishes it as a GitHub release; this posts it and opens the vote."""
+    series = Series.load(slug)
+    if not series.live:
+        print(f"{slug}: not live yet (set live: true in {slug}/series.yaml to start posting)")
+        return 0
+    acct = account(series)
+    if acct is None:
+        print(f"{slug}: ❌ no Instagram secrets ({' and '.join(series.ig_env)})")
+        return 1
+    state = series.state
+    eps = state["episodes"]
+    n = eps[-1]["n"] + 1 if eps else 1
+    tag = f"{slug}-ep{n}"
+    meta = release_file(tag, "post.json")
+    if meta is None:
+        print(f"{slug}: ⏸ episode {n} isn't ready (no release {tag}); nothing posted. "
+              f"It goes out at the next slot once the PC publishes it.")
+        return 0
+    post = json.loads(meta)
+    if not post.get("qa_pass"):
+        print(f"{slug}: ❌ release {tag} has no quality-gate PASS; not posting")
+        return 1
+    OUT.mkdir(exist_ok=True)
+    video = OUT / post["video"]
+    video.write_bytes(release_file(tag, post["video"]) or b"")
+    if video.stat().st_size != post["size"]:
+        print(f"{slug}: ❌ downloaded video is {video.stat().st_size} bytes, expected {post['size']}; not posting")
+        return 1
+    now = _now()
+    posted = acct.post_reel(video, cartoon_caption(series, post, now), post.get("thumb_offset_ms"))
+    when = datetime.strptime(posted["posted_at"].replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z")         if posted.get("posted_at") else now
+    ep = {"n": n, "title": post["title"], "kind": "cartoon",
+          "choice": {"question": post["question"], "options": post["options"]},
+          **posted, "close_at": schedule.iso(schedule.close_time(when))}
+    eps.append(ep)
+    series.save_state(state)
+    print(f"{slug}: ✅ episode {n} posted {posted.get('permalink')} (voting closes {schedule.close_words(when)})")
+    return 0
+
+
+def cmd_tally() -> int:
+    """Count every closed vote once and save it in state.json (the PC's writer reads it from there)."""
+    now = _now()
+    for slug in SLUGS:
+        series = Series.load(slug)
+        state = series.state
+        prev = state["episodes"][-1] if state["episodes"] else None
+        if not prev or not prev.get("media_id") or "result" in prev:
+            print(f"{series.title}: nothing to count")
+            continue
+        close = prev.get("close_at")
+        if close and now < datetime.strptime(close, "%Y-%m-%dT%H:%M:%S%z"):
+            print(f"{series.title}: voting on episode {prev['n']} is open until {close}")
+            continue
+        r = count_last_vote(series, prev, account(series))
+        if r is None:
+            print(f"{series.title}: ❌ no Instagram secrets")
+            continue
+        series.save_state(state)
+        counts = ", ".join(f"{k} {v}" for k, v in r["counts"].items())
+        verdict = f"{r['winner']} wins ({r['share']}%)" if r["winner"] else "no winner: the story chooses"
+        print(f"{series.title}: episode {prev['n']}: {counts} of {r['total']} votes -> {verdict}"
+              + (f" ⚠️ {r['error']}" if r.get("error") else ""))
+    return 0
+
+
 def cmd_check() -> int:
     bad = 0
     print("Gemini:", "✅ key set, text model " + gemini.text_model() if os.environ.get("GEMINI_API_KEY") else "❌ GEMINI_API_KEY not set")
@@ -173,6 +269,9 @@ def main(argv=None) -> int:
     ar = sub.add_parser("art")
     ar.add_argument("series", choices=SLUGS)
     ar.add_argument("--n", type=int, default=3)
+    po = sub.add_parser("post")
+    po.add_argument("series", choices=SLUGS)
+    sub.add_parser("tally")
     sl = sub.add_parser("slot")
     sl.add_argument("hour")
     a = ap.parse_args(argv)
@@ -183,6 +282,10 @@ def main(argv=None) -> int:
     if a.cmd == "preview":
         cmd_preview(a.series, a.fake_art)
         return 0
+    if a.cmd == "post":
+        return cmd_post(a.series)
+    if a.cmd == "tally":
+        return cmd_tally()
     if a.cmd == "episode":
         return cmd_episode(a.series)
     if a.cmd == "art":
@@ -192,7 +295,7 @@ def main(argv=None) -> int:
     if s is None:
         print(f"no series in slot {a.hour}")
         return 0
-    return cmd_episode(s.slug)
+    return cmd_post(s.slug)
 
 
 if __name__ == "__main__":

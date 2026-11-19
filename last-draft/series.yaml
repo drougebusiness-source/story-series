@@ -1,6 +1,6 @@
 title: THE LAST DRAFT
 handle: "lastdraft.survival"   # the Instagram handle (owner made it 2026-11-12)
-live: false
+live: true            # on since 2026-11-19: EP1 posts Fri 11-20 (Claude flipped it at launch)
 format: horror        # 3amchoicess-style narrated "you" parts in short arcs (HORROR-FORMAT.md, HORROR-PLAN.md)
 secret: LASTDRAFTSURVIVAL
 slot_utc: "01"        # 7 PM Central
@@ -20,4 +20,4 @@ characters:
   Priya Shah: a 16-year-old girl, long braid, med kit on her hip
   Rook: a weathered man in his 40s, grey stubble, faded military jacket, rifle
 vote_line: "WHAT DOES COLE DO?"
-hashtags: "#zombie #survival #interactivestory #youdecide #postapocalyptic #storytime"
+hashtags: "#horror #zombie #survival #interactivestory #youdecide #postapocalyptic #storytime"

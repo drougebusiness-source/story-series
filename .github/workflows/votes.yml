@@ -1,0 +1,43 @@
+name: Count votes
+
+# Voting closes at noon Central the day before the next episode: Sun, Tue and Thu (see stories/schedule.py).
+# 18:10 UTC is 12:10 PM CST / 1:10 PM CDT. Results go into each series' state.json for the PC's writer.
+on:
+  schedule:
+    - cron: "10 18 * * 0,2,4"
+  workflow_dispatch:
+
+concurrency: story-state
+
+jobs:
+  tally:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Count
+        env:
+          IG_USER_ID_CITIZEN213: ${{ secrets.IG_USER_ID_CITIZEN213 }}
+          META_PAGE_TOKEN_CITIZEN213: ${{ secrets.META_PAGE_TOKEN_CITIZEN213 }}
+          IG_USER_ID_LASTDRAFTSURVIVAL: ${{ secrets.IG_USER_ID_LASTDRAFTSURVIVAL }}
+          META_PAGE_TOKEN_LASTDRAFTSURVIVAL: ${{ secrets.META_PAGE_TOKEN_LASTDRAFTSURVIVAL }}
+          IG_USER_ID_ROLLFORFATE: ${{ secrets.IG_USER_ID_ROLLFORFATE }}
+          META_PAGE_TOKEN_ROLLFORFATE: ${{ secrets.META_PAGE_TOKEN_ROLLFORFATE }}
+          IG_USER_ID_DRIFTBORN: ${{ secrets.IG_USER_ID_DRIFTBORN }}
+          META_PAGE_TOKEN_DRIFTBORN: ${{ secrets.META_PAGE_TOKEN_DRIFTBORN }}
+        shell: bash
+        run: python -m stories tally | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Save the story state
+        if: always()
+        run: |
+          git config user.name "story-bot"
+          git config user.email "story-bot@users.noreply.github.com"
+          git add */state.json
+          git diff --cached --quiet || (git commit -m "votes: update story state" && git pull --rebase -q && git push)

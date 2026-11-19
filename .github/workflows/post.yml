@@ -1,0 +1,52 @@
+name: Post episode
+
+# The owner's week: Mon/Wed/Fri evenings (Central) - 6 PM COMPLIANT, 7 PM THE LAST DRAFT, 8 PM ROLL FOR FATE,
+# 9 PM DRIFTBORN. GitHub's cron is UTC: Tue/Thu/Sat 00-03 UTC (00:05 UTC is 6:05 PM CST, 7:05 PM CDT).
+# The PC writes, renders and quality-checks each episode and, after the owner's OK, publishes it as a release
+# <series>-epN (publish.py). This only posts what's there; a missing episode is skipped, never made up.
+on:
+  schedule:
+    - cron: "5 0,1,2,3 * * 2,4,6"
+  workflow_dispatch:
+    inputs:
+      series:
+        description: "Series to post now (compliant, last-draft, roll-for-fate, driftborn)"
+        required: true
+
+concurrency: story-state   # one run at a time, so commits never collide
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Post
+        env:
+          IG_USER_ID_CITIZEN213: ${{ secrets.IG_USER_ID_CITIZEN213 }}
+          META_PAGE_TOKEN_CITIZEN213: ${{ secrets.META_PAGE_TOKEN_CITIZEN213 }}
+          IG_USER_ID_LASTDRAFTSURVIVAL: ${{ secrets.IG_USER_ID_LASTDRAFTSURVIVAL }}
+          META_PAGE_TOKEN_LASTDRAFTSURVIVAL: ${{ secrets.META_PAGE_TOKEN_LASTDRAFTSURVIVAL }}
+          IG_USER_ID_ROLLFORFATE: ${{ secrets.IG_USER_ID_ROLLFORFATE }}
+          META_PAGE_TOKEN_ROLLFORFATE: ${{ secrets.META_PAGE_TOKEN_ROLLFORFATE }}
+          IG_USER_ID_DRIFTBORN: ${{ secrets.IG_USER_ID_DRIFTBORN }}
+          META_PAGE_TOKEN_DRIFTBORN: ${{ secrets.META_PAGE_TOKEN_DRIFTBORN }}
+        run: |
+          set -o pipefail
+          if [ -n "${{ inputs.series }}" ]; then python -m stories post "${{ inputs.series }}"
+          else python -m stories slot "$(date -u +%H)"; fi | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Save the story state
+        if: always()
+        run: |
+          set -o pipefail
+          git config user.name "story-bot"
+          git config user.email "story-bot@users.noreply.github.com"
+          git add */state.json
+          git diff --cached --quiet || (git commit -m "posted: update story state" && git pull --rebase -q && git push)
