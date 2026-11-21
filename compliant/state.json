@@ -1,1 +1,20 @@
-{"episodes": []}
+{
+  "episodes": [
+    {
+      "n": 1,
+      "title": "The Delete Pile",
+      "kind": "cartoon",
+      "choice": {
+        "question": "Delete his sister, or steal her file?",
+        "options": {
+          "A": "Delete it as ordered",
+          "B": "Secretly copy the file first"
+        }
+      },
+      "media_id": "18224716009342739",
+      "permalink": "https://www.instagram.com/reel/DgA3JWOD_Yi/",
+      "posted_at": "2026-11-21T18:21:35+0000",
+      "close_at": "2026-11-22T18:00:00+0000"
+    }
+  ]
+}
