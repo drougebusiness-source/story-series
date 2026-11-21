@@ -22,6 +22,7 @@ import json
 import logging
 import os
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -192,7 +193,12 @@ def cmd_post(slug: str) -> int:
         print(f"{slug}: ❌ downloaded video is {video.stat().st_size} bytes, expected {post['size']}; not posting")
         return 1
     now = _now()
-    posted = acct.post_reel(video, cartoon_caption(series, post, now), post.get("thumb_offset_ms"))
+    try:
+        posted = acct.post_reel(video, cartoon_caption(series, post, now), post.get("thumb_offset_ms"))
+    except PostError as e:   # Instagram's upload sometimes fails once ("Request processing failed", 11-21)
+        log.warning("upload failed, trying once more in 30 s: %s", e)
+        time.sleep(30)
+        posted = acct.post_reel(video, cartoon_caption(series, post, now), post.get("thumb_offset_ms"))
     when = datetime.strptime(posted["posted_at"].replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z")         if posted.get("posted_at") else now
     ep = {"n": n, "title": post["title"], "kind": "cartoon",
           "choice": {"question": post["question"], "options": post["options"]},
