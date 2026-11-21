@@ -13,6 +13,7 @@ then a video that passes the quality gate is queued on its own. Scripts ALWAYS n
 | Step | When (Central) | Who / where | What happens |
 |---|---|---|---|
 | 1. Post | Mon/Wed/Fri 6-9 PM | GitHub "Post episode" | Posts release `<series>-epN` if it's there, opens the vote. Missing = skipped (posts next slot). |
+| 1b. Post check | 20 min after each slot (6:20, 7:20, 8:20, 9:20 PM) | PC: Windows tasks "Story post check - <series>" (`post_check.py`, no Claude) | Up? done. Queued but not up (GitHub's timer missed)? starts the post job, re-checks at ~7 and ~10 min; still down = `review/POST-FAILED-<series>-<date>.txt`. Log: `logs/post-check.log`. |
 | 2. Votes close | Noon the day before the next episode: **Sun** (for Fri), **Tue** (for Mon), **Thu** (for Wed) | GitHub "Count votes" (~12:10 PM) | Counts A/B comments up to the close, saves `result` in `<series>/state.json`. |
 | 3. Write | Same day, ~12:45 PM | PC task "Sloane, next story episodes" | Pulls the votes, writes `<series>/cartoon/epN.yaml` for each series, one script review file, one approval item. |
 | 4. Owner OKs the scripts | Any time that afternoon/evening | Agent Office Approve button | (hq/approvals.md item "Story EPN scripts".) |
