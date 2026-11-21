@@ -7,7 +7,8 @@
     python -m stories episode <series>          the scheduled job: count the last vote, write, draw, render, post
     python -m stories post <series>             post the next episode the PC rendered and published as a GitHub release
                                                 (tag <series>-epN: video + post.json). Not ready -> skip, post nothing
-    python -m stories slot <HH>                 run `post` for the series whose slot_utc is HH (GitHub's cron)
+    python -m stories due                       post every series whose Mon/Wed/Fri slot has come and isn't posted yet
+                                                (GitHub's cron runs this every 20 min on post evenings)
     python -m stories tally                     count the votes of every episode whose voting has closed
     python -m stories status                    one line per series
     python -m stories art <series> [--n 3]      Gemini profile picture options -> out/art/
@@ -202,6 +203,23 @@ def cmd_post(slug: str) -> int:
     return 0
 
 
+def cmd_due() -> int:
+    """Post each live series whose slot (slot_central, Mon/Wed/Fri) has passed in the last 12 h and that hasn't
+    posted since. Safe to run as often as you like."""
+    now, bad = _now(), 0
+    for slug in SLUGS:
+        series = Series.load(slug)
+        slot = schedule.due_slot(int(series.cfg["slot_central"]), now)
+        if not series.live or slot is None:
+            continue
+        eps = series.state["episodes"]
+        last = eps[-1].get("posted_at") if eps else None
+        if last and datetime.strptime(last.replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z") >= slot - timedelta(hours=6):
+            continue   # already posted for this slot (or posted by hand shortly before it)
+        bad |= cmd_post(slug)
+    return bad
+
+
 def cmd_tally() -> int:
     """Count every closed vote once and save it in state.json (the PC's writer reads it from there)."""
     now = _now()
@@ -272,8 +290,7 @@ def main(argv=None) -> int:
     po = sub.add_parser("post")
     po.add_argument("series", choices=SLUGS)
     sub.add_parser("tally")
-    sl = sub.add_parser("slot")
-    sl.add_argument("hour")
+    sub.add_parser("due")
     a = ap.parse_args(argv)
     if a.cmd == "check":
         return cmd_check()
@@ -291,12 +308,7 @@ def main(argv=None) -> int:
     if a.cmd == "art":
         art.make_profile(Series.load(a.series), min(a.n, 6))
         return 0
-    s = Series.for_slot(a.hour.zfill(2))
-    if s is None:
-        print(f"no series in slot {a.hour}")
-        return 0
-    return cmd_post(s.slug)
-
+    return cmd_due()
 
 if __name__ == "__main__":
     sys.exit(main())

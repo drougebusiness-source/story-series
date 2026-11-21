@@ -90,3 +90,26 @@ def test_not_live_posts_nothing(tmp_path, monkeypatch):
     _series(tmp_path, monkeypatch, live=False)
     monkeypatch.setattr(m, "account", lambda series: (_ for _ in ()).throw(AssertionError("no account needed")))
     assert m.cmd_post("compliant") == 0
+
+
+def test_due_slot():
+    # Friday 6 PM Central = Sat 00:00 UTC (CST)
+    assert schedule.due_slot(18, utc("2026-11-20T23:30:00")) is None                       # 5:30 PM: not yet
+    assert schedule.due_slot(18, utc("2026-11-21T06:56:00")) == utc("2026-11-21T00:00:00")  # the late run: still due
+    assert schedule.due_slot(18, utc("2026-11-21T18:00:00")) is None                       # 18 h late: wait for Monday
+    assert schedule.due_slot(21, utc("2026-11-24T03:20:00")) == utc("2026-11-24T03:00:00")  # Monday 9 PM
+
+
+def test_due_posts_once(tmp_path, monkeypatch):
+    s = _series(tmp_path, monkeypatch)
+    s.cfg["slot_central"] = 18
+    calls = []
+    monkeypatch.setattr(m, "SLUGS", ("compliant",))
+    monkeypatch.setattr(m, "cmd_post", lambda slug: calls.append(slug) or 0)
+    monkeypatch.setattr(m, "_now", lambda: utc("2026-11-21T00:40:00"))
+    m.cmd_due()
+    assert calls == ["compliant"]
+    s.save_state({"episodes": [{"n": 1, "posted_at": "2026-11-21T00:41:00+0000"}]})
+    monkeypatch.setattr(m, "_now", lambda: utc("2026-11-21T01:00:00"))
+    m.cmd_due()
+    assert calls == ["compliant"]

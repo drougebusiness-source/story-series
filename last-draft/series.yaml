@@ -3,7 +3,7 @@ handle: "lastdraft.survival"   # the Instagram handle (owner made it 2026-11-12)
 live: true            # on since 2026-11-19: EP1 posts Fri 11-20 (Claude flipped it at launch)
 format: horror        # 3amchoicess-style narrated "you" parts in short arcs (HORROR-FORMAT.md, HORROR-PLAN.md)
 secret: LASTDRAFTSURVIVAL
-slot_utc: "01"        # 7 PM Central
+slot_central: 19       # Mon/Wed/Fri 7 PM Central (stories/schedule.py)
 colors: {bg: "#2B2B2B", fg: "#E8E1D3", accent: "#D9692B", accent2: "#3E6E6E"}
 font_head: SpecialElite-Regular.ttf
 font_body: Inter.ttf

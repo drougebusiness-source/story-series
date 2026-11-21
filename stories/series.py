@@ -25,14 +25,6 @@ class Series:
             raise SystemExit(f"unknown series {slug!r}; pick one of {', '.join(SLUGS)}")
         return cls(slug, yaml.safe_load((ROOT / slug / "series.yaml").read_text(encoding="utf-8")))
 
-    @classmethod
-    def for_slot(cls, hour_utc: str) -> "Series | None":
-        for s in SLUGS:
-            se = cls.load(s)
-            if str(se.cfg.get("slot_utc")) == hour_utc:
-                return se
-        return None
-
     # -- files
     @property
     def dir(self) -> Path:

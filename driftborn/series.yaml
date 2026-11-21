@@ -2,7 +2,7 @@ title: DRIFTBORN
 handle: "driftborn.saga"   # the Instagram handle (owner made it 2026-11-12)
 live: true            # on since 2026-11-19: EP1 posts Fri 11-20 (Claude flipped it at launch)
 secret: DRIFTBORN
-slot_utc: "03"        # 9 PM Central
+slot_central: 21       # Mon/Wed/Fri 9 PM Central (stories/schedule.py)
 colors: {bg: "#0E1A2B", fg: "#E9C896", accent: "#2EC4B6", accent2: "#B5532A"}
 font_head: Orbitron.ttf
 font_body: SpaceGrotesk.ttf

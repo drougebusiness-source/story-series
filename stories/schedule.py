@@ -32,3 +32,22 @@ def close_words(posted: datetime) -> str:
 
 def iso(t: datetime) -> str:
     return t.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S+0000")
+
+
+POST_DAYS = (0, 2, 4)        # Monday, Wednesday, Friday (Central)
+LATE_LIMIT = timedelta(hours=12)
+
+
+def due_slot(slot_hour: int, now: datetime) -> datetime | None:
+    """The latest Mon/Wed/Fri slot (slot_hour Central) at or before `now`, if it was under 12 h ago.
+    GitHub's timer often fires late or skips runs, so the post job checks this every 20 minutes instead of
+    trusting the hour it wakes up in."""
+    local = now.astimezone(CENTRAL)
+    for back in range(0, 3):
+        day = local.date() - timedelta(days=back)
+        if day.weekday() not in POST_DAYS:
+            continue
+        slot = datetime.combine(day, time(slot_hour), tzinfo=CENTRAL)
+        if slot <= local:
+            return slot.astimezone(timezone.utc) if local - slot <= LATE_LIMIT else None
+    return None
