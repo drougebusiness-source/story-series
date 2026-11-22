@@ -1,2 +1,3 @@
 # Sound effects made once with ElevenLabs sound generation (voice.py sfx), placed per shot with `sfx:` in ep files.
 slow_scratch: {prompt: "Slow, quiet fingernails scratching skin and fabric in a dark empty hallway at night, someone trying not to be heard, close and intimate, faint room echo, no music.", secs: 6}
+rifle_bolt: {prompt: "One brass rifle cartridge slid into a bolt-action hunting rifle, then the bolt closed slowly: a soft metallic slide and one quiet click. Close, dark empty hallway, faint echo, no music.", secs: 2}

@@ -1,0 +1,80 @@
+# Ep 2 (FLOW EP2-B "The Hum", adapted). Vote 1 closed 2026-11-22: 0 votes, so the story chose B (hide it). Why B: it
+# opens the series' core mystery (Wick and the Current) and stays in the two existing sets; A needs Holt, the gunship
+# and the village, none of which have sets yet. Written by Sloane 2026-11-22. Needs owner approval.
+# Change from FLOW: Kael hides the core inside the dead robot in the wreck (not his shack), so Wick wakes there.
+# Plant: Wick calls the core "my heart" (pays off in EP3/EP4: the core is part of Wick, and why it hums with Kael).
+title: The Hum
+shots:
+- set: wreck_inside
+  still: true
+  cast:
+  - Kael Torvin
+  framing: the same set, medium shot looking at the debris pile
+  frame: Kael in the dark tilted corridor holding the sealed metal cylinder glowing soft teal against his chest, glancing
+    back over his shoulder like a thief. Beside the debris pile, a huge rusted mining robot sits slumped against the wall,
+    dead, its round chest hatch hanging open and empty, its one round eye dark.
+  motion: Slow push in. The core pulses slowly teal.
+  secs: 4
+  caption: Last time, the story chose. Kael hid the core.
+  line: Last time, the story chose. <break time="0.6s" /> Kael hid the core.
+  sfx:
+  - sound: core_hum
+    hold: true
+    gain: 0.12
+- set: wreck_inside
+  cast:
+  - Kael Torvin
+  framing: the same set, medium shot of Kael at the slumped robot
+  frame: Kael kneels at the huge slumped rusted robot beside the debris pile and pushes the glowing teal core into the
+    robot's open chest hatch, grinning, very pleased with himself. The robot's one round eye is dark.
+  motion: Kael pushes the core into the robot's chest, shuts the hatch with a pat, and says his line with a cocky grin,
+    proud of his idea. The robot does not move. Small, clear movements.
+  secs: 5
+  caption: 'KAEL: Nobody robs a dead robot. Best hiding spot on Hollow.'
+  line: Nobody robs a dead robot. <break time="0.5s" /> Best hiding spot on Hollow.
+  sfx:
+  - sound: floor_clank
+    at: 1.8
+    gain: 0.2
+  - sound: core_hum
+    hold: true
+    gain: 0.18
+- set: wreck_inside
+  still: true
+  cast: []
+  framing: the same set, close-up on the robot's face
+  frame: Close-up of the huge rusted robot's head, slumped forward, a cracked visor and one round eye, which has just lit
+    up soft teal in the dark. No people in the picture.
+  motion: The single eye flickers, then glows steady teal. Hold.
+  secs: 3
+  caption: Then, the dead robot opens its one eye.
+  line: Then, the dead robot opens its one eye.
+  sfx:
+  - sound: core_hum
+    hold: true
+    gain: 0.3
+- set: wreck_inside
+  cast:
+  - Wick
+  - Kael Torvin
+  framing: the same set, medium shot of the robot and Kael
+  frame: (the last frame of the shot before, widened) The huge rusted robot, its one eye glowing teal, slowly lifting its
+    head; Kael frozen beside it on one knee, mid double-take, hand still on the hatch.
+  motion: The robot slowly raises its head toward Kael and speaks; the teal glow of its eye and its chest pulse with each
+    word. Kael's jaw drops in a big comic double-take and he scoots back on his heels. Small, slow movements.
+  secs: 5
+  caption: 'WICK: Ah. You found my heart. Thank you, little thief.'
+  line: Ah. <break time="0.5s" /> You found my heart. <break time="0.6s" /> Thank you, little thief.
+  voice_tts: true
+  continues: true
+  sfx:
+  - sound: core_hum
+    hold: true
+    gain: 0.2
+choice:
+  question: The robot says the core is its heart. Let it open it, or bury it?
+  options:
+    A: Let the robot open the core
+    B: Take it back and bury it in the dunes
+vote_line: What should Kael do? <break time="0.4s" /> Let the robot open it, or bury it in the dunes? <break time="0.4s" />
+  Vote A or B in the comments.

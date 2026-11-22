@@ -1,0 +1,63 @@
+# Ep 2 (FLOW Q2-B success "The Empty Case"). Vote 1 closed 2026-11-22: 0 votes, so the story chose B (the more
+# dramatic option: a risky roll). Written by Sloane 2026-11-22. Needs owner approval.
+# d20 roll: 19 (needed 13+) -- rolled once in code 2026-11-22 (secrets.randbelow(20) + 1). Never re-roll.
+# Plant: Crows "may have left out that part" (he knows more than he says; BRAND). The case broke from the INSIDE.
+title: The Empty Case
+shots:
+- set: vault_corridor
+  still: true
+  cast:
+  - Wren Ashby
+  - Crows
+  frame: The round iron vault door at the end of the torchlit corridor, swung half open. Wren, out of armour in her maroon
+    quilted jacket, crouches at it with a bent hairpin still in the lock, tongue poking out in concentration. The small
+    raven with one white head feather sits perched on top of her head. A big glowing gold d20 hangs in the torchlight above
+    the door, showing 19.
+  motion: Slow push in. The torches flicker.
+  secs: 5
+  caption: 'Last time, the story chose: break into the vault. Wren needed thirteen. She rolled nineteen.'
+  line: 'Last time, the story chose: <break time="0.4s" /> break into the vault. <break time="0.6s" /> Wren needed
+    thirteen. <break time="0.5s" /> She rolled nineteen.'
+- set: vault_corridor
+  still: true
+  cast: []
+  framing: the same set, close-up just inside the open vault door
+  frame: Close-up of a glass reliquary case on a stone plinth, empty, its glass panes bent outward like petals. Every shard
+    of broken glass lies on the floor OUTSIDE the case, scattered toward the door. Torchlight glints on the shards. No people
+    in the picture.
+  motion: The torchlight flickers across the shards.
+  secs: 5
+  caption: Inside, the empty case. And every shard of glass is on the outside.
+  line: Inside, the empty case. <break time="0.8s" /> And every shard of glass is on the outside.
+- set: vault_corridor
+  cast:
+  - Wren Ashby
+  - Crows
+  framing: the same set, close-up on Wren's face, the raven on her head
+  frame: Close-up of Wren beside the plinth, eyes wide, mouth open mid-word, pointing down at the shards; the small raven
+    still perched on top of her head.
+  motion: Wren looks from the shards to the empty case and back, then says her line, her face slowly dropping from triumph
+    to horror. The raven stays perched on her head and only turns his head. Small movements only.
+  secs: 4
+  caption: 'WREN: Nobody broke in. Something broke out.'
+  line: Nobody broke in. <break time="0.6s" /> Something broke out.
+- set: vault_corridor
+  cast:
+  - Crows
+  - Wren Ashby
+  frame: (the last frame of the shot before)
+  motion: The small raven stays perched on top of Wren's head for the ENTIRE shot and never flies. Only his head and beak
+    move as he talks, avoiding her eyes, smug and a little guilty. Wren slowly rolls her eyes up toward him and glares.
+    Small movements only.
+  secs: 5
+  caption: 'CROWS: Ah. Yes. I may have left out that part.'
+  line: Ah. <break time="0.4s" /> Yes. <break time="0.5s" /> I may have left out that part.
+  continues: true
+  voice_tts: true
+choice:
+  question: The case broke from the inside. Take it as proof, or tell the head of the Order?
+  options:
+    A: Take the case as proof
+    B: Leave it and tell the head of the Order
+vote_line: What should Wren do? <break time="0.4s" /> Take the case, or tell the head of the Order? <break time="0.4s" />
+  Vote A or B in the comments.

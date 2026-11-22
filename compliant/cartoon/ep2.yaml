@@ -1,0 +1,61 @@
+# Ep 2 (FLOW EP2-B "The Copy"). Vote 1 closed 2026-11-22: 0 votes, so the story chose B (the more dramatic option:
+# the copy is evidence on him, and the gate search gives a clock). Written by Sloane 2026-11-22. Needs owner approval.
+title: The Copy
+stills: true
+shots:
+- set: clerk_desk
+  cast:
+  - Ezra Vale
+  framing: the same set, close on the monitor and Ezra's hands
+  frame: Ezra's hands on the keyboard in the green monitor glow. On the screen, one line of green text with a red DELETED
+    stamp across it. A tiny chip glows green between his finger and thumb, half hidden under the desk edge. Smooth clean
+    hands, no scars, no stitches or marks.
+  motion: Slow push in on the chip.
+  secs: 4
+  caption: Last time, the story chose. Ezra copied his sister's file.
+  line: Last time, the story chose. <break time="0.6s" /> Ezra copied his sister's file.
+- set: clerk_desk
+  cast:
+  - Ezra Vale
+  framing: the same set, low close-up under the desk
+  frame: Under the desk in black shadow. Ezra's neat black regulation shoe, heel lifted out of it, and his fingers pressing
+    the tiny green-glowing chip down into the inside of the heel. Only a thin line of green monitor light reaches it.
+  motion: The green light on the chip fades as the heel closes over it. Hold.
+  secs: 5
+  caption: Now the only copy of Myra Vale left in Meridian is in his shoe.
+  line: Now the only copy of Myra Vale left in Meridian <break time="0.4s" /> is in his shoe.
+- set: meridian_street
+  cast:
+  - Officer Brann Kols
+  framing: the same set, a checkpoint at the Ministry gate in the evening
+  frame: A steel checkpoint barrier across the street outside the Ministry. Officer Brann Kols, broad, in black Harmony
+    Police riot armour with a red armband, stands at the barrier holding up a clerk's shoe, turning it over. A long queue
+    of identical grey-uniformed clerks waits in the hard low light, heads down, shoes in hand.
+  motion: Kols slowly turns the shoe over and taps the heel. The queue shuffles one step forward. The camera on the lamp
+    post turns toward the queue.
+  secs: 6
+  caption: At the gate, Officer Brann Kols of the Harmony Police is searching clerks. Tonight, he's checking shoes.
+  line: At the gate, Officer Brann Kols of the Harmony Police is searching clerks. <break time="0.7s" /> Tonight, he's
+    checking shoes.
+- set: meridian_street
+  cast:
+  - Juno Park
+  - Ezra Vale
+  framing: the same set, medium shot down the queue
+  frame: The clerks' queue seen from behind Ezra's shoulder. Three places ahead, Juno, in her round glasses, has turned
+    round and is looking down at Ezra's shoes. Kols and the barrier are small in the background.
+  motion: Juno's eyes move from Ezra's shoes up to his face. Then she gives a small, too-sweet smile. Ezra doesn't move.
+  secs: 4
+  caption: Three places ahead, Juno looks down at his shoes. And smiles.
+  line: Three places ahead, Juno looks down at his shoes. <break time="0.8s" /> And smiles.
+  sfx:
+  - sound: ominous_drone
+    at: 0.3
+    gain: 0.2
+choice:
+  question: Kols is checking shoes. Destroy the chip, or bluff past him?
+  options:
+    A: Destroy the chip before the gate
+    B: Keep it and bluff past Kols
+vote_line: What should Ezra do? <break time="0.4s" /> Destroy the chip, or bluff past Kols? <break time="0.4s" /> Vote
+  A or B in the comments.

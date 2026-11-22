@@ -1,0 +1,58 @@
+# Ep 2 (FLOW EP2-A "Quarantine"). Vote 1 closed 2026-11-22: 0 votes, so the story chose A (the more dramatic option:
+# the whole group knows, and Rook acts on the rule). Written by Sloane 2026-11-22. Needs owner approval.
+# Plant for the dog-bite twist (FLOW EP2-A ☠ / SEASON1 ep5): Dani says "It wasn't one of them."
+title: Quarantine
+stills: true
+shots:
+- set: school_hallway
+  cast: []
+  framing: the same set, the lantern raised over the sleeping bags
+  frame: The lantern held up in the near foreground by a man's hand in a cardigan cuff. In its orange pool, five sleeping
+    bags along the lockers; teenage silhouettes sitting up in them, faces turned toward the light, most of their features
+    lost in shadow. The far end of the hall is black.
+  motion: The lantern light sways slightly. The silhouettes stay very still. Slow push in.
+  secs: 5
+  caption: Last time, the story chose. You woke the group, and told them about Dani's arm.
+  line: Last time, the story chose. <break time="0.6s" /> You woke the group, and told them about Dani's arm.
+- set: school_hallway
+  cast:
+  - Rook
+  framing: the same set, close-up at the edge of the lantern light
+  frame: Close-up of a weathered man's big hands at the edge of the lantern light, sliding one single brass bullet into a
+    hunting rifle. His face is above the light, in black shadow. Everything else is dark.
+  motion: The bullet slides in. The bolt closes slowly. Long hold.
+  secs: 5
+  caption: Rook, the stranger with the rifle, says nothing. He loads one bullet.
+  line: Rook, the stranger with the rifle, says nothing. <break time="0.8s" /> He loads one bullet.
+  sfx:
+  - sound: rifle_bolt
+    at: 2.2
+    gain: 0.25
+- set: school_hallway
+  cast:
+  - Dani Ortiz
+  framing: the same set, long view down the hall to the barricade
+  frame: Long view down the dark hallway. At the far end, small at the edge of the warm light, Dani stands pressed back
+    against the barricade of desks, grey hoodie up and her face in shadow, both hands clutching her left forearm to her
+    chest.
+  motion: Dani shrinks back against the desks and shakes her head slowly. The lantern light trembles.
+  secs: 5
+  caption: 'DANI: Mister Mercer, it''s not what you think. It wasn''t one of them.'
+  line: Mister Mercer, <break time="0.3s" /> it's not what you think. <break time="0.6s" /> It wasn't one of them.
+- set: school_hallway
+  cast:
+  - Rook
+  framing: the same set, the corkboard, with Rook's shoulder in the foreground
+  frame: The corkboard in the lantern light, the sheet with seven tally marks pinned beside the map. In the near foreground,
+    out of focus, the dark shoulder of a man and the barrel of a rifle pointing at the floor.
+  motion: The rifle barrel lifts slowly toward the far end of the hall and out of frame. The seven marks stay in focus.
+  secs: 4
+  caption: 'ROOK: A bite means a bullet, teacher. You wrote that rule.'
+  line: A bite means a bullet, teacher. <break time="0.7s" /> You wrote that rule.
+choice:
+  question: Rook loaded one bullet. Let him, or lock Dani in the lab?
+  options:
+    A: Let Rook handle it
+    B: Lock her in the chem lab and find medicine
+vote_line: What do you do? <break time="0.4s" /> Let Rook handle it, or lock Dani in the lab? <break time="0.4s" /> Vote
+  A or B in the comments.
