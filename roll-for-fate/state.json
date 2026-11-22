@@ -14,7 +14,22 @@
       "media_id": "18195506437404233",
       "permalink": "https://www.instagram.com/reel/DgA2_zagLG7/",
       "posted_at": "2026-11-21T18:20:16+0000",
-      "close_at": "2026-11-22T18:00:00+0000"
+      "close_at": "2026-11-22T18:00:00+0000",
+      "result": {
+        "counts": {
+          "A": 0,
+          "B": 0
+        },
+        "total": 0,
+        "winner": null,
+        "share": 0
+      },
+      "stats": {
+        "id": "18195506437404233",
+        "comments_count": 0,
+        "like_count": 0,
+        "views": 29
+      }
     }
   ]
 }
