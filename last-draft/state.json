@@ -21,7 +21,10 @@
         "like_count": 0,
         "views": 30
       },
-      "note": "voting reopened by owner 2026-11-23: EP2 waits for Friday 11-27"
+      "note": "voting reopened by owner 2026-11-23: EP2 waits for Friday 11-27",
+      "notices": [
+        "⏳ Voting extended! Comment A or B until Thursday at noon Central. Episode 2 drops Friday."
+      ]
     }
   ]
 }
