@@ -101,3 +101,13 @@ def test_crosspost_captions():
     assert t["yt_title"].startswith("He copied it. | COMPLIANT EP 2") and t["yt_title"].endswith("#shorts")
     assert len(t["yt_title"]) <= 100
     assert "Tuesday at noon Central" in t["yt_desc"] and "@citizen.213" in t["tiktok"]
+
+
+def test_notice_once(tmp_path, monkeypatch):
+    s = _series(tmp_path, monkeypatch)
+    s.save_state({"episodes": [{"n": 1, "media_id": "m1"}]})
+    acct = EngageAcct([])
+    monkeypatch.setattr(m, "SLUGS", ("compliant",))
+    monkeypatch.setattr(m, "account", lambda series: acct)
+    assert m.cmd_notice("Voting extended") == 0 and m.cmd_notice("Voting extended") == 0
+    assert acct.comments_made == ["Voting extended"]

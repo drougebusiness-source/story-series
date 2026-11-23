@@ -351,6 +351,36 @@ def cmd_status() -> int:
     return 0
 
 
+def cmd_notice(text: str) -> int:
+    """One comment from each account on its open episode (e.g. "voting extended"), once per text. Owner-approved only."""
+    bad = 0
+    for slug in SLUGS:
+        series = Series.load(slug)
+        state = series.state
+        eps = state["episodes"]
+        ep = eps[-1] if eps else None
+        if not series.live or not ep or not ep.get("media_id"):
+            continue
+        if text in ep.get("notices", []):
+            print(f"{series.title}: already said that")
+            continue
+        acct = account(series)
+        if acct is None:
+            print(f"{series.title}: ❌ no Instagram secrets")
+            bad = 1
+            continue
+        try:
+            acct.comment(ep["media_id"], text)
+        except PostError as e:
+            print(f"{series.title}: ❌ {e}")
+            bad = 1
+            continue
+        ep.setdefault("notices", []).append(text)
+        series.save_state(state)
+        print(f"{series.title}: ✅ commented on episode {ep['n']}")
+    return bad
+
+
 def main(argv=None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     ap = argparse.ArgumentParser(prog="stories")
@@ -370,6 +400,8 @@ def main(argv=None) -> int:
     sub.add_parser("tally")
     sub.add_parser("engage")
     sub.add_parser("due")
+    no = sub.add_parser("notice")
+    no.add_argument("text")
     a = ap.parse_args(argv)
     if a.cmd == "check":
         return cmd_check()
@@ -384,6 +416,8 @@ def main(argv=None) -> int:
         return cmd_tally()
     if a.cmd == "engage":
         return cmd_engage()
+    if a.cmd == "notice":
+        return cmd_notice(a.text)
     if a.cmd == "episode":
         return cmd_episode(a.series)
     if a.cmd == "art":
