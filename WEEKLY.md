@@ -8,6 +8,15 @@ One episode per series every **Monday, Wednesday and Friday evening** (Central):
 (While ON, the owner OKs each finished batch of videos before it's queued. The owner turns it OFF by saying so;
 then a video that passes the quality gate is queued on its own. Scripts ALWAYS need the owner's OK.)
 
+## ⏸ Hold this week (owner, 2026-11-23)
+"We are going to go ahead and wait until Friday and give them time to actually vote."
+- EP1 voting is reopened on all four until **Thursday 11-26, noon Central** (`close_at` in each state.json).
+- `hold_until: "2026-11-27"` in each series.yaml: nothing posts Monday or Wednesday; EP2 posts **Friday 11-27** at the usual slots.
+- Thursday after the count (Sloane): the approved EP2 scripts follow the story's pick (COMPLIANT B, LAST DRAFT A,
+  ROLL FOR FATE B with d20 = 19, DRIFTBORN B). Where a series' real winner is the same (or there's still no winner),
+  keep its ep2.yaml. Where it differs, rewrite that ep2.yaml for the real winner and list it for a fresh OK.
+- After Friday's post, delete the `hold_until` lines; the normal Mon/Wed/Fri loop resumes Monday 11-30.
+
 ## The cycle
 
 | Step | When (Central) | Who / where | What happens |

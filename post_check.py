@@ -55,6 +55,9 @@ def main(slug: str, now: datetime | None = None) -> int:
     now = (now or datetime.now(timezone.utc)).astimezone(CENTRAL)
     if now.weekday() not in POST_DAYS or not cfg.get("live"):
         return 0
+    if cfg.get("hold_until") and now.date().isoformat() < str(cfg["hold_until"]):
+        log(f"{slug}: ⏸ on hold until {cfg['hold_until']}; nothing due")
+        return 0
     slot = datetime.combine(now.date(), dtime(int(cfg["slot_central"])), tzinfo=CENTRAL)
     if now < slot + timedelta(minutes=10):
         log(f"{slug}: too early to check (slot {slot:%H:%M})")

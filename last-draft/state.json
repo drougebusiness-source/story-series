@@ -14,22 +14,14 @@
       "media_id": "18082745096393264",
       "permalink": "https://www.instagram.com/reel/DgA24w1T92h/",
       "posted_at": "2026-11-21T18:19:21+0000",
-      "close_at": "2026-11-22T18:00:00+0000",
-      "result": {
-        "counts": {
-          "A": 0,
-          "B": 0
-        },
-        "total": 0,
-        "winner": null,
-        "share": 0
-      },
+      "close_at": "2026-11-26T18:00:00+0000",
       "stats": {
         "id": "18082745096393264",
         "comments_count": 0,
         "like_count": 0,
         "views": 30
-      }
+      },
+      "note": "voting reopened by owner 2026-11-23: EP2 waits for Friday 11-27"
     }
   ]
 }

@@ -189,6 +189,10 @@ def cmd_post(slug: str) -> int:
     if not series.live:
         print(f"{slug}: not live yet (set live: true in {slug}/series.yaml to start posting)")
         return 0
+    hold = series.cfg.get("hold_until")
+    if hold and _now().astimezone(schedule.CENTRAL).date().isoformat() < str(hold):
+        print(f"{slug}: ⏸ on hold until {hold} (owner's call, series.yaml hold_until); nothing posted")
+        return 0
     acct = account(series)
     if acct is None:
         print(f"{slug}: ❌ no Instagram secrets ({' and '.join(series.ig_env)})")

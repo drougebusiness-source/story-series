@@ -4,6 +4,7 @@ live: true            # on since 2026-11-19: EP1 posts Fri 11-20 (Claude flipped
 format: horror        # 3amchoicess-style narrated "you" parts in short arcs (HORROR-FORMAT.md, HORROR-PLAN.md)
 secret: LASTDRAFTSURVIVAL
 slot_central: 19       # Mon/Wed/Fri 7 PM Central (stories/schedule.py)
+hold_until: "2026-11-27"   # owner 2026-11-23: no posts before this day (Central); EP1 votes stay open to Thu noon
 colors: {bg: "#2B2B2B", fg: "#E8E1D3", accent: "#D9692B", accent2: "#3E6E6E"}
 font_head: SpecialElite-Regular.ttf
 font_body: Inter.ttf

@@ -43,6 +43,7 @@ class FakeAcct:
 def _series(tmp_path, monkeypatch, live=True):
     s = Series.load("compliant")
     s.cfg["live"] = live
+    s.cfg.pop("hold_until", None)   # the real series.yaml may carry a temporary hold
     d = tmp_path / "compliant"
     d.mkdir()
     monkeypatch.setattr(Series, "dir", property(lambda self: d))
@@ -116,3 +117,16 @@ def test_due_posts_once(tmp_path, monkeypatch):
     monkeypatch.setattr(m, "_now", lambda: utc("2026-11-21T01:00:00"))
     m.cmd_due()
     assert calls == ["compliant"]
+
+
+def test_hold_until(tmp_path, monkeypatch):
+    s = _series(tmp_path, monkeypatch)
+    s.cfg["hold_until"] = "2026-11-27"
+    monkeypatch.setattr(m, "account", lambda series: (_ for _ in ()).throw(AssertionError("held")))
+    monkeypatch.setattr(m, "_now", lambda: utc("2026-11-24T00:05:00"))   # Monday 6:05 PM CT
+    assert m.cmd_post("compliant") == 0
+    acct = FakeAcct()
+    monkeypatch.setattr(m, "account", lambda series: acct)
+    monkeypatch.setattr(m, "release_file", lambda tag, name: None)
+    monkeypatch.setattr(m, "_now", lambda: utc("2026-11-28T00:05:00"))   # Friday 6:05 PM CT
+    assert m.cmd_post("compliant") == 0   # past the hold: reaches the release check

@@ -3,6 +3,7 @@ handle: "roll.for.fate"   # the Instagram handle (owner made it 2026-11-12)
 live: true            # on since 2026-11-19: EP1 posts Fri 11-20 (Claude flipped it at launch)
 secret: ROLLFORFATE
 slot_central: 20       # Mon/Wed/Fri 8 PM Central (stories/schedule.py)
+hold_until: "2026-11-27"   # owner 2026-11-23: no posts before this day (Central); EP1 votes stay open to Thu noon
 colors: {bg: "#1C1A2E", fg: "#F1E3C3", accent: "#C9A227", accent2: "#7A1F3D"}
 font_head: CinzelDecorative-Bold.ttf
 font_body: CormorantGaramond.ttf
