@@ -337,10 +337,18 @@ class Episode:
         slow = min(1.2, secs / have) if secs > have else 1.0
         fit = f"setpts={slow:.4f}*PTS,tpad=stop_mode=clone:stop_duration={max(0.0, secs - have * slow) + 0.1:.2f},"
         has_audio = False   # the video model's own sound was scratchy and clicked at every cut: voice.py adds the mix
+        hook = self.ep.get("hook") if self.ep.get("shots") and shot is self.ep["shots"][0] else None
+        hook_in, hook_fx = [], ""
+        if hook:            # WEEKLY.md: the hook, big on screen for the first 2 s of shot 1 (owner 11-23)
+            hp = ov.with_name(ov.stem + "-hook.png")
+            reel.hook_overlay(self.s, hook).save(hp)
+            hook_in = ["-i", str(hp)]
+            hook_fx = f"[vo0][3]overlay=0:0:enable='lt(t,{reel.HOOK_SECS})'[vh];"
+        vo = "vh" if hook else "vo0"
         run(["ffmpeg", "-v", "error", "-y", "-i", str(raw), "-i", str(ov), "-f", "lavfi", "-i",
-             "anullsrc=r=48000:cl=stereo", "-filter_complex",
+             "anullsrc=r=48000:cl=stereo", *hook_in, "-filter_complex",
              f"[0:v]{fit}scale={reel.W}:{reel.H}:force_original_aspect_ratio=increase,crop={reel.W}:{reel.H},"
-             f"fps={reel.FPS}[v];[v][1]overlay=0:0,format=yuv420p[vo];"
+             f"fps={reel.FPS}[v];[v][1]overlay=0:0[vo0];{hook_fx}[{vo}]format=yuv420p[vo];"
              + ("[0:a][2:a]amix=inputs=2:duration=first[ao]" if has_audio else "[2:a]anull[ao]"),
              "-map", "[vo]", "-map", "[ao]", "-t", f"{secs:.2f}", "-c:v", "libx264", "-crf", "19",
              "-c:a", "aac", "-ar", "48000", "-ac", "2", str(out)])

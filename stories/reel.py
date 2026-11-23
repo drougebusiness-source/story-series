@@ -106,6 +106,27 @@ def caption_overlay(series: Series, text: str, n: int, hi: int | None = None) ->
     return im
 
 
+HOOK_SECS = 2.0
+
+
+def hook_overlay(series: Series, text: str) -> Image.Image:
+    """The hook, big, in the top third for the first 2 seconds of shot 1 (owner 11-23: stop the scroll)."""
+    im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    bg, fg, acc = (_rgb(series.color(k)) for k in ("bg", "fg", "accent"))
+    f = _font(series.font("head"), 118)
+    lines = _wrap(d, text.upper(), f, W - 140)
+    gap = int(f.size * 1.05)
+    top = 260
+    d.rectangle([40, top - 40, W - 40, top + gap * len(lines) + 30], fill=bg + (200,))
+    d.rectangle([40, top - 40, W - 40, top - 28], fill=acc)
+    y = top
+    for line in lines:
+        d.text(((W - d.textlength(line, font=f)) / 2, y), line, font=f, fill=fg, stroke_width=3, stroke_fill=bg)
+        y += gap
+    return im
+
+
 def card(series: Series, kind: str, ep: dict) -> Image.Image:
     bg, fg, acc = (_rgb(series.color(k)) for k in ("bg", "fg", "accent"))
     im = Image.new("RGB", (W, H), bg)
