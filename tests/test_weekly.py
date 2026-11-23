@@ -36,6 +36,9 @@ class FakeAcct:
         self.posted = (video.read_bytes(), caption, thumb_offset_ms)
         return {"media_id": "m1", "permalink": "https://ig/p/1", "posted_at": "2026-11-21T00:06:00+0000"}
 
+    def comment(self, media_id, text):
+        return "c1"
+
 
 def _series(tmp_path, monkeypatch, live=True):
     s = Series.load("compliant")

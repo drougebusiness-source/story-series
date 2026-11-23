@@ -51,11 +51,13 @@ def tally(comments: list[dict], options: list[str], posted_at: str, own_username
         if v and (user not in latest or when >= latest[user][0]):
             latest[user] = (when, v)
     counts = {o: 0 for o in options}
-    for _, v in latest.values():
+    voters: dict[str, list[str]] = {o: [] for o in options}
+    for user, (_, v) in latest.items():
         counts[v] += 1
+        voters[v].append(user)
     total = sum(counts.values())
     top = max(counts.values()) if total else 0
     leaders = [o for o, n in counts.items() if n == top]
     winner = leaders[0] if total and len(leaders) == 1 else None
     return {"counts": counts, "total": total, "winner": winner,
-            "share": round(100 * top / total) if winner else 0}
+            "share": round(100 * top / total) if winner else 0, "voters": voters}

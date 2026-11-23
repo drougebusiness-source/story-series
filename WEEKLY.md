@@ -19,12 +19,20 @@ then a video that passes the quality gate is queued on its own. Scripts ALWAYS n
 | 4. Owner OKs the scripts | Any time that afternoon/evening | Agent Office Approve button | (hq/approvals.md item "Story EPN scripts".) |
 | 5. Render | Every 2 h, 7 AM-11 PM, once approved | PC task "Story episodes: render and queue" | `render.py <series> epN` → quality gate. PASS → `review/EPN-<SERIES>.mp4`. |
 | 6. Owner OKs the videos | Before the post slot | Agent Office Approve button | Only while Video check is ON (item "Story EPN videos"). |
-| 7. Queue | Right after 6 (or 5 when OFF) | same render task | `python publish.py <series> epN` → GitHub release → step 1 posts it. |
+| 7. Queue | Right after 6 (or 5 when OFF) | same render task | `python publish.py <series> epN` → GitHub release → step 1 posts it. It also uploads the episode to the series' YouTube Shorts channel (goes public at the slot) and schedules it on TikTok through GHL, where those are set up (`crosspost.py status`). |
 
 Deadline: a series whose episode isn't queued by its slot just skips that slot and posts at the next one; the
 vote stays open meanwhile (the post job only ever posts the next episode in order). Nothing is ever made up.
 
 ## Rules the scheduled jobs follow
+- **The first 2 seconds (owner, 2026-11-23: more views).** Every script starts with a `hook:` line (under 8
+  words) that names the danger or the twist, e.g. `hook: He's deleted 11,000 people.` It is shown big on screen
+  for the first 2 s, it is the first thing said or shown, and it opens the caption. Shot 1 shows the danger in
+  that same second (no slow world set-up before it; the "Last time…" beat comes right after the hook).
+- **Votes from every platform.** Before writing, run `.venv/Scripts/python crosspost.py votes <series>` for each
+  series: it adds the YouTube comment votes to the Instagram count in state.json (TikTok can't be counted).
+- **Engagement runs itself:** the account posts its own first comment ("👇 Comment A or B…"), GitHub's "Answer
+  votes" job replies "B counted 🗳️" to each vote every 4 h, and the next caption thanks voters by @name.
 - The vote is the story. `result.winner` A/B picks what happens; no winner (no votes, tie, or a comment-read error)
   = the writer chooses the more dramatic option and the episode says "The story chose". Never ignore a winner.
 - ROLL FOR FATE: an option marked "(roll 13+)" that wins is rolled in code, once:

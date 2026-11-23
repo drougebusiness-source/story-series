@@ -73,12 +73,21 @@ class Account:
     def comments(self, media_id: str) -> list[dict]:
         """Every top-level comment (text, timestamp, username), following the pages."""
         out, url = [], f"{GRAPH}/{media_id}/comments"
-        params = {"fields": "text,timestamp,username", "limit": 50, "access_token": self.token}
+        params = {"fields": "id,text,timestamp,username", "limit": 50, "access_token": self.token}
         while url:
             d = _check(self.http.get(url, params=params, timeout=60))
             out += d.get("data", [])
             url, params = (d.get("paging") or {}).get("next"), None
         return out
+
+    def comment(self, media_id: str, text: str) -> str:
+        """The account's own comment on its post (the first comment, so the box isn't empty)."""
+        return _check(self.http.post(f"{GRAPH}/{media_id}/comments", data={
+            "message": text, "access_token": self.token}, timeout=30))["id"]
+
+    def reply(self, comment_id: str, text: str) -> str:
+        return _check(self.http.post(f"{GRAPH}/{comment_id}/replies", data={
+            "message": text, "access_token": self.token}, timeout=30))["id"]
 
     def insights(self, media_id: str) -> dict:
         """Views, likes and comments for the office's Performance tab (best effort)."""

@@ -10,6 +10,7 @@
     python -m stories due                       post every series whose Mon/Wed/Fri slot has come and isn't posted yet
                                                 (GitHub's cron runs this every 20 min on post evenings)
     python -m stories tally                     count the votes of every episode whose voting has closed
+    python -m stories engage                    reply "B counted" to each new vote on the open episodes
     python -m stories status                    one line per series
     python -m stories art <series> [--n 3]      Gemini profile picture options -> out/art/
 
@@ -153,10 +154,29 @@ def release_file(tag: str, name: str) -> bytes | None:
     return r.content
 
 
-def cartoon_caption(series: Series, post: dict, now: datetime) -> str:
+def credit_line(prev: dict | None) -> str:
+    """Thank last episode's voters by name (people come back to see it), or say the story chose."""
+    r = (prev or {}).get("result")
+    if not r:
+        return ""
+    if r.get("winner"):
+        names = [f"@{u}" for u in (r.get("voters") or {}).get(r["winner"], []) if not u.isdigit()]
+        more = r["total"] - len(names[:3])
+        who = ", ".join(names[:3]) + (f" and {more} other{'s' if more != 1 else ''}" if more > 0 and names else "")
+        return f"Last time you chose {r['winner']}" + (f". Thanks {who}! 🗳️" if names else ".")
+    if r.get("total"):
+        return "Last time it was a tie, so the story chose. Break the tie this time."
+    return "Last time nobody voted, so the story chose. This time it's up to you."
+
+
+FIRST_COMMENT = "👇 Comment {letters}. The votes decide what happens next."
+
+
+def cartoon_caption(series: Series, post: dict, now: datetime, prev: dict | None = None) -> str:
     opts = "\n".join(f"{k}: {v}" for k, v in post["options"].items())
     letters = " or ".join(post["options"])
-    return (f"EP {post['n']}: {post['title']}\n\n{post['question']}\n{opts}\n\n"
+    head = "\n\n".join(x for x in (post.get("hook", ""), credit_line(prev)) if x)
+    return (f"{head + chr(10) + chr(10) if head else ''}EP {post['n']}: {post['title']}\n\n{post['question']}\n{opts}\n\n"
             f"Comment {letters}. Voting closes {schedule.close_words(now)}. Most votes wins. "
             f"No votes? The story chooses.\n\nNew episodes every Monday, Wednesday and Friday.\n\n"
             f"{series.cfg.get('hashtags', '')}").strip()
@@ -193,12 +213,17 @@ def cmd_post(slug: str) -> int:
         print(f"{slug}: ❌ downloaded video is {video.stat().st_size} bytes, expected {post['size']}; not posting")
         return 1
     now = _now()
+    text = cartoon_caption(series, post, now, eps[-1] if eps else None)
     try:
-        posted = acct.post_reel(video, cartoon_caption(series, post, now), post.get("thumb_offset_ms"))
+        posted = acct.post_reel(video, text, post.get("thumb_offset_ms"))
     except PostError as e:   # Instagram's upload sometimes fails once ("Request processing failed", 11-21)
         log.warning("upload failed, trying once more in 30 s: %s", e)
         time.sleep(30)
-        posted = acct.post_reel(video, cartoon_caption(series, post, now), post.get("thumb_offset_ms"))
+        posted = acct.post_reel(video, text, post.get("thumb_offset_ms"))
+    try:   # our own first comment, so the comment box isn't empty (best effort: never fails the post)
+        acct.comment(posted["media_id"], FIRST_COMMENT.format(letters=" or ".join(post["options"])))
+    except (PostError, KeyError) as e:
+        log.warning("first comment failed: %s", e)
     when = datetime.strptime(posted["posted_at"].replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z")         if posted.get("posted_at") else now
     ep = {"n": n, "title": post["title"], "kind": "cartoon",
           "choice": {"question": post["question"], "options": post["options"]},
@@ -224,6 +249,49 @@ def cmd_due() -> int:
             continue   # already posted for this slot (or posted by hand shortly before it)
         bad |= cmd_post(slug)
     return bad
+
+
+MAX_REPLIES = 40   # per series per run, well under Instagram's limits
+
+
+def cmd_engage() -> int:
+    """Reply to every new vote on each open episode ("B counted 🗳️"). Replies roughly double the comment count,
+    which is what Instagram ranks on, and tell voters they were heard. Runs a few times a day on GitHub."""
+    now = _now()
+    for slug in SLUGS:
+        series = Series.load(slug)
+        state = series.state
+        ep = state["episodes"][-1] if state["episodes"] else None
+        acct = account(series)
+        if not series.live or not ep or not ep.get("media_id") or acct is None or "result" in ep:
+            continue
+        if ep.get("close_at") and now >= datetime.strptime(ep["close_at"], "%Y-%m-%dT%H:%M:%S%z"):
+            continue
+        try:
+            own = acct.username().lower()
+            comments = acct.comments(ep["media_id"])
+        except PostError as e:
+            print(f"{series.title}: ⚠️ couldn't read comments: {e}")
+            continue
+        done, sent = set(ep.get("replied", [])), 0
+        for c in comments:
+            if c.get("id") in done or (c.get("username") or "").lower() == own or sent >= MAX_REPLIES:
+                continue
+            v = votes.parse_vote(c.get("text", ""), list(ep["choice"]["options"]))
+            if not v:
+                continue
+            try:
+                acct.reply(c["id"], f"{v} counted 🗳️ ({ep['choice']['options'][v]})")
+            except PostError as e:
+                print(f"{series.title}: ⚠️ reply failed: {e}")
+                break
+            done.add(c["id"])
+            sent += 1
+        if sent:
+            ep["replied"] = sorted(done)
+            series.save_state(state)
+        print(f"{series.title}: episode {ep['n']}: {sent} new vote{'s' if sent != 1 else ''} answered")
+    return 0
 
 
 def cmd_tally() -> int:
@@ -296,6 +364,7 @@ def main(argv=None) -> int:
     po = sub.add_parser("post")
     po.add_argument("series", choices=SLUGS)
     sub.add_parser("tally")
+    sub.add_parser("engage")
     sub.add_parser("due")
     a = ap.parse_args(argv)
     if a.cmd == "check":
@@ -309,6 +378,8 @@ def main(argv=None) -> int:
         return cmd_post(a.series)
     if a.cmd == "tally":
         return cmd_tally()
+    if a.cmd == "engage":
+        return cmd_engage()
     if a.cmd == "episode":
         return cmd_episode(a.series)
     if a.cmd == "art":

@@ -25,6 +25,16 @@ def duration_ms(video: Path) -> int:
     return int(float(out.strip()) * 1000)
 
 
+def first_line(script: dict) -> str:
+    """No `hook:` in the script -> the episode's own first caption sentence (already approved text)."""
+    import re
+    for shot in script.get("shots") or []:
+        for sentence in re.split(r"(?<=[.!?])\s+", str(shot.get("caption", "")).strip()):
+            if sentence and not sentence.lower().startswith("last time"):
+                return sentence
+    return ""
+
+
 def main(slug: str, ep: str, replace: bool = False) -> int:
     n = int(ep.removeprefix("ep"))
     passed = ROOT / "out" / "qa" / f"{slug}-{ep}" / "PASS.json"
@@ -40,7 +50,7 @@ def main(slug: str, ep: str, replace: bool = False) -> int:
     choice = script["choice"]
     name = f"{slug}-ep{n}.mp4"
     post = {"n": n, "series": slug, "title": script["title"], "question": choice["question"],
-            "options": choice["options"], "video": name, "size": video.stat().st_size, "qa_pass": True,
+            "options": choice["options"], "hook": script.get("hook") or first_line(script), "video": name, "size": video.stat().st_size, "qa_pass": True,
             "thumb_offset_ms": max(0, duration_ms(video) - COVER_FROM_END_MS)}
     tag = f"{slug}-ep{n}"
     with tempfile.TemporaryDirectory() as d:
@@ -58,6 +68,13 @@ def main(slug: str, ep: str, replace: bool = False) -> int:
                             "-R", REPO, "--title", f"{script['title']} ({slug} episode {n})",
                             "--notes", f"Queued for {slug}'s next Mon/Wed/Fri slot. Quality gate: PASS."], check=True)
     print(f"✅ {slug} episode {n} queued: it posts at the next {slug} slot (Mon/Wed/Fri evening, Central)")
+    try:   # the same episode on YouTube Shorts and TikTok at the same slot (skipped where not set up)
+        import crosspost
+        crosspost.schedule(slug, ep, video, post)
+        subprocess.run(["git", "add", f"{slug}/crosspost.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(["git", "commit", "-q", "-m", f"crosspost: {slug} ep{n}"], cwd=ROOT, capture_output=True)
+    except Exception as e:
+        print(f"⚠️ cross-posting failed (Instagram is still queued): {e}")
     return 0
 
 
