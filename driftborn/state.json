@@ -17,14 +17,27 @@
       "close_at": "2026-11-26T18:00:00+0000",
       "stats": {
         "id": "17907852759655751",
-        "comments_count": 0,
+        "comments_count": 1,
         "like_count": 0,
         "views": 112
       },
       "note": "voting reopened by owner 2026-11-23: EP2 waits for Friday 11-27",
       "notices": [
         "⏳ Voting extended! Comment A or B until Thursday at noon Central. Episode 2 drops Friday."
-      ]
+      ],
+      "result": {
+        "counts": {
+          "A": 0,
+          "B": 0
+        },
+        "total": 0,
+        "winner": null,
+        "share": 0,
+        "voters": {
+          "A": [],
+          "B": []
+        }
+      }
     }
   ]
 }
